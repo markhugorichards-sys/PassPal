@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080c14">
+<title>PassPal AI — Compare Driving Instructors. Find the Best Value.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────────────── */
+:root{
+  --bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2236;
+  --glass:rgba(255,255,255,.04);--glassb:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.07);--borderh:rgba(255,255,255,.14);
+  --blue:#4f8fff;--blued:#3a6fe0;--bluegl:rgba(79,143,255,.15);--bluell:rgba(79,143,255,.08);
+  --green:#00e676;--greend:#00c864;--greengl:rgba(0,230,118,.12);
+  --amber:#ffb300;--ambergl:rgba(255,179,0,.12);
+  --red:#ff4d6a;--redgl:rgba(255,77,106,.12);
+  --text:#f0f4ff;--text2:#8a9bc4;--text3:#4a5880;--text4:#2a3550;
+  --r:10px;--rlg:16px;--rxl:22px;--r2xl:28px;
+  /* fluid type */
+  --txs:clamp(10px,2.5vw,11px);--tsm:clamp(12px,3vw,13px);
+  --tbase:clamp(14px,3.5vw,15px);--tmd:clamp(15px,4vw,16px);
+  --tlg:clamp(17px,4.5vw,19px);--txl:clamp(20px,5vw,24px);
+  --t2xl:clamp(26px,6vw,36px);--t3xl:clamp(32px,8vw,52px);
+  --thero:clamp(36px,10vw,76px);
+  /* spacing */
+  --sp1:4px;--sp2:8px;--sp3:12px;--sp4:16px;--sp5:20px;--sp6:24px;--sp8:32px;--sp10:40px;
+  /* safe areas */
+  --sab:env(safe-area-inset-bottom,0px);
+  --sat:env(safe-area-inset-top,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Satoshi',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;min-height:100dvh;
+  -webkit-font-smoothing:antialiased;
+  font-size:var(--tbase);line-height:1.6;
+  overflow-x:hidden;
+  padding-bottom:calc(56px + var(--sab));
+}
+body.no-bottom-pad{padding-bottom:var(--sab)}
+img{display:block;max-width:100%}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:none}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+.afu{animation:fadeUp .35s cubic-bezier(.22,.68,0,1.2) both}
+.afi{animation:fadeIn .25s ease both}
+.asu{animation:slideUp .32s cubic-bezier(.22,.68,0,1.1) both}
+.d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}.d4{animation-delay:.28s}
+
+/* ─── SKELETON ───────────────────────────────────────────────────── */
+.skeleton{
+  background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);
+  background-size:400px 100%;animation:shimmer 1.4s infinite;border-radius:var(--r);
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────────────── */
+.wrap{max-width:1160px;margin:0 auto;padding:0 var(--sp6)}
+.wrap-sm{max-width:700px;margin:0 auto;padding:0 var(--sp6)}
+.wrap-xs{max-width:480px;margin:0 auto;padding:0 var(--sp4)}
+
+/* ─── CARDS ──────────────────────────────────────────────────────── */
+.card{background:var(--glass);border:1px solid var(--border);border-radius:var(--rlg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.card-s{background:var(--bg1);border:1px solid var(--border);border-radius:var(--rlg)}
+/* hover only on pointer devices */
+@media(hover:hover){
+  .card-h{transition:all .22s cubic-bezier(.4,0,.2,1);cursor:pointer}
+  .card-h:hover{border-color:var(--borderh);background:var(--glassb);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:48px;padding:0 22px;border-radius:var(--r);
+  font-family:inherit;font-size:var(--tsm);font-weight:700;
+  border:none;cursor:pointer;transition:all .18s;
+  white-space:nowrap;text-decoration:none;letter-spacing:.01em;
+  -webkit-appearance:none;touch-action:manipulation;
+}
+.btn:active{transform:scale(.96)}
+.btn-sm{min-height:38px;padding:0 14px;font-size:var(--txs);border-radius:8px}
+.btn-lg{min-height:54px;padding:0 32px;font-size:var(--tmd);border-radius:var(--rlg)}
+.btn-full{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.btn-p{background:var(--blue);color:#fff;box-shadow:0 0 24px rgba(79,143,255,.3)}
+@media(hover:hover){.btn-p:hover{background:var(--blued);box-shadow:0 0 36px rgba(79,143,255,.5);transform:translateY(-1px)}}
+.btn-g{background:var(--green);color:#001a0e;box-shadow:0 0 18px rgba(0,230,118,.25)}
+@media(hover:hover){.btn-g:hover{background:var(--greend);box-shadow:0 0 28px rgba(0,230,118,.4);transform:translateY(-1px)}}
+.btn-ghost{background:var(--glass);color:var(--text2);border:1px solid var(--border)}
+@media(hover:hover){.btn-ghost:hover{border-color:var(--borderh);color:var(--text);background:var(--glassb)}}
+.btn-sub{background:var(--bluell);color:var(--blue)}
+@media(hover:hover){.btn-sub:hover{background:var(--bluegl)}}
+
+/* ─── INPUTS ─────────────────────────────────────────────────────── */
+.field{display:flex;flex-direction:column;gap:6px}
+.label{font-size:var(--txs);font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
+.input,.select{
+  min-height:48px;padding:0 14px;border:1.5px solid var(--border);
+  border-radius:var(--r);background:var(--bg2);color:var(--text);
+  font-family:inherit;font-size:var(--tbase);outline:none;
+  transition:border-color .15s,box-shadow .15s;width:100%;
+  -webkit-appearance:none;appearance:none;
+}
+.input:focus,.select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,143,255,.18)}
+.input::placeholder{color:var(--text3)}
+textarea.input{min-height:90px;padding:12px 14px;resize:vertical}
+.select option{background:var(--bg2)}
+/* hero inputs */
+.hinput{
+  min-height:48px;padding:0 14px;border:1.5px solid rgba(255,255,255,.12);
+  border-radius:var(--r);background:rgba(255,255,255,.06);color:var(--text);
+  font-family:inherit;font-size:var(--tbase);font-weight:500;outline:none;
+  transition:all .15s;width:100%;-webkit-appearance:none;
+}
+.hinput::placeholder{color:var(--text3)}
+.hinput:focus{border-color:var(--blue);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(79,143,255,.15)}
+.hinput option{background:var(--bg2)}
+
+/* ─── CHIPS ──────────────────────────────────────────────────────── */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;font-size:var(--txs);font-weight:700}
+.ch-blue{background:var(--bluegl);color:var(--blue);border:1px solid rgba(79,143,255,.2)}
+.ch-green{background:var(--greengl);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.ch-amber{background:var(--ambergl);color:var(--amber);border:1px solid rgba(255,179,0,.2)}
+.ch-red{background:var(--redgl);color:var(--red);border:1px solid rgba(255,77,106,.2)}
+.ch-gray{background:rgba(255,255,255,.05);color:var(--text2);border:1px solid var(--border)}
+.ch-navy{background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+
+/* ─── TOGGLE ─────────────────────────────────────────────────────── */
+.tog{position:relative;width:44px;height:24px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-track{position:absolute;inset:0;background:var(--bg3);border-radius:99px;transition:all .2s;cursor:pointer;border:1px solid var(--border)}
+.tog-track::before{content:'';position:absolute;width:18px;height:18px;left:2px;bottom:2px;background:var(--text2);border-radius:50%;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog input:checked~.tog-track{background:var(--blue);border-color:var(--blue);box-shadow:0 0 12px rgba(79,143,255,.3)}
+.tog input:checked~.tog-track::before{transform:translateX(20px);background:#fff}
+
+/* ─── PROGRESS ───────────────────────────────────────────────────── */
+.prog{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:var(--blue);transition:width .4s ease}
+
+/* ─── RANGE ──────────────────────────────────────────────────────── */
+input[type=range]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:var(--bg3);border-radius:99px;cursor:pointer;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--blue);border:3px solid var(--bg1);cursor:grab;box-shadow:0 0 10px rgba(79,143,255,.4)}
+
+/* ─── HEADER ─────────────────────────────────────────────────────── */
+#hdr{position:sticky;top:0;z-index:100;background:rgba(8,12,20,.92);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border)}
+.hdr-inner{height:56px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:0;cursor:pointer;text-decoration:none}
+.logo-t{font-size:20px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 40%,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-b{font-size:var(--txs);font-weight:700;color:var(--green);letter-spacing:.05em;text-transform:uppercase;margin-left:8px;background:var(--greengl);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,230,118,.2)}
+.nav-d{display:flex;align-items:center;gap:2px}
+.nav-btn{min-height:36px;padding:0 13px;border-radius:var(--r);font-size:var(--tsm);font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .15s;font-family:inherit}
+@media(hover:hover){.nav-btn:hover{background:var(--glassb);color:var(--text)}}
+.nav-btn.on{background:var(--bluegl);color:var(--blue)}
+.nav-sep{width:1px;height:16px;background:var(--border);margin:0 6px}
+@media(max-width:639px){.nav-d{display:none}}
+
+/* ─── BOTTOM NAV (mobile learner) ────────────────────────────────── */
+#bnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:rgba(8,12,20,.96);backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  display:flex;padding:0 0 calc(var(--sab)) 0;
+}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;transition:color .15s;font-family:inherit;padding-bottom:var(--sp1)}
+.bnav-item svg{width:22px;height:22px}
+.bnav-item.on{color:var(--blue)}
+.bnav-item.on svg{filter:drop-shadow(0 0 6px rgba(79,143,255,.6))}
+@media(min-width:640px){#bnav{display:none}}
+
+/* ─── HERO ───────────────────────────────────────────────────────── */
+.hero{padding:60px 0 52px;position:relative;overflow:hidden;background:var(--bg1)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 30%,rgba(79,143,255,.16) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 85% 80%,rgba(0,230,118,.08) 0%,transparent 55%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--borderh);border-radius:99px;padding:5px 14px 5px 8px;margin-bottom:20px;background:var(--glass)}
+.eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:glow 2s ease-in-out infinite;flex-shrink:0}
+.eyebrow-t{font-size:var(--txs);color:var(--text2);font-weight:600}
+.hero h1{font-size:var(--thero);font-weight:900;letter-spacing:-.03em;line-height:1.0;margin-bottom:16px}
+.hero h1 .ac{color:var(--green)}
+.hero h1 .dm{color:var(--text2)}
+.hero-sub{font-size:var(--tlg);color:var(--text2);line-height:1.6;max-width:480px;margin-bottom:0;font-weight:400}
+.hero-sub strong{color:var(--text);font-weight:700}
+
+/* ─── MOBILE SEARCH HERO ─────────────────────────────────────────── */
+.msearch{
+  background:rgba(255,255,255,.04);border:1px solid var(--borderh);
+  border-radius:var(--r2xl);padding:var(--sp6);margin-top:var(--sp6);
+  box-shadow:0 24px 80px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.msearch-row{display:flex;gap:var(--sp3);margin-bottom:var(--sp3)}
+.msearch-row:last-child{margin-bottom:0}
+/* desktop: 4-col grid */
+@media(min-width:640px){
+  .msearch-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:var(--sp4);align-items:flex-end}
+  .msearch-row,.msearch-cta-row{display:none}
+  .msearch-grid-cta{display:flex!important}
+}
+@media(max-width:639px){
+  .msearch-grid{display:none}
+  .msearch-grid-cta{display:none}
+}
+.msearch-label{font-size:var(--txs);font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px}
+.qe-btn{min-height:48px;padding:0 22px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-weight:800;font-size:var(--tsm);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;box-shadow:0 0 24px rgba(79,143,255,.35);white-space:nowrap;touch-action:manipulation}
+@media(hover:hover){.qe-btn:hover{background:var(--blued);transform:translateY(-1px);box-shadow:0 0 36px rgba(79,143,255,.5)}}
+.qe-btn:active{transform:scale(.96)}
+.trust-row{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+.trust-item{font-size:var(--txs);color:var(--text3);display:flex;align-items:center;gap:5px}
+.trust-item svg{color:var(--green);flex-shrink:0;width:14px;height:14px}
+
+/* social proof avatars */
+.sp-wrap{display:inline-flex;align-items:center;gap:7px;background:var(--glass);border:1px solid var(--border);border-radius:99px;padding:4px 12px 4px 4px;font-size:var(--txs);color:var(--text2);font-weight:600}
+.sp-avs{display:flex}
+.sp-avs img{width:22px;height:22px;border-radius:50%;border:2px solid var(--bg1);margin-left:-6px;object-fit:cover}
+.sp-avs img:first-child{margin-left:0}
+
+/* hero stats */
+.hstats{display:flex;gap:var(--sp10);margin-top:var(--sp10);flex-wrap:wrap}
+@media(max-width:639px){.hstats{gap:var(--sp6);margin-top:var(--sp8)}}
+.hstat-n{font-size:clamp(26px,6vw,42px);font-weight:900;letter-spacing:-.03em;color:#fff;line-height:1}
+.hstat-l{font-size:var(--txs);color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+/* ─── COMPARE TOOLBAR ────────────────────────────────────────────── */
+.ctool{background:rgba(8,12,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:56px;z-index:80;padding:10px 0}
+.ctool-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rcount{font-size:var(--tsm);color:var(--text2)}
+.rcount strong{color:var(--text)}
+.save-pill{display:inline-flex;align-items:center;gap:5px;background:var(--greengl);color:var(--green);border:1px solid rgba(0,230,118,.2);padding:3px 10px;border-radius:99px;font-size:var(--txs);font-weight:700}
+.pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{min-height:32px;padding:0 13px;border-radius:99px;font-size:var(--txs);font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--glass);color:var(--text2);transition:all .15s;font-family:inherit;white-space:nowrap;touch-action:manipulation}
+.pill.on{background:var(--bg1);color:var(--text);border-color:var(--borderh)}
+@media(hover:hover){.pill:hover{border-color:var(--borderh);color:var(--text)}}
+
+/* ─── FILTER BOTTOM SHEET ────────────────────────────────────────── */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:200;animation:fadeIn .2s ease}
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:201;
+  background:var(--bg2);border-top:1px solid var(--borderh);
+  border-radius:22px 22px 0 0;
+  max-height:82vh;overflow-y:auto;
+  padding:0 var(--sp6) calc(var(--sp8) + var(--sab));
+  animation:slideUp .28s cubic-bezier(.22,.68,0,1.1);
+}
+.sheet-handle{width:40px;height:4px;background:var(--bg3);border-radius:99px;margin:12px auto 20px}
+.sheet-title{font-size:var(--tmd);font-weight:900;letter-spacing:-.01em;margin-bottom:20px}
+.fblock{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.fblock:last-child{border:none;padding:0;margin:0}
+.ftitle{font-size:var(--txs);font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.filter-btn-mobile{position:fixed;bottom:calc(68px + var(--sab));right:16px;z-index:89;background:var(--blue);color:#fff;border:none;border-radius:99px;padding:0 18px;min-height:44px;font-family:inherit;font-weight:800;font-size:var(--tsm);display:flex;align-items:center;gap:7px;box-shadow:0 4px 20px rgba(79,143,255,.4);cursor:pointer;touch-action:manipulation}
+@media(min-width:640px){.filter-btn-mobile{display:none}}
+
+/* ─── DESKTOP SIDEBAR ────────────────────────────────────────────── */
+.sidebar{background:var(--bg1);border:1px solid var(--border);border-radius:var(--rlg);padding:var(--sp5);position:sticky;top:112px;max-height:calc(100vh-132px);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bg3)}
+@media(max-width:639px){.sidebar{display:none}}
+
+/* ─── INSTRUCTOR CARDS ───────────────────────────────────────────── */
+/* mobile: full-width stacked cards */
+.inst-card-m{
+  background:var(--bg1);border:1px solid var(--border);border-radius:var(--rlg);
+  margin-bottom:10px;overflow:hidden;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+@media(hover:hover){.inst-card-m:hover{border-color:var(--borderh);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4)}}
+.inst-card-m.featured{border-color:rgba(79,143,255,.35);box-shadow:0 0 20px rgba(79,143,255,.07)}
+.inst-card-m.best{border-color:rgba(0,230,118,.35);box-shadow:0 0 20px rgba(0,230,118,.07)}
+.card-banner{padding:5px 16px;font-size:var(--txs);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.cb-blue{background:linear-gradient(90deg,rgba(79,143,255,.2),transparent);color:var(--blue);border-bottom:1px solid rgba(79,143,255,.15)}
+.cb-green{background:linear-gradient(90deg,rgba(0,230,118,.2),transparent);color:var(--green);border-bottom:1px solid rgba(0,230,118,.15)}
+
+/* card header row */
+.card-head{padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.card-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--borderh)}
+.card-avatar-sk{width:52px;height:52px;border-radius:50%;flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:var(--tmd);font-weight:800;letter-spacing:-.01em;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{font-size:var(--txs);color:var(--text3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.vmark{color:var(--blue);font-size:var(--txs);font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.ex-badge{background:var(--ambergl);color:var(--amber);border:1px solid rgba(255,179,0,.2);border-radius:4px;padding:1px 6px;font-size:9px;font-weight:800;letter-spacing:.05em}
+
+/* card metrics row */
+.card-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)}
+.cm-cell{padding:12px 10px;text-align:center;border-right:1px solid var(--border)}
+.cm-cell:last-child{border-right:none}
+.cm-big{font-size:clamp(17px,4.5vw,22px);font-weight:900;letter-spacing:-.02em;line-height:1;margin-bottom:3px}
+.cm-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.cm-sub{font-size:9px;color:var(--text4);margin-top:3px}
+.cm-green .cm-big{color:var(--green)}
+.cm-blue .cm-big{color:var(--blue)}
+.cm-amber .cm-big{color:var(--amber)}
+.cm-red .cm-big{color:var(--red)}
+.cm-muted .cm-big{color:var(--text2)}
+
+/* card actions */
+.card-actions{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+
+/* desktop table row */
+@media(min-width:640px){
+  .inst-row-d{
+    background:var(--glass);border:1px solid var(--border);border-radius:var(--rlg);
+    margin-bottom:8px;overflow:hidden;cursor:pointer;
+    transition:all .22s cubic-bezier(.4,0,.2,1);
+  }
+  .inst-row-d:hover{border-color:var(--borderh);background:var(--glassb);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+  .inst-row-d.featured{border-color:rgba(79,143,255,.3)}
+  .inst-row-d.best{border-color:rgba(0,230,118,.3)}
+  .row-grid{display:grid;grid-template-columns:48px 1fr 140px 152px 140px 168px;align-items:stretch;min-height:88px}
+  .rank-c{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;border-right:1px solid var(--border)}
+  .rank-n{font-size:18px;font-weight:900;color:var(--text4)}
+  .rank-c.r1 .rank-n{color:var(--amber);text-shadow:0 0 10px rgba(255,179,0,.4)}
+  .rank-c.r2 .rank-n{color:var(--text2)}
+  .rank-c.r3 .rank-n{color:#a07940}
+  .info-c{padding:14px 16px;border-right:1px solid var(--border);display:flex;align-items:center;gap:12px}
+  .d-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--borderh)}
+  .d-name{font-size:var(--tmd);font-weight:800;margin-bottom:3px;letter-spacing:-.01em}
+  .d-meta{font-size:var(--txs);color:var(--text3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .d-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .met-c{padding:14px 12px;text-align:center;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .met-c:last-child{border-right:none}
+  .met-big{font-size:clamp(18px,2vw,24px);font-weight:900;letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+  .met-lbl{font-size:var(--txs);color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .met-sub{font-size:var(--txs);color:var(--text4);margin-top:3px}
+  .met-green .met-big{color:var(--green)}
+  .met-blue .met-big{color:var(--blue)}
+  .met-amber .met-big{color:var(--amber)}
+  .met-red .met-big{color:var(--red)}
+  .met-muted .met-big{color:var(--text2)}
+  .act-c{padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+}
+@media(max-width:639px){
+  .inst-row-d{display:none}
+  .col-labels-d{display:none}
+}
+@media(min-width:640px){.inst-card-m{display:none}}
+
+/* bench badge */
+.bench{display:inline-flex;align-items:center;padding:2px 7px;border-radius:5px;font-size:var(--txs);font-weight:700;margin-top:4px}
+.b-below{background:var(--greengl);color:var(--green)}
+.b-above{background:var(--redgl);color:var(--red)}
+.b-avg{background:var(--glass);color:var(--text3)}
+
+/* pass score */
+.ps-n{font-size:28px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.ps-bar{width:64px;height:3px;background:var(--bg3);border-radius:99px;margin:4px auto 8px;overflow:hidden}
+.ps-fill{height:100%;border-radius:99px;transition:width .5s}
+
+/* gate */
+.gate-wrap{position:relative;margin-bottom:10px}
+.gate-blur{filter:blur(4px);pointer-events:none;user-select:none}
+.gate-panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;text-align:center;background:var(--bg2);border:1px solid var(--borderh);border-radius:var(--rxl);padding:28px var(--sp8);box-shadow:0 24px 60px rgba(0,0,0,.6);min-width:min(300px,85vw);animation:scaleIn .2s ease}
+.gate-h{font-size:var(--txl);font-weight:900;margin-bottom:8px;letter-spacing:-.02em}
+.gate-sub{font-size:var(--tsm);color:var(--text2);margin-bottom:18px;line-height:1.6}
+
+/* expand panel */
+.expand-panel{border-top:1px solid var(--border);background:rgba(0,0,0,.2);padding:18px var(--sp5);display:grid;grid-template-columns:repeat(2,1fr);gap:18px;animation:slideDown .2s ease}
+@media(min-width:640px){.expand-panel{grid-template-columns:repeat(4,1fr)}}
+.exp-title{font-size:var(--txs);font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px}
+.mini-bars{display:flex;gap:4px;align-items:flex-end;height:36px;margin-bottom:6px}
+.mini-bar{flex:1;border-radius:3px 3px 0 0;background:var(--bg3);min-height:4px}
+.mini-bar.now{background:var(--blue)}
+
+/* sponsored */
+.spons{background:var(--bluegl);color:var(--blue);border:1px solid rgba(79,143,255,.2);font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;letter-spacing:.04em}
+
+/* ─── PROFILE PAGE ───────────────────────────────────────────────── */
+.prof-hero{background:linear-gradient(135deg,rgba(79,143,255,.1),rgba(0,230,118,.05));border-bottom:1px solid var(--border);padding:var(--sp8) var(--sp6)}
+.prof-stats{background:rgba(79,143,255,.05);border-bottom:1px solid rgba(79,143,255,.12);padding:var(--sp5) var(--sp6)}
+/* fixed bottom bar on mobile for profile */
+.prof-bottom-bar{
+  position:fixed;bottom:calc(56px + var(--sab));left:0;right:0;z-index:88;
+  background:rgba(8,12,20,.96);backdrop-filter:blur(24px);
+  border-top:1px solid var(--border);
+  padding:10px var(--sp4);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+@media(min-width:640px){.prof-bottom-bar{display:none}}
+.prof-sticky-sidebar{padding:var(--sp6);position:sticky;top:84px;border-color:rgba(79,143,255,.3)!important;box-shadow:0 0 30px rgba(79,143,255,.08)}
+@media(max-width:639px){.prof-sticky-sidebar{display:none}}
+
+/* ─── MESSAGING ──────────────────────────────────────────────────── */
+.msg-bubble{padding:10px 14px;border-radius:var(--rlg);max-width:85%;font-size:var(--tsm);line-height:1.55}
+.msg-out{background:var(--blue);color:#fff;border-radius:var(--rlg) var(--rlg) 4px var(--rlg);align-self:flex-end}
+.msg-in{background:var(--bg2);color:var(--text);border-radius:var(--rlg) var(--rlg) var(--rlg) 4px;align-self:flex-start}
+.msg-time{font-size:9px;color:var(--text4);margin-top:3px}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px rgba(79,143,255,.6);flex-shrink:0}
+
+/* ─── REVIEWS ────────────────────────────────────────────────────── */
+.review-card{padding:16px;border-bottom:1px solid var(--border)}
+.review-card:last-child{border-bottom:none}
+.stars{color:var(--amber);letter-spacing:1px;font-size:14px}
+
+/* ─── DVSA BADGE ─────────────────────────────────────────────────── */
+.dvsa-verified{display:inline-flex;align-items:center;gap:6px;background:var(--bluegl);border:1px solid rgba(79,143,255,.3);border-radius:8px;padding:5px 12px;font-size:var(--txs);font-weight:700;color:var(--blue)}
+.dvsa-pending{display:inline-flex;align-items:center;gap:6px;background:var(--ambergl);border:1px solid rgba(255,179,0,.3);border-radius:8px;padding:5px 12px;font-size:var(--txs);font-weight:700;color:var(--amber)}
+.dvsa-unverified{display:inline-flex;align-items:center;gap:6px;background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:var(--txs);font-weight:700;color:var(--text3)}
+.exc-badge{display:inline-flex;align-items:center;gap:5px;background:var(--ambergl);border:1px solid rgba(255,179,0,.2);border-radius:6px;padding:3px 10px;font-size:var(--txs);font-weight:800;color:var(--amber)}
+
+/* ─── PORTAL ─────────────────────────────────────────────────────── */
+.portal-wrap{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
+.portal-nav{background:var(--bg1);border-right:1px solid var(--border);padding:var(--sp5) 12px;display:flex;flex-direction:column;gap:2px}
+.portal-logo{font-size:16px;font-weight:900;letter-spacing:-.01em;padding:4px 12px 16px;color:var(--text);border-bottom:1px solid var(--border);margin-bottom:10px}
+.portal-ni{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r);color:var(--text3);font-size:var(--tsm);font-weight:600;background:none;border:none;cursor:pointer;width:100%;text-align:left;transition:all .15s;font-family:inherit;min-height:44px}
+@media(hover:hover){.portal-ni:hover{background:var(--glassb);color:var(--text2)}}
+.portal-ni.on{background:var(--bluegl);color:var(--blue)}
+.portal-content{background:var(--bg);padding:var(--sp8);overflow:auto}
+/* mobile portal: bottom tab bar replacement */
+.portal-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(8,12,20,.96);backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sab)}
+.ptab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-family:inherit;padding-bottom:var(--sp1)}
+.ptab svg{width:20px;height:20px}
+.ptab.on{color:var(--blue)}
+@media(min-width:640px){.portal-tab-bar{display:none}}
+@media(max-width:639px){.portal-wrap{grid-template-columns:1fr!important}.portal-nav{display:none}.portal-content{padding:var(--sp5)}}
+
+/* ─── ADMIN ──────────────────────────────────────────────────────── */
+.admin-wrap{display:flex;min-height:calc(100vh - 56px)}
+.admin-nav{width:210px;background:var(--bg1);border-right:1px solid var(--border);padding:18px 10px;display:flex;flex-direction:column;flex-shrink:0;gap:2px}
+.admin-title{font-size:16px;font-weight:900;padding:4px 12px 16px;color:var(--text);letter-spacing:-.01em}
+.admin-ni{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r);color:var(--text3);font-size:var(--tsm);font-weight:600;background:none;border:none;cursor:pointer;width:100%;text-align:left;transition:all .15s;font-family:inherit;min-height:44px}
+@media(hover:hover){.admin-ni:hover{background:var(--glassb);color:var(--text)}}
+.admin-ni.on{background:var(--bluegl);color:var(--blue)}
+.admin-content{flex:1;padding:var(--sp8);overflow:auto;background:var(--bg)}
+.admin-pt{font-size:var(--t2xl);font-weight:900;letter-spacing:-.02em;margin-bottom:var(--sp6)}
+@media(max-width:639px){.admin-wrap{flex-direction:column}.admin-nav{display:none}.admin-content{padding:var(--sp5)}}
+
+/* ─── DATA TABLE ─────────────────────────────────────────────────── */
+.dtable{width:100%;border-collapse:collapse;font-size:var(--tsm)}
+.dtable th{padding:10px 14px;text-align:left;font-size:var(--txs);font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;background:var(--bg1);border-bottom:1px solid var(--border)}
+.dtable td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.dtable tr:last-child td{border-bottom:none}
+@media(hover:hover){.dtable tr:hover td{background:var(--glass)}}
+
+/* ─── METRIC CARDS ───────────────────────────────────────────────── */
+.mcard{padding:22px}
+.mcard-n{font-size:clamp(24px,5vw,32px);font-weight:900;letter-spacing:-.03em;margin-top:6px;line-height:1}
+.mcard-s{font-size:var(--txs);color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+
+/* ─── MODAL ──────────────────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:var(--sp5);animation:fadeIn .2s ease}
+.modal{background:var(--bg2);border:1px solid var(--borderh);border-radius:var(--r2xl);max-width:520px;width:100%;max-height:90vh;max-height:90dvh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);animation:scaleIn .25s cubic-bezier(.22,.68,0,1.1)}
+.modal-hd{padding:var(--sp6) var(--sp6) 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:16px}
+.modal-bd{padding:var(--sp5) var(--sp6)}
+.modal-ft{padding:0 var(--sp6) var(--sp6);display:flex;gap:10px}
+.modal-title{font-size:var(--txl);font-weight:900;letter-spacing:-.02em}
+.mclose{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--glass);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+@media(hover:hover){.mclose:hover{border-color:var(--borderh);color:var(--text)}}
+
+/* ─── AUTH ───────────────────────────────────────────────────────── */
+.auth-wrap{min-height:65vh;min-height:65dvh;display:flex;align-items:center;justify-content:center;padding:var(--sp6)}
+.auth-card{max-width:420px;width:100%;padding:var(--sp8)}
+.auth-title{font-size:var(--t2xl);font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.auth-sub{font-size:var(--tsm);color:var(--text2);margin-bottom:var(--sp8)}
+
+/* ─── CALLOUT ────────────────────────────────────────────────────── */
+.callout{padding:13px 16px;border-radius:var(--r);border-left:3px solid;font-size:var(--tsm);line-height:1.65}
+.cal-blue{background:var(--bluegl);border-color:var(--blue);color:var(--text2)}
+.cal-green{background:var(--greengl);border-color:var(--green);color:var(--text2)}
+.cal-amber{background:var(--ambergl);border-color:var(--amber);color:var(--text2)}
+.cal-red{background:var(--redgl);border-color:var(--red);color:var(--text2)}
+
+/* ─── THEORY / QUIZ ──────────────────────────────────────────────── */
+.q-opt{width:100%;text-align:left;padding:13px 16px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--glass);font-family:inherit;font-size:var(--tbase);color:var(--text);cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center;min-height:52px;touch-action:manipulation}
+@media(hover:hover){.q-opt:hover:not(:disabled){border-color:var(--blue);background:var(--bluegl)}}
+.q-opt.correct{border-color:var(--green);background:var(--greengl)}
+.q-opt.wrong{border-color:var(--red);background:var(--redgl)}
+
+/* ─── PACKAGE CARDS ──────────────────────────────────────────────── */
+.pkg-card{padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rlg);transition:all .2s}
+@media(hover:hover){.pkg-card:hover{border-color:var(--borderh)}}
+
+/* ─── WAITLIST ───────────────────────────────────────────────────── */
+.waitlist-bar{background:var(--redgl);border:1px solid var(--red);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ─── PAGE TRANSITION ────────────────────────────────────────────── */
+.page{animation:fadeUp .3s cubic-bezier(.22,.68,0,1.2) both}
+
+/* ─── PLAN CARD ──────────────────────────────────────────────────── */
+.plan-feat{border-color:rgba(79,143,255,.4)!important;box-shadow:0 0 28px rgba(79,143,255,.1)}
+
+/* ─── DIVIDER ────────────────────────────────────────────────────── */
+.div{height:1px;background:var(--border)}
+
+/* ─── MISC ───────────────────────────────────────────────────────── */
+.tog-row{display:flex;justify-content:space-between;align-items:center}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* cookie */
+.cookie{position:fixed;bottom:calc(56px + var(--sab));left:0;right:0;z-index:150;background:var(--bg2);border-top:1px solid var(--border);padding:14px var(--sp6);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+@media(min-width:640px){.cookie{bottom:0}}
+.cookie-t{font-size:var(--tsm);color:var(--text2);flex:1}
+
+/* ranking page */
+.rank-pct{font-size:var(--txl);font-weight:900;color:var(--blue);letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo,useEffect,useCallback,useRef,memo} = React;
+
+// ─── ICONS ──────────────────────────────────────────────────────────────
+const Svg=({d,s=18,...p})=><svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}><path d={d}/></svg>;
+const I={
+  search:<Svg d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>,
+  pin:<Svg d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z M12 10a2 2 0 100-4 2 2 0 000 4"/>,
+  star:<svg width={14} height={14} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>,
+  check:<Svg d="M20 6L9 17l-5-5"/>,
+  x:<Svg d="M18 6L6 18M6 6l12 12"/>,
+  aR:<Svg d="M5 12h14M12 5l7 7-7 7"/>,
+  aL:<Svg d="M19 12H5M12 19l-7-7 7-7"/>,
+  lock:<Svg d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2z M7 11V7a5 5 0 0110 0v4"/>,
+  shield:<Svg d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>,
+  chart:<Svg d="M18 20V10M12 20V4M6 20v-6"/>,
+  book:<Svg d="M4 19.5A2.5 2.5 0 016.5 17H20 M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>,
+  logout:<Svg d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>,
+  trending:<Svg d="M23 6l-9.5 9.5-5-5L1 18 M17 6h6v6"/>,
+  trendDn:<Svg d="M23 18l-9.5-9.5-5 5L1 6 M17 18h6v-6"/>,
+  users:<Svg d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75"/>,
+  award:<Svg d="M12 15a6 6 0 100-12 6 6 0 000 12z M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>,
+  refresh:<Svg d="M23 4v6h-6 M1 20v-6h6 M3.51 9a9 9 0 0114.85-3.36L23 10 M1 14l4.64 4.36A9 9 0 0020.49 15"/>,
+  tag:<Svg d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z M7 7h.01"/>,
+  pound:<Svg d="M9 17H5m14 0h-4m-6 0V9a3 3 0 116 0v8m-6 0h6"/>,
+  zap:<Svg d="M13 2L3 14h9l-1 8 10-12h-9z"/>,
+  menu:<Svg d="M3 12h18M3 6h18M3 18h18"/>,
+  cal:<Svg d="M8 2v4M16 2v4M3 10h18 M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/>,
+  mail:<Svg d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6"/>,
+  msg:<Svg d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>,
+  send:<Svg d="M22 2L11 13 M22 2l-7 20-4-9-9-4z"/>,
+  home:<Svg d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10"/>,
+  compare:<Svg d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3M16 3h3a2 2 0 012 2v14a2 2 0 01-2 2h-3M12 3v18"/>,
+  info:<Svg d="M12 22a10 10 0 110-20 10 10 0 010 20z M12 8h.01 M12 12v4"/>,
+  star_fill:<svg width={16} height={16} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>,
+  package:<Svg d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12"/>,
+  filter:<Svg d="M22 3H2l8 9.46V19l4 2v-8.54L22 3"/>,
+  settings:<Svg d="M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>,
+  bell:<Svg d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 01-3.46 0"/>,
+  waitlist:<Svg d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75 M12 11a4 4 0 100-8 4 4 0 000 8"/>,
+  dvsa:<Svg d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>,
+};
+
+// ─── DATA ────────────────────────────────────────────────────────────────
+const HOURS={'Complete Beginner':47,'A Few Hours':35,'Some Experience':22,'Returning Driver':12};
+const RAVG=pc=>{const p=pc.toUpperCase();if(/^(M|SK)/.test(p))return 34;if(/^(LS|BD)/.test(p))return 32;if(/^(E[0-9C]|W[0-9C]|N[0-9W]|SW|SE)/.test(p))return 56;if(/^B/.test(p))return 36;return 34;};
+
+const MOCK_REVIEWS=[
+  {id:1,learnerName:'Jordan T.',rating:5,comment:'Absolutely brilliant. Passed first time. Sarah was patient with my anxiety and never made me feel rushed.',date:'2 weeks ago',instructorId:1},
+  {id:2,learnerName:'Priya M.',rating:5,comment:'So calm and structured. I went from a complete beginner to passing in 8 weeks.',date:'1 month ago',instructorId:1},
+  {id:3,learnerName:'Sam K.',rating:4,comment:'Really good intensive course. Expensive but worth every penny for the pass rate.',date:'3 weeks ago',instructorId:2},
+  {id:4,learnerName:'Fatima A.',rating:5,comment:'James is exceptional. I was nervous about intensive but he made it manageable.',date:'2 months ago',instructorId:2},
+  {id:5,learnerName:'Tom W.',rating:5,comment:'Priya is brilliant — BSL trained so my dad could actually understand what was happening.',date:'1 week ago',instructorId:3},
+  {id:6,learnerName:'Mia S.',rating:4,comment:'Good value and flexible timing. Would recommend for beginners.',date:'1 month ago',instructorId:5},
+];
+
+const MOCK_PACKAGES=[
+  {id:1,instructorId:1,name:'Starter Pack',lessons:5,price:155,saving:5,description:'5 lessons to get you started. Perfect for complete beginners.'},
+  {id:2,instructorId:1,name:'Pass Pack',lessons:10,price:300,saving:20,description:'10 lessons. Most popular — covers everything you need for test day.'},
+  {id:3,instructorId:2,name:'Intensive Week',lessons:8,price:300,saving:12,description:'8 hours over 5 days. Test booking included.'},
+  {id:4,instructorId:6,name:'Intensive Fortnight',lessons:15,price:530,saving:25,description:'15 hours in 2 weeks. Guaranteed test booking.'},
+];
+
+const MOCK_AVAILABILITY=[
+  {instructorId:1,slots:['Mon AM','Mon PM','Wed PM','Thu AM','Sat AM','Sat PM']},
+  {instructorId:2,slots:['Tue AM','Thu PM','Fri AM']},
+  {instructorId:3,slots:['Mon AM','Tue AM','Wed AM','Thu AM','Fri AM','Sat AM','Sat PM','Sun AM']},
+  {instructorId:5,slots:['Mon PM','Tue PM','Wed PM','Thu PM','Fri PM','Sat AM','Sun PM']},
+  {instructorId:6,slots:['Mon AM','Mon PM','Tue AM','Tue PM','Wed AM','Wed PM','Thu AM','Thu PM','Fri AM']},
+  {instructorId:9,slots:['Flexible — contact to arrange']},
+];
+
+const MOCK_MESSAGES=[
+  {id:1,fromLearner:true,text:"Hi Sarah, I saw your profile on PassPal. I'm a complete beginner and really anxious about driving. Do you have slots available?",time:'10:23 AM'},
+  {id:2,fromLearner:false,text:"Hi! Absolutely — anxious learners are my speciality. I have slots this Saturday morning and next Tuesday evening. Which would suit you?",time:'10:41 AM'},
+  {id:3,fromLearner:true,text:"Saturday morning would be perfect. What do I need to bring?",time:'11:02 AM'},
+  {id:4,fromLearner:false,text:"Just your provisional licence and comfortable shoes. I'll handle the rest. Looking forward to meeting you!",time:'11:15 AM'},
+];
+
+const INSTS=[
+  {id:1,name:'Sarah Mitchell',email:'sarah@passpal.ai',post:'M1',area:'Central Manchester',dist:1.2,tx:['Manual','Automatic'],gender:'Female',quals:['ADI','Pass Plus Registered'],types:['Standard','Pass Plus','Refresher'],support:['Anxious Drivers','ADHD Friendly'],rate:32,passRate:91,yrs:12,rating:4.9,reviews:187,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-2847391',dvsaExpiry:'March 2027',tier:'Premium',avail:'Available',bio:'Twelve years specialising in anxious learners and ADHD. Structured, calm lessons — never rushed, always clear. 91% first-time pass rate across 187 reviews.',avatar:'https://i.pravatar.cc/200?u=s1',history:[35,34,34,33,32],waitlist:false},
+  {id:2,name:'James Okafor',email:'james@passpal.ai',post:'M3',area:'Salford',dist:2.5,tx:['Automatic'],gender:'Male',quals:['ADI','Advanced Driving Certified'],types:['Intensive','Beginner','Standard'],support:['Anxious Drivers'],rate:39,passRate:94,yrs:8,rating:5.0,reviews:96,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-1920384',dvsaExpiry:'June 2026',tier:'Premium',avail:'Limited',bio:'Intensive specialist — zero to test-ready in 10 days. 94% pass rate. Drives a Tesla for quiet, smooth lessons.',avatar:'https://i.pravatar.cc/200?u=j2',history:[40,40,39,39,39],waitlist:false},
+  {id:3,name:'Priya Sharma',email:'priya@passpal.ai',post:'M14',area:'Fallowfield',dist:3.8,tx:['Manual'],gender:'Female',quals:['ADI'],types:['Standard','Beginner','Refresher'],support:['BSL / Deaf Support','Autism Friendly'],rate:29,passRate:86,yrs:6,rating:4.7,reviews:54,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-3748291',dvsaExpiry:'November 2026',tier:'Verified',avail:'Available',bio:'BSL-trained and autism-friendly. Clear, structured lessons with no surprises.',avatar:'https://i.pravatar.cc/200?u=p3',history:[31,30,30,29,29],waitlist:false},
+  {id:4,name:'Tom Barker',email:'tom@passpal.ai',post:'M20',area:'Didsbury',dist:5.6,tx:['Automatic','Manual'],gender:'Male',quals:['ADI','Pass Plus Registered','Motorbike Certified'],types:['Standard','Pass Plus','Motorbike','Refresher'],support:['Adapted Vehicle'],rate:45,passRate:89,yrs:14,rating:4.8,reviews:231,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-0928471',dvsaExpiry:'September 2025',tier:'Premium',avail:'Full',bio:'14 years. Cars, motorbikes, adaptive driving. Fully adapted dual-control vehicle available.',avatar:'https://i.pravatar.cc/200?u=t4',history:[46,46,45,45,45],waitlist:true},
+  {id:5,name:'David Nkosi',email:'david@passpal.ai',post:'M8',area:'Moston',dist:6.2,tx:['Manual'],gender:'Male',quals:['PDI'],types:['Standard','Beginner'],support:[],rate:24,passRate:78,yrs:2,rating:4.3,reviews:18,verified:false,dvsaStatus:'Pending',dvsaLicence:null,dvsaExpiry:null,tier:'Free',avail:'Available',bio:'Budget lessons, flexible schedule. Evenings and weekends available.',avatar:'https://i.pravatar.cc/200?u=d5',history:[25,25,24,24,24],waitlist:false},
+  {id:6,name:'Claire Hughes',email:'claire@passpal.ai',post:'M16',area:'Stretford',dist:4.1,tx:['Automatic','Manual'],gender:'Female',quals:['ADI','Intensive Course Specialist'],types:['Intensive','Beginner','Standard'],support:['Anxious Drivers'],rate:36,passRate:93,yrs:9,rating:4.8,reviews:142,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-5647382',dvsaExpiry:'January 2027',tier:'Premium',avail:'Available',bio:'Intensive specialist. Zero to licence in 10 days with a 93% pass rate.',avatar:'https://i.pravatar.cc/200?u=c6',history:[38,37,37,36,36],waitlist:false},
+  {id:7,name:'Ryan Casey',email:'ryan@passpal.ai',post:'M21',area:'Chorlton',dist:4.8,tx:['Manual','Automatic'],gender:'Male',quals:['ADI'],types:['Standard','Refresher'],support:[],rate:33,passRate:84,yrs:7,rating:4.6,reviews:89,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-8374629',dvsaExpiry:'August 2026',tier:'Verified',avail:'Available',bio:'Calm, methodical approach. Most learners pass within 35 hours.',avatar:'https://i.pravatar.cc/200?u=r7',history:[35,34,34,33,33],waitlist:false},
+  {id:8,name:'Aisha Rahman',email:'aisha@passpal.ai',post:'M13',area:'Longsight',dist:2.9,tx:['Manual','Automatic'],gender:'Female',quals:['ADI'],types:['Standard','Beginner','Intensive'],support:['ADHD Friendly','Anxious Drivers'],rate:31,passRate:88,yrs:5,rating:4.7,reviews:67,verified:true,dvsaStatus:'Verified',dvsaLicence:'ADI-2938471',dvsaExpiry:'April 2027',tier:'Verified',avail:'Available',bio:'ADHD-friendly structured lessons. 88% pass rate.',avatar:'https://i.pravatar.cc/200?u=a8',history:[33,32,32,31,31],waitlist:false},
+  {id:9,name:'Demo Instructor',email:'instructor@passpal.ai',post:'M2',area:'Manchester City',dist:1.8,tx:['Automatic'],gender:'Any',quals:['ADI'],types:['Standard','Refresher'],support:[],rate:33,passRate:82,yrs:5,rating:4.5,reviews:45,verified:false,dvsaStatus:'Unverified',dvsaLicence:null,dvsaExpiry:null,tier:'Free',avail:'Available',bio:'Demo account. Sign in as instructor@passpal.ai / password to explore the portal.',avatar:'https://i.pravatar.cc/200?u=x9',history:[34,34,33,33,33],waitlist:false},
+];
+
+const LEARNERS=[{id:1,name:'Alex Doe',email:'alex@passpal.ai',emailVerified:true,postcode:'M1 1AA',supportNeeds:['Anxious Drivers']}];
+const THEORY=[
+  {id:'signs',name:'Road Signs',progress:65,questions:[
+    {id:1,text:'What does a circular sign with a red border indicate?',opts:['Warning','Information','Orders — must not do','Direction'],correct:2,explain:'Circular signs with red borders give mandatory orders — things you must not do.'},
+    {id:2,text:'What shape is the UK STOP sign?',opts:['Triangle','Circle','Square','Octagon'],correct:3,explain:'The octagonal shape makes STOP uniquely recognisable even if text is obscured.'},
+    {id:3,text:'A triangular sign means…',opts:['Warning ahead','Give way','Info only','No entry'],correct:0,explain:'Triangular signs warn of hazards ahead. Slow down and be prepared.'},
+  ]},
+  {id:'hazard',name:'Hazard Perception',progress:80,questions:[
+    {id:4,text:'When should you use the two-second rule?',opts:['Wet weather only','Checking mirrors','Safe following distance','Motorways only'],correct:2,explain:'Two-second rule ensures safe following distance in dry conditions. Double it when wet.'},
+    {id:5,text:'A ball rolls into the road ahead. What do you do?',opts:['Speed up','Swerve','Prepare to stop','Sound horn'],correct:2,explain:'A ball often means a child may follow. Always be prepared to stop.'},
+  ]},
+  {id:'vehicle',name:'Vehicle Handling',progress:40,questions:[{id:6,text:'Correct hand position on the steering wheel?',opts:["12 o'clock",'10 and 2','9 and 3','8 and 4'],correct:2,explain:'9 and 3 keeps hands away from the airbag zone.'}]},
+  {id:'motorway',name:'Motorway Driving',progress:95,questions:[{id:7,text:'National speed limit on a UK motorway?',opts:['60 mph','70 mph','80 mph','No limit'],correct:1,explain:'70 mph national limit. Smart motorways vary — check overhead signs.'}]},
+  {id:'vulnerable',name:'Vulnerable Road Users',progress:55,questions:[{id:8,text:'Minimum clearance when overtaking a cyclist?',opts:['0.5m','1m','1.5m','2m'],correct:2,explain:'Highway Code recommends at least 1.5m when overtaking a cyclist.'}]},
+];
+const MOCK_QS=THEORY.flatMap(t=>t.questions);
+const PROG={theoryProgress:78,scoreTrend:5,lessonsCompleted:8,avgSaving:5.20,passLikelihood:85,mockLeft:3,recommended:['Hazard Perception','Road Signs','Vulnerable Road Users']};
+const ADMIN={learners:1847,instructors:312,premium:94,mrr:1220.06,comparisons:247,conversion:31,tickets:6};
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────
+const Stars=({r,size=14})=><span className="stars">{Array.from({length:5},(_,i)=><span key={i} style={{opacity:i<Math.floor(r)?1:i<r?.5:.18,color:'var(--amber)',fontSize:size}}>{I.star}</span>)}</span>;
+const Bench=({rate,avg})=>{const d=rate-avg;if(d<=-3)return<span className="bench b-below">↓ £{Math.abs(d)} below avg</span>;if(d>=3)return<span className="bench b-above">↑ £{d} above avg</span>;return<span className="bench b-avg">Near avg</span>;};
+const Trend=({h})=>{if(!h||h.length<2)return null;const d=h[h.length-1]-h[0];if(d===0)return<span style={{fontSize:'var(--txs)',color:'var(--text3)'}}>Stable</span>;return d<0?<span style={{fontSize:'var(--txs)',color:'var(--green)',display:'flex',alignItems:'center',gap:4}}>{I.trendDn} £{Math.abs(d)} cheaper than 4 weeks ago</span>:<span style={{fontSize:'var(--txs)',color:'var(--red)',display:'flex',alignItems:'center',gap:4}}>{I.trending} £{d} more expensive now</span>;};
+const AvailDot=({s})=>{const c=s==='Available'?'var(--green)':s==='Limited'?'var(--amber)':'var(--red)';return<span style={{width:7,height:7,borderRadius:'50%',background:c,boxShadow:s==='Available'?`0 0 5px ${c}`:'none',flexShrink:0,display:'inline-block'}}/>;};
+const DvsaBadge=({status})=>{if(status==='Verified')return<span className="dvsa-verified">{I.dvsa} DVSA Verified</span>;if(status==='Pending')return<span className="dvsa-pending">{I.dvsa} Verification Pending</span>;return<span className="dvsa-unverified">{I.shield} Not Verified</span>;};
+
+const Modal=({open,onClose,title,children,footer})=>{if(!open)return null;return<div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}><div className="modal"><div className="modal-hd"><span className="modal-title">{title}</span><button className="mclose" onClick={onClose}>{I.x}</button></div><div className="modal-bd">{children}</div>{footer&&<div className="modal-ft">{footer}</div>}</div></div>;};
+
+// Skeleton card
+const SkeletonCard=()=><div className="inst-card-m" style={{padding:16}}>
+  <div style={{display:'flex',gap:12,marginBottom:12}}>
+    <div className="skeleton" style={{width:52,height:52,borderRadius:'50%'}}/>
+    <div style={{flex:1}}><div className="skeleton" style={{height:16,width:'60%',marginBottom:8}}/><div className="skeleton" style={{height:12,width:'40%'}}/></div>
+  </div>
+  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:1}}>
+    {[0,1,2].map(i=><div key={i} className="skeleton" style={{height:60,borderRadius:4}}/>)}
+  </div>
+</div>;
+
+// ─── DVSA MOCK SERVICE ─────────────────────────────────────────────────────
+const mockDvsaCheck=async(licenceNo)=>{
+  await new Promise(r=>setTimeout(r,2200));
+  // Simulate DVSA register lookup
+  const valid=licenceNo&&licenceNo.length>=8;
+  if(!valid)return{success:false,error:'Licence number not found in DVSA register.'};
+  return{success:true,status:'Verified',licenceNo,expiryDate:'March 2027',grade:'Grade A',testCentre:'Manchester',registered:'2019-06-12'};
+};
+
+// Mock email relay
+const sendEmailRelay=async(to,subject,body)=>{
+  await new Promise(r=>setTimeout(r,800));
+  console.log(`[EMAIL RELAY] To: ${to} | Subject: ${subject} | Body: ${body.slice(0,80)}...`);
+  return{success:true,messageId:`relay-${Date.now()}`};
+};
+
+// ─── HEADER ───────────────────────────────────────────────────────────────
+const Header=({view,onNav,learner,onLogout,inst,onInstOut,logoClicks,setLC})=>{
+  const logo=()=>{const n=logoClicks+1;setLC(n);if(n>=5){onNav('adminLogin');setLC(0);}else onNav('home');};
+  return<div id="hdr">
+    <div className="wrap hdr-inner">
+      <div className="logo" onClick={logo}>
+        <span className="logo-t">PassPal</span>
+        <span className="logo-b">Compare</span>
+      </div>
+      <nav className="nav-d">
+        {[{v:'compare',l:'Compare'},{v:'theoryPractice',l:'Theory'},{v:'instructorInfo',l:'For Instructors'}].map(({v,l})=>
+          <button key={v} className={`nav-btn${view===v?' on':''}`} onClick={()=>onNav(v)}>{l}</button>
+        )}
+        <span className="nav-sep"/>
+        {learner?<>
+          <button className="nav-btn" onClick={()=>onNav('dashboard')}>Hi, {learner.name.split(' ')[0]}</button>
+          <button className="btn btn-ghost btn-sm" onClick={onLogout}>Sign out</button>
+        </>:inst?<>
+          <button className="nav-btn" onClick={()=>onNav('instructorPortal')}>Portal</button>
+          <button className="btn btn-ghost btn-sm" onClick={onInstOut}>Sign out</button>
+        </>:<>
+          <button className="btn btn-ghost btn-sm" onClick={()=>onNav('learnerLogin')}>Sign in</button>
+          <button className="btn btn-p btn-sm" onClick={()=>onNav('compare')}>Compare free</button>
+        </>}
+      </nav>
+    </div>
+  </div>;
+};
+
+// ─── BOTTOM NAV ───────────────────────────────────────────────────────────
+const BottomNav=({view,onNav,learner,inst})=>{
+  if(inst||!learner&&['instructorPortal','adminDashboard','adminLogin'].includes(view))return null;
+  const items=learner
+    ?[{v:'home',l:'Home',ic:I.home},{v:'compare',l:'Compare',ic:I.compare},{v:'theoryPractice',l:'Theory',ic:I.book},{v:'dashboard',l:'Progress',ic:I.chart},{v:'messages',l:'Messages',ic:I.msg}]
+    :[{v:'home',l:'Home',ic:I.home},{v:'compare',l:'Compare',ic:I.compare},{v:'theoryPractice',l:'Theory',ic:I.book},{v:'learnerLogin',l:'Sign in',ic:I.users}];
+  return<div id="bnav">
+    {items.map(({v,l,ic})=><button key={v} className={`bnav-item${view===v?' on':''}`} onClick={()=>onNav(v)}>{ic}<span>{l}</span></button>)}
+  </div>;
+};
+
+// ─── HOME ─────────────────────────────────────────────────────────────────
+const Home=({onNav,onSearch})=>{
+  const [pc,setPc]=useState('');
+  const [exp,setExp]=useState('Complete Beginner');
+  const [tx,setTx]=useState('Any');
+  const go=e=>{e.preventDefault();if(pc.trim())onSearch({postcode:pc,exp,tx,type:'Any'});else onSearch({postcode:'Manchester',exp,tx,type:'Any'});};
+
+  return<>
+    <div className="hero">
+      <div className="wrap" style={{position:'relative',zIndex:1}}>
+        <div className="eyebrow afu"><span className="eyebrow-dot"/><span className="eyebrow-t">UK's driving instructor price comparison</span></div>
+        <h1 className="afu d1">Compare.<br/><span className="ac">Save £360.</span><br/><span className="dm">Pass first time.</span></h1>
+        <p className="hero-sub afu d2">See <strong>real prices</strong>, total costs, and pass rates for every instructor near you. No calls.</p>
+
+        <div className="msearch afu d3">
+          {/* Mobile: single postcode + button */}
+          <div className="msearch-row" style={{marginBottom:'var(--sp3)'}}>
+            <div style={{flex:1}}>
+              <div className="msearch-label">Your postcode</div>
+              <input className="hinput" value={pc} onChange={e=>setPc(e.target.value)} placeholder="e.g. M1 1AA" onKeyDown={e=>e.key==='Enter'&&go(e)}/>
+            </div>
+          </div>
+          <div className="msearch-row" style={{marginBottom:0}}>
+            <div style={{flex:1}}>
+              <div className="msearch-label">Experience</div>
+              <select className="hinput" value={exp} onChange={e=>setExp(e.target.value)}>
+                {Object.keys(HOURS).map(x=><option key={x}>{x}</option>)}
+              </select>
+            </div>
+            <div style={{flex:1}}>
+              <div className="msearch-label">Transmission</div>
+              <select className="hinput" value={tx} onChange={e=>setTx(e.target.value)}>
+                {['Any','Manual','Automatic'].map(x=><option key={x}>{x}</option>)}
+              </select>
+            </div>
+          </div>
+          <button className="btn btn-p btn-full btn-lg" style={{marginTop:'var(--sp4)'}} onClick={go}>{I.search} Compare instructors</button>
+
+          {/* Desktop: 4-col grid */}
+          <div className="msearch-grid" style={{display:'none'}}>
+            <div><div className="msearch-label">Postcode</div><input className="hinput" value={pc} onChange={e=>setPc(e.target.value)} placeholder="e.g. M1 1AA"/></div>
+            <div><div className="msearch-label">Experience</div><select className="hinput" value={exp} onChange={e=>setExp(e.target.value)}>{Object.keys(HOURS).map(x=><option key={x}>{x}</option>)}</select></div>
+            <div><div className="msearch-label">Transmission</div><select className="hinput" value={tx} onChange={e=>setTx(e.target.value)}>{['Any','Manual','Automatic'].map(x=><option key={x}>{x}</option>)}</select></div>
+            <button type="button" className="qe-btn" onClick={go}>{I.search} Compare</button>
+          </div>
+
+          <div className="trust-row">
+            {['Free forever','No account needed','Updated weekly'].map(x=><span key={x} className="trust-item"><span style={{color:'var(--green)'}}>{I.check}</span>{x}</span>)}
+            <span className="sp-wrap">
+              <span className="sp-avs">{['?u=s1','?u=j2','?u=p3'].map(u=><img key={u} loading="lazy" src={`https://i.pravatar.cc/40${u}`} alt=""/>)}</span>
+              43 today
+            </span>
+          </div>
+        </div>
+
+        <div className="hstats afu d4">
+          {[['£360','average saving'],['94%','premium pass rate'],['40K+','instructors'],['4.9','rating']].map(([n,l])=><div key={l}><div className="hstat-n">{n}</div><div className="hstat-l">{l}</div></div>)}
+        </div>
+      </div>
+    </div>
+
+    <div style={{background:'var(--bg)',padding:'48px 0'}}>
+      <div className="wrap">
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:16,marginBottom:48}}>
+          {[{ic:I.pound,c:'amber',t:'Total cost calculator',d:"We show your estimated total cost to pass — not just the hourly rate. See the real number before you pick up the phone."},
+            {ic:I.award,c:'blue',t:'PassScore',d:"Price + pass rate + rating in one transparent number. The best value isn't always the cheapest."},
+            {ic:I.tag,c:'green',t:'Regional benchmarks',d:"See instantly if an instructor is above or below the going rate for your postcode. Know a bargain when you see one."}
+          ].map(({ic,c,t,d})=><div key={t} className="card-s card-h" style={{padding:'var(--sp6)'}}><div style={{color:`var(--${c})`,marginBottom:12,width:22,height:22}}>{ic}</div><h3 style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:8,letterSpacing:'-.01em'}}>{t}</h3><p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.7}}>{d}</p></div>)}
+        </div>
+
+        <div className="card-s" style={{padding:'var(--sp8)',background:'var(--bg1)',marginBottom:48,borderRadius:'var(--r2xl)'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:32,alignItems:'center'}}>
+            <div>
+              <div style={{fontSize:'var(--txs)',fontWeight:800,color:'var(--text3)',letterSpacing:'.07em',textTransform:'uppercase',marginBottom:10}}>Built for every learner</div>
+              <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:12,lineHeight:1.1}}>Accessibility filters<br/>nobody else has.</h2>
+              <p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.75,marginBottom:20}}>The only UK comparison site with dedicated filters for ADHD-friendly, BSL/Deaf support, autism-friendly, and adapted vehicle instructors.</p>
+              <button className="btn btn-g" onClick={()=>onNav('compare')}>Find a specialist {I.aR}</button>
+            </div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:10,alignContent:'center'}}>
+              {['ADHD Friendly','BSL / Deaf Support','Adapted Vehicle','Autism Friendly','Anxious Drivers'].map(s=><span key={s} className="chip ch-navy" style={{padding:'8px 14px',fontSize:'var(--tsm)'}}>{s}</span>)}
+            </div>
+          </div>
+        </div>
+
+        <div style={{textAlign:'center',marginBottom:32}}>
+          <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:8}}>How it works</h2>
+          <p style={{color:'var(--text2)',fontSize:'var(--tsm)'}}>30 seconds. No account. No commitment.</p>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:16}}>
+          {[{n:'01',t:'Enter postcode & experience',d:'30 seconds. No login needed.'},
+            {n:'02',t:'See every local instructor ranked',d:'Cheapest first, or by PassScore.'},
+            {n:'03',t:'Compare total cost & pass rate',d:'All data on one screen.'},
+            {n:'04',t:'Book directly with no fees',d:'No commission. No middleman.'},
+          ].map(({n,t,d})=><div key={n} style={{textAlign:'center',padding:'8px 12px'}}>
+            <div style={{fontFamily:'inherit',fontSize:11,fontWeight:800,color:'var(--blue)',letterSpacing:'.1em',marginBottom:12}}>{n}</div>
+            <h4 style={{fontSize:'var(--tsm)',fontWeight:700,marginBottom:6,lineHeight:1.4}}>{t}</h4>
+            <p style={{fontSize:'var(--txs)',color:'var(--text3)',lineHeight:1.6}}>{d}</p>
+          </div>)}
+        </div>
+      </div>
+    </div>
+    <style>{`@media(min-width:640px){.msearch-grid{display:grid!important}.msearch-row{display:none!important}}`}</style>
+  </>;
+};
+
+// ─── COMPARISON PAGE ──────────────────────────────────────────────────────
+const ComparePage=({insts,sp,isGuest,onNav,onProfile,onBook,onWaitlist})=>{
+  const [sort,setSort]=useState('passscore');
+  const [verOnly,setVerOnly]=useState(false);
+  const [maxRate,setMaxRate]=useState(60);
+  const [tx,setTx]=useState(sp?.tx||'Any');
+  const [gender,setGender]=useState('Any');
+  const [ltype,setLtype]=useState(sp?.type||'Any');
+  const [specs,setSpecs]=useState([]);
+  const [evPref,setEvPref]=useState(false);
+  const [expanded,setExpanded]=useState(null);
+  const [sheetOpen,setSheetOpen]=useState(false);
+  const [loading,setLoading]=useState(true);
+
+  const exp=sp?.exp||'Complete Beginner';
+  const pc=sp?.postcode||'Manchester';
+  const hrs=HOURS[exp]||47;
+  const ravg=RAVG(pc);
+
+  useEffect(()=>{const t=setTimeout(()=>setLoading(false),700);return()=>clearTimeout(t);},[sp]);
+  const toggleSpec=s=>setSpecs(p=>p.includes(s)?p.filter(x=>x!==s):[...p,s]);
+  const resetFilters=()=>{setTx('Any');setGender('Any');setLtype('Any');setVerOnly(false);setMaxRate(60);setSpecs([]);setEvPref(false);};
+
+  const results=useMemo(()=>{
+    let r=insts.filter(i=>{
+      return(tx==='Any'||i.tx.includes(tx))
+        &&(gender==='Any'||i.gender===gender)
+        &&(ltype==='Any'||i.types.includes(ltype))
+        &&(!verOnly||i.verified)
+        &&i.rate<=maxRate
+        &&(specs.length===0||specs.every(s=>i.support.includes(s)))
+        &&(!evPref||['Tesla','EV','Corsa-e','electric','hybrid'].some(k=>i.area.includes(k)||JSON.stringify(i).toLowerCase().includes(k.toLowerCase())));
+    }).map(i=>{
+      const total=i.rate*hrs;
+      const ps=Math.max(0,Math.min(100,100-((i.rate-20)/50)*100));
+      const rs=(i.rating/5)*100;
+      const passScore=Math.round(ps*.4+rs*.3+i.passRate*.3);
+      return{...i,total,passScore};
+    });
+    switch(sort){
+      case 'rate':  return r.sort((a,b)=>a.rate-b.rate);
+      case 'total': return r.sort((a,b)=>a.total-b.total);
+      case 'pass':  return r.sort((a,b)=>b.passRate-a.passRate);
+      case 'rating':return r.sort((a,b)=>b.rating-a.rating);
+      default:      return r.sort((a,b)=>b.passScore-a.passScore);
+    }
+  },[insts,tx,gender,ltype,verOnly,maxRate,specs,sort,hrs,evPref]);
+
+  const maxSave=results.length>1?results[results.length-1].total-results[0].total:0;
+  const specOpts=['Anxious Drivers','ADHD Friendly','BSL / Deaf Support','Autism Friendly','Adapted Vehicle'];
+
+  const FilterContent=()=><>
+    <div className="fblock">
+      <div className="ftitle">Max hourly rate</div>
+      <input type="range" min={20} max={80} value={maxRate} onChange={e=>setMaxRate(+e.target.value)}/>
+      <div style={{display:'flex',justifyContent:'space-between',fontSize:'var(--txs)',color:'var(--text3)',marginTop:8}}><span>£20</span><strong style={{color:'var(--blue)'}}>£{maxRate}/hr</strong></div>
+    </div>
+    {[{t:'Transmission',opts:['Any','Manual','Automatic'],v:tx,s:setTx},{t:'Lesson type',opts:['Any','Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'],v:ltype,s:setLtype},{t:'Gender',opts:['Any','Male','Female'],v:gender,s:setGender}].map(({t,opts,v,s})=><div key={t} className="fblock">
+      <div className="ftitle">{t}</div>
+      <select className="select" value={v} onChange={e=>s(e.target.value)}>{opts.map(o=><option key={o}>{o}</option>)}</select>
+    </div>)}
+    <div className="fblock">
+      <div className="ftitle">Specialist support</div>
+      {specOpts.map(s=><label key={s} style={{display:'flex',alignItems:'center',gap:8,marginBottom:10,cursor:'pointer',color:'var(--text2)',fontWeight:400,fontSize:'var(--tsm)'}}>
+        <input type="checkbox" style={{width:16,height:16,accentColor:'var(--blue)'}} checked={specs.includes(s)} onChange={()=>toggleSpec(s)}/>{s}
+      </label>)}
+    </div>
+    <div className="tog-row fblock">
+      <span style={{fontWeight:700,fontSize:'var(--tsm)'}}>Verified only</span>
+      <label className="tog"><input type="checkbox" checked={verOnly} onChange={e=>setVerOnly(e.target.checked)}/><span className="tog-track"/></label>
+    </div>
+    <div className="tog-row">
+      <span style={{fontWeight:700,fontSize:'var(--tsm)'}}>EV / hybrid vehicle</span>
+      <label className="tog"><input type="checkbox" checked={evPref} onChange={e=>setEvPref(e.target.checked)}/><span className="tog-track"/></label>
+    </div>
+  </>;
+
+  return<>
+    <div className="ctool">
+      <div className="wrap ctool-inner">
+        <div className="rcount"><strong>{results.length}</strong> instructors in {pc}{maxSave>0&&<> · <span className="save-pill">{I.zap} Save up to £{Math.round(maxSave)}</span></>}</div>
+        <div className="pills">
+          {[{v:'passscore',l:'PassScore'},{v:'rate',l:'Cheapest/hr'},{v:'total',l:'Lowest total'},{v:'pass',l:'Pass rate'},{v:'rating',l:'Top rated'}].map(({v,l})=><button key={v} className={`pill${sort===v?' on':''}`} onClick={()=>setSort(v)}>{l}</button>)}
+        </div>
+      </div>
+    </div>
+
+    <div className="wrap" style={{paddingTop:20,paddingBottom:20}}>
+      <div style={{display:'grid',gridTemplateColumns:'220px 1fr',gap:20,alignItems:'start'}}>
+        {/* Desktop sidebar */}
+        <aside className="sidebar">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+            <span style={{fontWeight:800,fontSize:'var(--tmd)'}}>Filters</span>
+            <button className="btn btn-ghost btn-sm" onClick={resetFilters}>Reset</button>
+          </div>
+          <FilterContent/>
+        </aside>
+
+        {/* Results */}
+        <div>
+          {/* Desktop col headers */}
+          <div className="col-labels-d" style={{display:'grid',gridTemplateColumns:'48px 1fr 140px 152px 140px 168px',marginBottom:6,paddingLeft:0}}>
+            <div/><div/>
+            {['Hourly rate','Est. total','Pass rate','PassScore'].map(h=><div key={h} style={{textAlign:'center',fontSize:'var(--txs)',fontWeight:700,color:'var(--text4)',textTransform:'uppercase',letterSpacing:'.06em',padding:'0 8px'}}>{h}</div>)}
+          </div>
+
+          {loading
+            ?[0,1,2].map(i=><SkeletonCard key={i}/>)
+            :results.length===0
+            ?<div className="card-s" style={{padding:40,textAlign:'center'}}><div style={{color:'var(--text3)',marginBottom:14}}>{I.search}</div><h3 style={{fontWeight:800,marginBottom:8}}>No instructors match</h3><p style={{color:'var(--text2)',fontSize:'var(--tsm)'}}>Try adjusting filters or raising max price.</p></div>
+            :results.map((inst,idx)=>{
+              const locked=isGuest&&idx>=3;
+              const isTop=idx===0;
+              const ps=inst.passScore;
+              const pc_=ps>=85?'var(--green)':ps>=70?'var(--blue)':ps>=55?'var(--amber)':'var(--red)';
+              const pCls=inst.rate<=ravg-3?'cm-green':inst.rate>=ravg+3?'cm-red':'cm-muted';
+              const pClsD=inst.rate<=ravg-3?'met-green':inst.rate>=ravg+3?'met-red':'met-muted';
+              const saving=results.length>1?results[results.length-1].total-inst.total:0;
+              const isExp=expanded===inst.id;
+              const expandPanel=isExp&&<div className="expand-panel">
+                <div><div className="exp-title">Price trend</div><div className="mini-bars">{inst.history.map((p,i)=><div key={i} className={`mini-bar${i===inst.history.length-1?' now':''}`} style={{height:`${((p-20)/50)*100}%`,minHeight:4}}/>)}</div><Trend h={inst.history}/></div>
+                <div><div className="exp-title">Score breakdown</div>{[{l:'Price score',v:Math.round(Math.max(0,Math.min(100,100-((inst.rate-20)/50)*100)))},{l:'Rating score',v:Math.round((inst.rating/5)*100)},{l:'Pass rate',v:inst.passRate}].map(({l,v})=><div key={l} style={{marginBottom:8}}><div style={{display:'flex',justifyContent:'space-between',fontSize:'var(--txs)',marginBottom:3}}><span style={{color:'var(--text2)'}}>{l}</span><strong>{v}</strong></div><div className="prog"><div className="prog-fill" style={{width:`${v}%`}}/></div></div>)}</div>
+                <div><div className="exp-title">Lesson types</div><div style={{display:'flex',gap:5,flexWrap:'wrap',marginBottom:12}}>{inst.types.map(l=><span key={l} className="chip ch-blue">{l}</span>)}</div><div className="exp-title">Transmission</div><div style={{display:'flex',gap:5}}>{inst.tx.map(t=><span key={t} className="chip ch-gray">{t}</span>)}</div></div>
+                <div><div className="exp-title">About</div><p style={{fontSize:'var(--txs)',color:'var(--text2)',lineHeight:1.65,marginBottom:8}}>{inst.bio}</p>{inst.support.length>0&&<><div className="exp-title">Support</div><div style={{display:'flex',gap:5,flexWrap:'wrap'}}>{inst.support.map(s=><span key={s} className="chip ch-green">{s}</span>)}</div></>}</div>
+              </div>;
+
+              // Mobile card
+              const mobileCard=<div className={`inst-card-m${isTop&&sort==='passscore'?' featured':''} ${isTop&&sort==='rate'?' best':''}`} onClick={()=>!locked&&setExpanded(isExp?null:inst.id)}>
+                {isTop&&sort==='passscore'&&<div className="card-banner cb-blue">Best PassScore in your area</div>}
+                {isTop&&sort==='rate'&&<div className="card-banner cb-green">Cheapest hourly rate</div>}
+                <div className="card-head">
+                  <img src={inst.avatar} alt={inst.name} className="card-avatar" loading="lazy"/>
+                  <div className="card-info">
+                    <div className="card-name">{inst.name}</div>
+                    <div className="card-meta">
+                      <Stars r={inst.rating}/><span style={{fontWeight:700}}>{inst.rating}</span><span>({inst.reviews})</span>
+                      {inst.passRate>=90&&<span className="exc-badge">{I.award} 90%+ pass</span>}
+                    </div>
+                    <div className="card-chips">
+                      <span style={{fontSize:'var(--txs)',color:'var(--text3)',display:'flex',alignItems:'center',gap:3}}>{I.pin} {inst.area} · {inst.dist.toFixed(1)}mi</span>
+                      <span style={{display:'flex',alignItems:'center',gap:4,fontSize:'var(--txs)',color:'var(--text3)'}}><AvailDot s={inst.avail}/>{inst.avail}</span>
+                      {inst.tier==='Premium'&&<span className="spons">SPONSORED</span>}
+                    </div>
+                  </div>
+                </div>
+                <div className="card-metrics">
+                  <div className={`cm-cell ${pCls}`}><div className="cm-big">£{inst.rate}</div><div className="cm-lbl">per hour</div><Bench rate={inst.rate} avg={ravg}/></div>
+                  <div className="cm-cell cm-blue"><div className="cm-big" style={{fontSize:'clamp(14px,4vw,20px)'}}>£{inst.total.toLocaleString()}</div><div className="cm-lbl">est. total</div><div className="cm-sub">{hrs}h × £{inst.rate}</div></div>
+                  <div className="cm-cell" style={{position:'relative'}}><div className="ps-n" style={{color:pc_}}>{ps}</div><div className="cm-lbl">PassScore</div><div className="ps-bar"><div className="ps-fill" style={{width:`${ps}%`,background:pc_}}/></div></div>
+                </div>
+                <div className="card-actions">
+                  <button className="btn btn-p btn-full btn-sm" onClick={e=>{e.stopPropagation();inst.avail==='Full'?onWaitlist(inst):onBook(inst);}}>
+                    {inst.avail==='Full'?'Join waitlist':'Book lesson'}
+                  </button>
+                  <button className="btn btn-ghost btn-sm" onClick={e=>{e.stopPropagation();onProfile(inst.id);}}>Profile</button>
+                </div>
+                {expandPanel}
+              </div>;
+
+              // Desktop row
+              const desktopRow=<div className={`inst-row-d${isTop&&sort==='passscore'?' featured':''} ${isTop&&sort==='rate'?' best':''}`} onClick={()=>setExpanded(isExp?null:inst.id)}>
+                {isTop&&sort==='passscore'&&<div className="card-banner cb-blue">Best PassScore in your area</div>}
+                {isTop&&sort==='rate'&&<div className="card-banner cb-green">Cheapest hourly rate</div>}
+                <div className="row-grid">
+                  <div className={`rank-c${idx<3?` r${idx+1}`:''}`}><span className="rank-n">#{idx+1}</span></div>
+                  <div className="info-c">
+                    <img src={inst.avatar} alt={inst.name} className="d-avatar" loading="lazy"/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div className="d-name">{inst.name}</div>
+                      <div className="d-meta"><Stars r={inst.rating}/><span style={{fontWeight:700}}>{inst.rating}</span><span>({inst.reviews})</span>{inst.passRate>=90&&<span className="exc-badge">{I.award} 90%+</span>}{inst.tier==='Premium'&&<span className="spons">SPONSORED</span>}</div>
+                      <div className="d-chips"><span style={{fontSize:'var(--txs)',color:'var(--text3)',display:'flex',alignItems:'center',gap:3}}>{I.pin} {inst.area} · {inst.dist.toFixed(1)}mi</span><span style={{display:'flex',alignItems:'center',gap:4,fontSize:'var(--txs)',color:'var(--text3)'}}><AvailDot s={inst.avail}/>{inst.avail}</span>{saving>80&&<span className="chip ch-green">Save £{Math.round(saving)}</span>}</div>
+                    </div>
+                  </div>
+                  <div className={`met-c ${pClsD}`}><div className="met-big">£{inst.rate}</div><div className="met-lbl">per hour</div><Bench rate={inst.rate} avg={ravg}/></div>
+                  <div className="met-c met-blue"><div className="met-big" style={{fontSize:'clamp(15px,1.8vw,20px)'}}>£{inst.total.toLocaleString()}</div><div className="met-lbl">est. total</div><div className="met-sub">{hrs} hrs × £{inst.rate}</div></div>
+                  <div className={`met-c ${inst.passRate>=90?'met-green':inst.passRate>=80?'met-muted':'met-amber'}`}><div className="met-big">{inst.passRate}%</div><div className="met-lbl">pass rate</div><div className="met-sub">UK avg 47%</div></div>
+                  <div className="act-c">
+                    <div style={{textAlign:'center'}}><div className="ps-n" style={{color:pc_}}>{ps}</div><div style={{fontSize:'var(--txs)',fontWeight:800,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:2}}>PassScore</div><div className="ps-bar"><div className="ps-fill" style={{width:`${ps}%`,background:pc_}}/></div></div>
+                    <button className="btn btn-p btn-sm btn-full" style={{fontSize:11}} onClick={e=>{e.stopPropagation();inst.avail==='Full'?onWaitlist(inst):onBook(inst);}}>{inst.avail==='Full'?'Waitlist':'Book lesson'}</button>
+                    <button className="btn btn-ghost btn-sm btn-full" style={{fontSize:11}} onClick={e=>{e.stopPropagation();onProfile(inst.id);}}>Full profile</button>
+                  </div>
+                </div>
+                {expandPanel}
+              </div>;
+
+              if(locked) return<div key={`gate-${inst.id}`} className="gate-wrap">
+                <div className="gate-blur">{mobileCard}{desktopRow}</div>
+                <div className="gate-panel"><div style={{color:'var(--text3)',marginBottom:10,display:'flex',justifyContent:'center'}}>{I.lock}</div><div className="gate-h">See all {results.length}</div><p className="gate-sub">Sign up free to unlock the full comparison.</p><button className="btn btn-p btn-full btn-lg" onClick={()=>onNav('learnerSignup')}>Unlock all — free</button><p style={{fontSize:'var(--txs)',color:'var(--text4)',marginTop:10}}>No card. 30 seconds.</p></div>
+              </div>;
+
+              return<React.Fragment key={inst.id}>{mobileCard}{desktopRow}</React.Fragment>;
+            })
+          }
+
+          {!loading&&results.length>0&&<div style={{marginTop:16,padding:'12px 16px',background:'var(--bg1)',border:'1px solid var(--border)',borderRadius:'var(--r)',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:10}}>
+            <span style={{fontSize:'var(--txs)',color:'var(--text3)'}}>Results include sponsored placements. Pass rates self-reported.</span>
+            <button onClick={()=>onNav('rankingMethod')} style={{background:'none',border:'none',color:'var(--blue)',fontSize:'var(--txs)',fontWeight:700,cursor:'pointer',textDecoration:'underline'}}>How we rank</button>
+          </div>}
+        </div>
+      </div>
+    </div>
+
+    {/* Mobile filter FAB */}
+    <button className="filter-btn-mobile" onClick={()=>setSheetOpen(true)}>{I.filter} Filters {specs.length+(!verOnly?0:1)>0&&<span style={{background:'var(--blue)',color:'#fff',borderRadius:'50%',width:18,height:18,display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800}}>{specs.length+(!verOnly?0:1)}</span>}</button>
+
+    {/* Filter bottom sheet */}
+    {sheetOpen&&<>
+      <div className="sheet-overlay" onClick={()=>setSheetOpen(false)}/>
+      <div className="sheet">
+        <div className="sheet-handle"/>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+          <div className="sheet-title">Filters</div>
+          <div style={{display:'flex',gap:8}}><button className="btn btn-ghost btn-sm" onClick={resetFilters}>Reset</button><button className="btn btn-p btn-sm" onClick={()=>setSheetOpen(false)}>Apply</button></div>
+        </div>
+        <FilterContent/>
+      </div>
+    </>}
+    <style>{`@media(max-width:639px){aside{display:none}.col-labels-d{display:none}}`}</style>
+  </>;
+};
+
+// ─── INSTRUCTOR PROFILE PAGE ───────────────────────────────────────────────
+const InstProfile=({inst:i,exp,postcode,onBack,onBook,onMsg,onWaitlist,isGuest,onNav})=>{
+  const [tab,setTab]=useState('overview');
+  const hrs=HOURS[exp||'Complete Beginner']||47;
+  const total=i.rate*hrs;
+  const ravg=RAVG(postcode||'');
+  const ps=Math.round(Math.max(0,Math.min(100,100-((i.rate-20)/50)*100))*.4+(i.rating/5)*100*.3+i.passRate*.3);
+  const pc=ps>=85?'var(--green)':ps>=70?'var(--blue)':ps>=55?'var(--amber)':'var(--red)';
+  const reviews=MOCK_REVIEWS.filter(r=>r.instructorId===i.id);
+  const packages=MOCK_PACKAGES.filter(p=>p.instructorId===i.id);
+  const avail=MOCK_AVAILABILITY.find(a=>a.instructorId===i.id);
+
+  return<div className="page">
+    <div className="wrap" style={{paddingTop:'var(--sp6)',paddingBottom:120}}>
+      <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:'var(--sp5)'}}>{I.aL} Back</button>
+      <div className="card-s" style={{overflow:'hidden',borderRadius:'var(--r2xl)'}}>
+        {/* Profile hero */}
+        <div className="prof-hero">
+          <div style={{display:'flex',gap:'var(--sp6)',alignItems:'flex-start',flexWrap:'wrap'}}>
+            <img src={i.avatar} alt={i.name} style={{width:88,height:88,borderRadius:'50%',objectFit:'cover',border:'3px solid rgba(255,255,255,.15)',flexShrink:0}} loading="lazy"/>
+            <div style={{flex:1}}>
+              <div style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:12,alignItems:'flex-start'}}>
+                <div>
+                  <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:8}}>{i.name}</h1>
+                  <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:8}}>
+                    <DvsaBadge status={i.dvsaStatus}/>
+                    {i.passRate>=90&&<span className="exc-badge">{I.award} 90%+ pass rate</span>}
+                  </div>
+                </div>
+                <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+                  {[{l:'Per hour',v:`£${i.rate}`,c:'var(--amber)'},{l:'Pass rate',v:`${i.passRate}%`,c:i.passRate>=90?'var(--green)':'var(--blue)'},{l:'PassScore',v:ps,c:pc}].map(({l,v,c})=><div key={l} style={{textAlign:'center',background:'rgba(255,255,255,.06)',border:'1px solid var(--border)',borderRadius:'var(--rlg)',padding:'12px 18px',minWidth:80}}>
+                    <div style={{fontSize:24,fontWeight:900,color:c,letterSpacing:'-.02em',lineHeight:1}}>{v}</div>
+                    <div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:4,textTransform:'uppercase',letterSpacing:'.05em'}}>{l}</div>
+                  </div>)}
+                </div>
+              </div>
+              <div style={{display:'flex',gap:16,flexWrap:'wrap'}}>
+                {[i.area,`${i.yrs} years experience`].map(x=><span key={x} style={{color:'var(--text3)',fontSize:'var(--txs)'}}>{x}</span>)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Total cost banner */}
+        <div className="prof-stats">
+          <div style={{display:'flex',gap:32,alignItems:'center',flexWrap:'wrap'}}>
+            <div>
+              <div style={{fontSize:'var(--txs)',fontWeight:800,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:5}}>Estimated total cost to pass</div>
+              <div style={{display:'flex',alignItems:'baseline',gap:10}}>
+                <span style={{fontSize:'var(--t3xl)',fontWeight:900,color:'var(--blue)',letterSpacing:'-.03em',lineHeight:1}}>£{total.toLocaleString()}</span>
+                <span style={{fontSize:'var(--tsm)',color:'var(--text3)'}}>{hrs} hrs × £{i.rate}/hr</span>
+              </div>
+              <div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:4}}>Based on <em>{exp}</em> · DVSA 2023 data</div>
+            </div>
+            <div style={{width:1,height:48,background:'var(--border)'}}/>
+            <div>
+              <div style={{fontSize:'var(--txs)',fontWeight:800,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:5}}>vs. {postcode} average</div>
+              <span style={{fontSize:24,fontWeight:900,color:'var(--text2)',letterSpacing:'-.02em'}}>£{(ravg*hrs).toLocaleString()}</span>
+              {total<ravg*hrs&&<div style={{fontSize:'var(--txs)',color:'var(--green)',fontWeight:700,marginTop:3}}>£{Math.round(ravg*hrs-total)} cheaper than local average</div>}
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{display:'flex',gap:0,borderBottom:'1px solid var(--border)',overflowX:'auto'}}>
+          {[{v:'overview',l:'Overview'},{v:'reviews',l:`Reviews (${reviews.length})`},{v:'packages',l:'Packages'},{v:'availability',l:'Availability'}].map(({v,l})=><button key={v}
+            style={{padding:'12px 20px',border:'none',background:'none',color:tab===v?'var(--blue)':'var(--text2)',fontWeight:tab===v?800:500,fontSize:'var(--tsm)',cursor:'pointer',borderBottom:tab===v?'2px solid var(--blue)':'2px solid transparent',whiteSpace:'nowrap',fontFamily:'inherit',transition:'all .15s',minHeight:48}}
+            onClick={()=>setTab(v)}>{l}</button>)}
+        </div>
+
+        <div style={{padding:'var(--sp8) var(--sp6)',display:'grid',gridTemplateColumns:'1fr 280px',gap:32}}>
+          <div>
+            {tab==='overview'&&<>
+              <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>About {i.name.split(' ')[0]}</h2>
+              <p style={{color:'var(--text2)',lineHeight:1.75,marginBottom:24,fontSize:'var(--tsm)'}}>{i.bio}</p>
+              <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>Qualifications</h2>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:22}}>{i.quals.map(q=><span key={q} className="chip ch-blue" style={{padding:'5px 12px'}}>{i.verified&&<span style={{marginRight:3}}>{I.check}</span>}{q}</span>)}</div>
+              {i.support.length>0&&<><h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>Specialist support</h2><div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:22}}>{i.support.map(s=><span key={s} className="chip ch-green" style={{padding:'5px 12px'}}>{s}</span>)}</div></>}
+              {i.dvsaStatus==='Verified'&&<><h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>DVSA Verification</h2>
+              <div className="callout cal-blue" style={{marginBottom:0}}>
+                <div style={{fontWeight:700,marginBottom:4,color:'var(--blue)'}}>Independently verified via DVSA register</div>
+                <div style={{fontSize:'var(--txs)',display:'flex',flexDirection:'column',gap:4}}>
+                  <span>Licence: <strong>{i.dvsaLicence}</strong></span>
+                  <span>Expires: <strong>{i.dvsaExpiry}</strong></span>
+                </div>
+              </div></>}
+              <h2 style={{fontSize:'var(--tlg)',fontWeight:800,margin:'22px 0 12px'}}>Price history</h2>
+              <div className="mini-bars" style={{height:48,marginBottom:8}}>{i.history.map((p,ii)=><div key={ii} className={`mini-bar${ii===i.history.length-1?' now':''}`} style={{height:`${((p-20)/50)*100}%`,minHeight:6}}/>)}</div>
+              <Trend h={i.history}/>
+            </>}
+            {tab==='reviews'&&<>
+              {reviews.length===0?<p style={{color:'var(--text2)'}}>No reviews yet.</p>
+              :<div>{reviews.map(r=><div key={r.id} className="review-card"><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:6}}><div><strong style={{fontSize:'var(--tsm)'}}>{r.learnerName}</strong><div style={{marginTop:2}}><Stars r={r.rating}/></div></div><span style={{fontSize:'var(--txs)',color:'var(--text3)'}}>{r.date}</span></div><p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.65}}>{r.comment}</p></div>)}</div>}
+              {isGuest&&<div style={{marginTop:16,padding:16,background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'var(--r)',textAlign:'center'}}><p style={{fontSize:'var(--tsm)',color:'var(--text2)',marginBottom:12}}>Sign up to leave a review after your lessons.</p><button className="btn btn-p btn-sm" onClick={()=>onNav('learnerSignup')}>Create free account</button></div>}
+            </>}
+            {tab==='packages'&&<>
+              {packages.length===0?<p style={{color:'var(--text2)'}}>No block booking packages listed.</p>
+              :<div style={{display:'flex',flexDirection:'column',gap:12}}>{packages.map(p=><div key={p.id} className="pkg-card">
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
+                  <div><strong style={{fontSize:'var(--tmd)'}}>{p.name}</strong><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:2}}>{p.lessons} lessons</div></div>
+                  <div style={{textAlign:'right'}}><div style={{fontSize:24,fontWeight:900,color:'var(--amber)',letterSpacing:'-.02em'}}>£{p.price}</div><div style={{fontSize:'var(--txs)',color:'var(--green)'}}>Save £{p.saving} vs hourly</div></div>
+                </div>
+                <p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.6,marginBottom:12}}>{p.description}</p>
+                <button className="btn btn-p btn-sm" onClick={()=>onBook(i,p)}>Book this package</button>
+              </div>)}</div>}
+            </>}
+            {tab==='availability'&&<>
+              {avail?<div><p style={{fontSize:'var(--tsm)',color:'var(--text2)',marginBottom:16}}>Available slots this week:</p><div style={{display:'flex',gap:8,flexWrap:'wrap'}}>{avail.slots.map(s=><span key={s} className="chip ch-green" style={{padding:'7px 14px',fontSize:'var(--tsm)'}}>{s}</span>)}</div></div>:<p style={{color:'var(--text2)'}}>Contact instructor for availability.</p>}
+              {i.waitlist&&<div className="waitlist-bar" style={{marginTop:20}}><div><strong style={{color:'var(--red)'}}>Fully booked</strong><p style={{fontSize:'var(--tsm)',color:'var(--text2)',marginTop:2}}>Join the waitlist to be notified when a slot opens.</p></div><button className="btn btn-ghost btn-sm" onClick={()=>onWaitlist(i)}>Join waitlist</button></div>}
+            </>}
+          </div>
+
+          {/* Desktop sticky sidebar */}
+          <div>
+            <div className="card-s prof-sticky-sidebar">
+              <div style={{fontSize:32,fontWeight:900,letterSpacing:'-.03em',color:'var(--amber)',lineHeight:1,marginBottom:4}}>£{i.rate}<span style={{fontSize:14,fontWeight:400,color:'var(--text3)',marginLeft:3}}>/hr</span></div>
+              <Bench rate={i.rate} avg={ravg}/>
+              <div style={{display:'flex',gap:6,marginTop:10,marginBottom:16,alignItems:'center'}}><Stars r={i.rating}/><span style={{fontSize:'var(--txs)',color:'var(--text2)'}}>{i.rating} ({i.reviews} reviews)</span></div>
+              {i.avail==='Full'
+                ?<><button className="btn btn-full btn-lg" style={{background:'var(--redgl)',color:'var(--red)',border:'1px solid var(--red)',marginBottom:8}} onClick={()=>onWaitlist(i)}>{I.waitlist} Join waitlist</button><p style={{fontSize:'var(--txs)',color:'var(--text3)',textAlign:'center'}}>Fully booked — we'll notify you when a slot opens.</p></>
+                :<><button className="btn btn-p btn-full btn-lg" onClick={()=>onBook(i)} style={{marginBottom:8}}>Book a lesson</button>
+                <button className="btn btn-ghost btn-full" onClick={()=>onMsg(i)}>{I.msg} Send message</button></>
+              }
+              <div style={{marginTop:14,display:'flex',alignItems:'center',gap:6,justifyContent:'center',fontSize:'var(--txs)',color:i.avail==='Available'?'var(--green)':'var(--amber)'}}><AvailDot s={i.avail}/>{i.avail}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Mobile fixed bottom bar */}
+    <div className="prof-bottom-bar">
+      <div><div style={{fontSize:22,fontWeight:900,color:'var(--amber)',letterSpacing:'-.02em'}}>£{i.rate}/hr</div><div style={{fontSize:'var(--txs)',color:'var(--text3)'}}>Est. total: £{total.toLocaleString()}</div></div>
+      <div style={{display:'flex',gap:8}}>
+        <button className="btn btn-ghost btn-sm" onClick={()=>onMsg(i)}>{I.msg}</button>
+        {i.avail==='Full'?<button className="btn btn-sm" style={{background:'var(--redgl)',color:'var(--red)',border:'1px solid var(--red)'}} onClick={()=>onWaitlist(i)}>Waitlist</button>:<button className="btn btn-p btn-sm" onClick={()=>onBook(i)}>Book lesson</button>}
+      </div>
+    </div>
+    <style>{`@media(max-width:639px){.card-s>div[style*="grid-template-columns: 1fr 280px"]{grid-template-columns:1fr!important}.prof-sticky-sidebar{display:none!important}}`}</style>
+  </div>;
+};
+
+// ─── MESSAGES PAGE ────────────────────────────────────────────────────────
+const MessagesPage=({learner,insts})=>{
+  const [activeThread,setActiveThread]=useState(1);
+  const [draft,setDraft]=useState('');
+  const [msgs,setMsgs]=useState(MOCK_MESSAGES);
+  const inst=insts.find(i=>i.id===activeThread)||insts[0];
+  const threads=insts.slice(0,3);
+  const send=()=>{if(!draft.trim())return;setMsgs(p=>[...p,{id:Date.now(),fromLearner:true,text:draft,time:'Just now'}]);setDraft('');};
+
+  return<div className="wrap page" style={{paddingTop:'var(--sp6)',paddingBottom:80}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:'var(--sp6)'}}>Messages</h1>
+    <div style={{display:'grid',gridTemplateColumns:'240px 1fr',gap:16,height:'60vh',minHeight:400}}>
+      <div className="card-s" style={{overflow:'hidden'}}>
+        {threads.map(t=><div key={t.id} onClick={()=>setActiveThread(t.id)} style={{padding:'12px 16px',cursor:'pointer',background:activeThread===t.id?'var(--bluegl)':'transparent',borderLeft:activeThread===t.id?'3px solid var(--blue)':'3px solid transparent',display:'flex',gap:10,alignItems:'center',transition:'all .15s'}}>
+          <img src={t.avatar} style={{width:36,height:36,borderRadius:'50%',objectFit:'cover',flexShrink:0}} alt="" loading="lazy"/>
+          <div style={{flex:1,minWidth:0}}><div style={{fontWeight:700,fontSize:'var(--tsm)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.name}</div><div style={{fontSize:'var(--txs)',color:'var(--text3)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>Tap to view</div></div>
+          {t.id===1&&<span className="unread-dot"/>}
+        </div>)}
+      </div>
+      <div className="card-s" style={{display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        <div style={{padding:'12px 16px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:10}}>
+          <img src={inst.avatar} style={{width:36,height:36,borderRadius:'50%',objectFit:'cover'}} alt="" loading="lazy"/>
+          <div><div style={{fontWeight:700,fontSize:'var(--tsm)'}}>{inst.name}</div><div style={{fontSize:'var(--txs)',color:'var(--green)',display:'flex',alignItems:'center',gap:4}}><AvailDot s={inst.avail}/>{inst.avail}</div></div>
+        </div>
+        <div style={{flex:1,overflow:'auto',padding:16,display:'flex',flexDirection:'column',gap:10}}>
+          {msgs.map(m=><div key={m.id} style={{display:'flex',flexDirection:'column',alignItems:m.fromLearner?'flex-end':'flex-start'}}>
+            <div className={`msg-bubble ${m.fromLearner?'msg-out':'msg-in'}`}>{m.text}</div>
+            <div className="msg-time">{m.time}</div>
+          </div>)}
+        </div>
+        <div style={{padding:'12px 16px',borderTop:'1px solid var(--border)',display:'flex',gap:8}}>
+          <input className="input" value={draft} onChange={e=>setDraft(e.target.value)} placeholder="Type a message…" onKeyDown={e=>e.key==='Enter'&&send()} style={{minHeight:40}}/>
+          <button className="btn btn-p btn-sm" onClick={send}>{I.send}</button>
+        </div>
+      </div>
+    </div>
+    <style>{`@media(max-width:639px){.wrap>div[style*="grid-template-columns: 240px"]{grid-template-columns:1fr!important;height:auto}.wrap>div[style*="grid-template-columns: 240px"]>div:first-child{height:140px;overflow-x:auto;display:flex;flex-direction:row}.wrap>div[style*="grid-template-columns: 240px"]>div:first-child>div{min-width:160px;flex-direction:column;border-left:none!important;border-bottom:2px solid transparent}.wrap>div[style*="grid-template-columns: 240px"]>div:last-child{height:360px}}`}</style>
+  </div>;
+};
+
+// ─── BOOKING MODAL ────────────────────────────────────────────────────────
+const BookModal=({inst,pkg,onClose})=>{
+  const [date,setDate]=useState('');
+  const [time,setTime]=useState('');
+  const [msg,setMsg]=useState('');
+  const [sent,setSent]=useState(false);
+  const [sending,setSending]=useState(false);
+  const doBook=async()=>{setSending(true);await sendEmailRelay(inst.email,'New booking request',`From learner. Date: ${date}, Time: ${time}. Message: ${msg}`);setSending(false);setSent(true);};
+  return<Modal open={true} onClose={onClose} title={pkg?`Book: ${pkg.name}`:`Book with ${inst.name}`}
+    footer={!sent&&<><button className="btn btn-ghost btn-full" onClick={onClose}>Cancel</button><button className="btn btn-p btn-full btn-lg" disabled={!date||!time||sending} onClick={doBook}>{sending?'Sending…':'Send request'}</button></>}>
+    {sent?<div style={{textAlign:'center',padding:'16px 0'}}>
+      <div style={{color:'var(--green)',marginBottom:14,display:'flex',justifyContent:'center'}}>{I.check}</div>
+      <h3 style={{fontSize:'var(--txl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:8}}>Request sent!</h3>
+      <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.6,marginBottom:4}}><strong>{inst.name}</strong> will confirm within 24 hours.</p>
+      <p style={{fontSize:'var(--txs)',color:'var(--text3)'}}>A confirmation email has been sent to your inbox.</p>
+      <button className="btn btn-p" style={{marginTop:20}} onClick={onClose}>Done</button>
+    </div>
+    :<div style={{display:'flex',flexDirection:'column',gap:16}}>
+      <div style={{display:'flex',gap:12,padding:14,background:'var(--bg1)',borderRadius:'var(--r)',alignItems:'center'}}>
+        <img src={inst.avatar} style={{width:44,height:44,borderRadius:'50%',objectFit:'cover'}} alt="" loading="lazy"/>
+        <div><div style={{fontWeight:800}}>{inst.name}</div><div style={{fontSize:'var(--txs)',color:'var(--text3)'}}>£{inst.rate}/hr · {inst.passRate}% pass · {inst.area}</div></div>
+      </div>
+      {pkg&&<div className="callout cal-blue"><strong style={{color:'var(--blue)'}}>Package: </strong>{pkg.name} — {pkg.lessons} lessons for £{pkg.price}</div>}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+        <div className="field"><span className="label">Date</span><input className="input" type="date" value={date} onChange={e=>setDate(e.target.value)} min={new Date().toISOString().split('T')[0]}/></div>
+        <div className="field"><span className="label">Time</span><select className="select" value={time} onChange={e=>setTime(e.target.value)}><option value="">Pick a time…</option>{['8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM'].map(t=><option key={t}>{t}</option>)}</select></div>
+      </div>
+      <div className="field"><span className="label">Message (optional)</span><textarea className="input" value={msg} onChange={e=>setMsg(e.target.value)} placeholder="Any focus areas, accessibility needs, or questions…"/></div>
+    </div>}
+  </Modal>;
+};
+
+// ─── WAITLIST MODAL ───────────────────────────────────────────────────────
+const WaitlistModal=({inst,onClose})=>{
+  const [sent,setSent]=useState(false);
+  const join=async()=>{await sendEmailRelay(inst.email,'New waitlist signup',`Learner joined waitlist for ${inst.name}`);setSent(true);};
+  return<Modal open={true} onClose={onClose} title="Join Waitlist" footer={!sent&&<><button className="btn btn-ghost btn-full" onClick={onClose}>Cancel</button><button className="btn btn-p btn-full btn-lg" onClick={join}>Join waitlist</button></>}>
+    {sent?<div style={{textAlign:'center',padding:16}}><div style={{color:'var(--green)',marginBottom:12,display:'flex',justifyContent:'center'}}>{I.check}</div><h3 style={{fontWeight:900,marginBottom:8}}>You're on the waitlist</h3><p style={{color:'var(--text2)',fontSize:'var(--tsm)'}}>We'll email you the moment a slot opens with <strong>{inst.name}</strong>.</p><button className="btn btn-p" style={{marginTop:20}} onClick={onClose}>Done</button></div>
+    :<div><div style={{display:'flex',gap:12,padding:14,background:'var(--bg1)',borderRadius:'var(--r)',alignItems:'center',marginBottom:16}}><img src={inst.avatar} style={{width:44,height:44,borderRadius:'50%'}} alt="" loading="lazy"/><div><div style={{fontWeight:800}}>{inst.name}</div><div style={{fontSize:'var(--txs)',color:'var(--red)',fontWeight:700}}>Fully booked</div></div></div><p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.65}}>Join the waitlist and we'll notify you by email the moment a slot becomes available. No commitment required.</p></div>}
+  </Modal>;
+};
+
+// ─── AUTH PAGES ───────────────────────────────────────────────────────────
+const LearnerLogin=({onLogin,onNav})=>{
+  const [e,setE]=useState('alex@passpal.ai');
+  const [p,setP]=useState('password');
+  const [err,setErr]=useState('');
+  return<div className="auth-wrap page"><div className="card-s auth-card" style={{borderRadius:'var(--r2xl)'}}>
+    <h2 className="auth-title">Welcome back.</h2>
+    <p className="auth-sub">Sign in to your PassPal AI account.</p>
+    <form onSubmit={ev=>{ev.preventDefault();const u=LEARNERS.find(l=>l.email===e);if(u&&p==='password')onLogin(u);else setErr('Try alex@passpal.ai / password');}} style={{display:'flex',flexDirection:'column',gap:14}}>
+      <div className="field"><span className="label">Email</span><input className="input" type="email" value={e} onChange={ev=>setE(ev.target.value)} autoComplete="email"/></div>
+      <div className="field"><span className="label">Password</span><input className="input" type="password" value={p} onChange={ev=>setP(ev.target.value)}/></div>
+      {err&&<p style={{color:'var(--red)',fontSize:'var(--tsm)'}}>{err}</p>}
+      <button type="submit" className="btn btn-p btn-full btn-lg">Sign in</button>
+      <p style={{textAlign:'center',fontSize:'var(--tsm)',color:'var(--text3)'}}>No account? <button type="button" className="btn btn-sub btn-sm" onClick={()=>onNav('learnerSignup')}>Sign up free</button></p>
+    </form>
+    <div className="callout cal-blue" style={{marginTop:14}}>Demo: alex@passpal.ai / password</div>
+  </div></div>;
+};
+
+const LearnerSignup=({onSignup,onNav})=>{
+  const [name,setName]=useState('');
+  const [email,setEmail]=useState('');
+  const [consent,setConsent]=useState(false);
+  return<div className="auth-wrap page"><div className="card-s auth-card" style={{borderRadius:'var(--r2xl)'}}>
+    <h2 className="auth-title">Start comparing.</h2>
+    <p className="auth-sub">Free forever. No card needed.</p>
+    <form onSubmit={e=>{e.preventDefault();onSignup(name,email,consent);}} style={{display:'flex',flexDirection:'column',gap:14}}>
+      <div className="field"><span className="label">Full name</span><input className="input" value={name} onChange={e=>setName(e.target.value)} required/></div>
+      <div className="field"><span className="label">Email</span><input className="input" type="email" value={email} onChange={e=>setEmail(e.target.value)} required/></div>
+      <label style={{display:'flex',gap:9,alignItems:'flex-start',cursor:'pointer'}}>
+        <input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} style={{width:16,height:16,marginTop:2,accentColor:'var(--blue)'}}/>
+        <span style={{fontSize:'var(--txs)',color:'var(--text3)',lineHeight:1.6}}>Send me lesson deals and instructor recommendations. Unsubscribe any time.</span>
+      </label>
+      <button type="submit" className="btn btn-p btn-full btn-lg">Compare free {I.aR}</button>
+      <p style={{textAlign:'center',fontSize:'var(--tsm)',color:'var(--text3)'}}>Have an account? <button type="button" className="btn btn-sub btn-sm" onClick={()=>onNav('learnerLogin')}>Sign in</button></p>
+    </form>
+  </div></div>;
+};
+
+const InstLogin=({insts,onLogin})=>{
+  const [e,setE]=useState('instructor@passpal.ai');
+  const [p,setP]=useState('password');
+  const [err,setErr]=useState('');
+  return<div className="auth-wrap page"><div className="card-s auth-card" style={{borderRadius:'var(--r2xl)'}}>
+    <h2 className="auth-title">Instructor portal.</h2>
+    <p className="auth-sub">Manage your profile and subscription.</p>
+    <form onSubmit={ev=>{ev.preventDefault();const i=insts.find(x=>x.email===e);if(i&&p==='password')onLogin(i);else setErr('Try instructor@passpal.ai / password');}} style={{display:'flex',flexDirection:'column',gap:14}}>
+      <div className="field"><span className="label">Email</span><input className="input" type="email" value={e} onChange={ev=>setE(ev.target.value)}/></div>
+      <div className="field"><span className="label">Password</span><input className="input" type="password" value={p} onChange={ev=>setP(ev.target.value)}/></div>
+      {err&&<p style={{color:'var(--red)',fontSize:'var(--tsm)'}}>{err}</p>}
+      <button type="submit" className="btn btn-p btn-full btn-lg">Sign in</button>
+    </form>
+    <div className="callout cal-blue" style={{marginTop:14}}>Demo: instructor@passpal.ai / password</div>
+  </div></div>;
+};
+
+const AdminLogin=({onLogin})=>{
+  const [p,setP]=useState('');
+  const [err,setErr]=useState('');
+  return<div className="auth-wrap page"><div className="card-s auth-card" style={{borderRadius:'var(--r2xl)'}}>
+    <h2 className="auth-title">Admin access.</h2>
+    <div style={{display:'flex',flexDirection:'column',gap:14,marginTop:20}}>
+      <div className="field"><span className="label">Password</span><input className="input" type="password" value={p} onChange={e=>setP(e.target.value)}/></div>
+      {err&&<p style={{color:'var(--red)',fontSize:'var(--tsm)'}}>{err}</p>}
+      <button className="btn btn-p btn-full btn-lg" onClick={()=>p==='admin'?onLogin():setErr('Try: admin')}>Access dashboard</button>
+    </div>
+    <div className="callout cal-blue" style={{marginTop:14}}>Demo: admin</div>
+  </div></div>;
+};
+
+// ─── LEARNER DASHBOARD ────────────────────────────────────────────────────
+const LearnerDash=({progress:pr,onNav})=>{
+  const r=50,circ=2*Math.PI*r,dash=circ*(pr.theoryProgress/100);
+  return<div className="wrap page" style={{paddingTop:'var(--sp6)',paddingBottom:80}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:4}}>Your progress</h1>
+    <p style={{color:'var(--text2)',marginBottom:'var(--sp6)',fontSize:'var(--tsm)'}}>Keep going — you're on track.</p>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:16}}>
+      {[{l:'Lessons done',v:pr.lessonsCompleted,c:'var(--blue)'},{l:'Avg saving',v:`£${pr.avgSaving}/hr`,c:'var(--green)'},{l:'Pass readiness',v:`${pr.passLikelihood}%`,c:'var(--amber)'}].map(({l,v,c})=><div key={l} className="card-s mcard"><div className="mcard-s">{l}</div><div className="mcard-n" style={{color:c}}>{v}</div></div>)}
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+      <div className="card-s" style={{padding:'var(--sp6)',display:'flex',flexDirection:'column',alignItems:'center'}}>
+        <h3 style={{fontWeight:800,marginBottom:16,alignSelf:'flex-start'}}>Theory progress</h3>
+        <div style={{position:'relative',display:'inline-flex',alignItems:'center',justifyContent:'center',width:120,height:120}}>
+          <svg width="120" height="120" viewBox="0 0 120 120" style={{transform:'rotate(-90deg)'}}>
+            <circle cx="60" cy="60" r={r} fill="none" stroke="var(--bg3)" strokeWidth="8"/>
+            <circle cx="60" cy="60" r={r} fill="none" stroke="var(--blue)" strokeWidth="8" strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"/>
+          </svg>
+          <span style={{position:'absolute',fontSize:24,fontWeight:900,letterSpacing:'-.03em'}}>{pr.theoryProgress}%</span>
+        </div>
+        <p style={{color:'var(--green)',fontWeight:700,marginTop:10,fontSize:'var(--tsm)'}}>↑ {pr.scoreTrend}% this week</p>
+        <button className="btn btn-p btn-full" style={{marginTop:14}} onClick={()=>onNav('theoryPractice')}>Continue</button>
+      </div>
+      <div className="card-s" style={{padding:'var(--sp6)'}}>
+        <h3 style={{fontWeight:800,marginBottom:12}}>Recommended</h3>
+        {pr.recommended.map(t=><div key={t} style={{padding:'9px 12px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'var(--r)',fontSize:'var(--tsm)',marginBottom:8,color:'var(--text2)'}}>{t}</div>)}
+        <button className="btn btn-ghost btn-full" style={{marginTop:8}} onClick={()=>onNav('compare')}>{I.compare} Find an instructor</button>
+      </div>
+    </div>
+  </div>;
+};
+
+// ─── THEORY + QUIZ ────────────────────────────────────────────────────────
+const TheoryPage=({topics,mockLeft,onStart,isGuest,onNav})=><div className="wrap page" style={{paddingTop:'var(--sp6)',paddingBottom:80}}>
+  <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:4,display:'flex',alignItems:'center',gap:10}}>{I.book} Theory Practice</h1>
+  <p style={{color:'var(--text2)',marginBottom:16,fontSize:'var(--tsm)'}}>Official DVSA-licensed questions. Free, unlimited.</p>
+  {isGuest&&<div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,padding:'12px 16px',background:'var(--bg2)',border:'1px solid var(--borderh)',borderRadius:'var(--r)',marginBottom:16,flexWrap:'wrap'}}>
+    <span style={{fontSize:'var(--tsm)',color:'var(--text2)'}}>Practising as guest — scores won't save.</span>
+    <button className="btn btn-p btn-sm" onClick={()=>onNav('learnerSignup')}>Save progress — free</button>
+  </div>}
+  <div className="callout cal-green" style={{marginBottom:20}}><span style={{color:'var(--green)',fontWeight:700}}>All official. </span>Questions sourced from DVSA material.</div>
+  <div style={{display:'grid',gridTemplateColumns:'1fr 240px',gap:16,alignItems:'start'}}>
+    <div className="card-s" style={{padding:'var(--sp6)'}}>
+      <h2 style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:16}}>Study topics</h2>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:10}}>
+        {topics.map(t=><div key={t.id} className="card-s card-h" style={{padding:16}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}><strong style={{fontSize:'var(--tsm)'}}>{t.name}</strong><button className="btn btn-p btn-sm" onClick={()=>onStart(t)}>Practice</button></div>
+          <div className="prog"><div className="prog-fill" style={{width:`${t.progress}%`}}/></div>
+          <div style={{fontSize:'var(--txs)',color:'var(--text3)',textAlign:'right',marginTop:4}}>{t.progress}%</div>
+        </div>)}
+      </div>
+    </div>
+    <div className="card-s" style={{padding:'var(--sp6)',position:'sticky',top:84}}>
+      <h2 style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:10}}>Mock test</h2>
+      <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:14,lineHeight:1.6}}><strong>{mockLeft}</strong> attempts left this week.</p>
+      <div style={{textAlign:'center',margin:'14px 0'}}><span style={{fontSize:48,fontWeight:900,color:'var(--blue)',letterSpacing:'-.03em',lineHeight:1}}>{mockLeft}</span><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:4,textTransform:'uppercase',letterSpacing:'.06em'}}>remaining</div></div>
+      <button className="btn btn-p btn-full btn-lg" onClick={()=>onStart('mock')} disabled={mockLeft<=0}>Start mock test</button>
+    </div>
+  </div>
+</div>;
+
+const QuizPage=({quiz,onFinish,isGuest,onNav})=>{
+  const [idx,setIdx]=useState(0);
+  const [sel,setSel]=useState(null);
+  const [ans,setAns]=useState(false);
+  const [score,setScore]=useState(0);
+  const [done,setDone]=useState(false);
+  const q=quiz.questions[idx];
+  const answer=i=>{if(ans)return;setSel(i);setAns(true);if(i===q.correct)setScore(s=>s+1);};
+  const next=()=>{if(idx<quiz.questions.length-1){setIdx(i=>i+1);setSel(null);setAns(false);}else setDone(true);};
+
+  if(!q)return<div className="wrap" style={{paddingTop:40,textAlign:'center'}}><p style={{color:'var(--text2)'}}>No questions yet for this topic.</p><button className="btn btn-ghost" style={{marginTop:12}} onClick={()=>onFinish(0,0,quiz.topic)}>{I.aL} Back</button></div>;
+
+  if(done){
+    const pct=Math.round(score/quiz.questions.length*100);
+    const c=pct>=75?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
+    return<div className="wrap page" style={{paddingTop:40}}>
+      <div className="card-s" style={{maxWidth:460,margin:'0 auto',padding:40,textAlign:'center',borderRadius:'var(--r2xl)'}}>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:6}}>Quiz complete</h2>
+        <div style={{fontSize:64,fontWeight:900,color:c,letterSpacing:'-.03em',margin:'20px 0',lineHeight:1}}>{pct}%</div>
+        <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:24}}>{score} of {quiz.questions.length} correct</p>
+        {isGuest?<>
+          <div style={{background:'var(--bg2)',border:'1px solid var(--borderh)',borderRadius:'var(--rlg)',padding:20,marginBottom:10}}>
+            <div style={{fontWeight:800,fontSize:'var(--tmd)',marginBottom:6}}>Save this score</div>
+            <p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.6,marginBottom:14}}>Create a free account to track progress and unlock your dashboard.</p>
+            <button className="btn btn-p btn-full btn-lg" onClick={()=>onNav('learnerSignup')}>Save progress — free</button>
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button className="btn btn-ghost btn-full" onClick={()=>onFinish(score,quiz.questions.length,quiz.topic)}>Back to hub</button>
+            <button className="btn btn-ghost btn-full" onClick={()=>{setIdx(0);setSel(null);setAns(false);setScore(0);setDone(false);}}>{I.refresh} Retry</button>
+          </div>
+        </>:<div style={{display:'flex',gap:10}}>
+          <button className="btn btn-ghost btn-full" onClick={()=>onFinish(score,quiz.questions.length,quiz.topic)}>Back to hub</button>
+          <button className="btn btn-p btn-full" onClick={()=>{setIdx(0);setSel(null);setAns(false);setScore(0);setDone(false);}}>{I.refresh} Try again</button>
+        </div>}
+      </div>
+    </div>;
+  }
+
+  return<div className="wrap page" style={{paddingTop:'var(--sp6)',maxWidth:580,margin:'0 auto',paddingBottom:80}}>
+    <div style={{display:'flex',justifyContent:'space-between',fontSize:'var(--txs)',color:'var(--text3)',marginBottom:8}}><span>Q{idx+1}/{quiz.questions.length}</span><span>{score} correct</span></div>
+    <div className="prog" style={{marginBottom:20}}><div className="prog-fill" style={{width:`${(idx/quiz.questions.length)*100}%`}}/></div>
+    <div className="card-s" style={{padding:'var(--sp6)',borderRadius:'var(--rxl)'}}>
+      <h2 style={{fontSize:'var(--txl)',fontWeight:800,letterSpacing:'-.01em',marginBottom:20,lineHeight:1.3}}>{q.text}</h2>
+      {q.opts.map((opt,i)=>{
+        let cls='q-opt';
+        if(ans&&i===q.correct)cls+=' correct';
+        else if(ans&&i===sel)cls+=' wrong';
+        return<button key={i} className={cls} onClick={()=>answer(i)} disabled={ans}><span>{opt}</span>{ans&&i===q.correct&&<span style={{color:'var(--green)'}}>{I.check}</span>}{ans&&i===sel&&i!==q.correct&&<span style={{color:'var(--red)'}}>{I.x}</span>}</button>;
+      })}
+      {ans&&<div className="callout cal-blue" style={{marginTop:12}}><span style={{color:'var(--blue)',fontWeight:700}}>Explanation: </span>{q.explain}</div>}
+      <div style={{textAlign:'right',marginTop:16}}><button className="btn btn-p" onClick={next} disabled={!ans}>{idx<quiz.questions.length-1?'Next':'Finish'} {I.aR}</button></div>
+    </div>
+  </div>;
+};
+
+// ─── INSTRUCTOR PORTAL ────────────────────────────────────────────────────
+const InstPortal=({inst:init,onUpdate,onLogout,allInsts})=>{
+  const [form,setForm]=useState({...init});
+  const [editing,setEditing]=useState(false);
+  const [tab,setTab]=useState('profile');
+  const [dvsaInput,setDvsaInput]=useState('');
+  const [dvsaLoading,setDvsaLoading]=useState(false);
+  const [dvsaResult,setDvsaResult]=useState(null);
+  const [msgDraft,setMsgDraft]=useState('');
+  const [msgs,setMsgs]=useState(MOCK_MESSAGES.slice().reverse());
+  useEffect(()=>setForm({...init}),[init]);
+  const set=(k,v)=>setForm(p=>({...p,[k]:v}));
+  const tog=(k,v)=>setForm(p=>{const arr=Array.isArray(p[k])?p[k]:[];return{...p,[k]:arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]};});
+  const ps=Math.round(Math.max(0,Math.min(100,100-((form.rate-20)/50)*100))*.4+(form.rating/5)*100*.3+form.passRate*.3);
+  const ra=RAVG(form.post);
+  const instReviews=MOCK_REVIEWS.filter(r=>r.instructorId===init.id);
+
+  const runDvsaCheck=async()=>{
+    if(!dvsaInput.trim())return;
+    setDvsaLoading(true);setDvsaResult(null);
+    const result=await mockDvsaCheck(dvsaInput);
+    setDvsaResult(result);setDvsaLoading(false);
+    if(result.success){set('dvsaStatus','Verified');set('dvsaLicence',result.licenceNo);set('dvsaExpiry',result.expiryDate);set('verified',true);}
+  };
+
+  const sendReply=async()=>{
+    if(!msgDraft.trim())return;
+    await sendEmailRelay('learner@example.com','Reply from instructor',msgDraft);
+    setMsgs(p=>[{id:Date.now(),fromLearner:false,text:msgDraft,time:'Just now'},...p]);
+    setMsgDraft('');
+  };
+
+  const tabs=[{v:'profile',l:'Profile',ic:I.users},{v:'dvsa',l:'DVSA',ic:I.dvsa},{v:'pricing',l:'Pricing',ic:I.pound},{v:'inbox',l:'Inbox',ic:I.msg},{v:'reviews',l:'Reviews',ic:I.star_fill},{v:'subscription',l:'Plan',ic:I.tag},{v:'stats',l:'Stats',ic:I.chart}];
+
+  return<div className="portal-wrap">
+    <nav className="portal-nav">
+      <div className="portal-logo">PassPal.ai</div>
+      <div style={{padding:'8px 12px',marginBottom:10}}>
+        <img src={form.avatar} style={{width:44,height:44,borderRadius:'50%',border:'2px solid rgba(255,255,255,.1)',marginBottom:8}} alt="" loading="lazy"/>
+        <div style={{color:'var(--text)',fontWeight:700,fontSize:'var(--tsm)'}}>{form.name}</div>
+        <div style={{color:'var(--text3)',fontSize:'var(--txs)'}}>{form.tier} · {form.area}</div>
+      </div>
+      {tabs.map(({v,l,ic})=><button key={v} className={`portal-ni${tab===v?' on':''}`} onClick={()=>setTab(v)}><span style={{flexShrink:0,width:16,height:16}}>{ic}</span>{l}</button>)}
+      <div style={{flex:1}}/>
+      <button className="portal-ni" onClick={onLogout}>{I.logout} Sign out</button>
+    </nav>
+
+    {/* Mobile tab bar */}
+    <div className="portal-tab-bar">
+      {tabs.slice(0,5).map(({v,l,ic})=><button key={v} className={`ptab${tab===v?' on':''}`} onClick={()=>setTab(v)}>{ic}<span>{l}</span></button>)}
+    </div>
+
+    <div className="portal-content">
+      {tab==='profile'&&<>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+          <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em'}}>My Profile</h2>
+          {!editing?<button className="btn btn-ghost btn-sm" onClick={()=>setEditing(true)}>Edit</button>
+          :<div style={{display:'flex',gap:8}}><button className="btn btn-ghost btn-sm" onClick={()=>{setEditing(false);setForm({...init});}}>Cancel</button><button className="btn btn-p btn-sm" onClick={()=>{onUpdate(form);setEditing(false);}}>Save</button></div>}
+        </div>
+        <div className="card-s" style={{padding:'var(--sp6)',borderRadius:'var(--rxl)'}}>
+          {!editing
+            ?<>
+              <div style={{display:'flex',gap:14,marginBottom:16,alignItems:'center'}}>
+                <img src={form.avatar} style={{width:64,height:64,borderRadius:'50%'}} alt="" loading="lazy"/>
+                <div><h3 style={{fontSize:'var(--tlg)',fontWeight:800,letterSpacing:'-.01em'}}>{form.name}</h3><DvsaBadge status={form.dvsaStatus}/><div style={{color:'var(--text3)',fontSize:'var(--txs)',marginTop:3}}>{form.area}</div></div>
+              </div>
+              <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7,marginBottom:16}}>{form.bio}</p>
+              <div style={{display:'flex',gap:20,flexWrap:'wrap',fontSize:'var(--tsm)',marginBottom:16}}>
+                {[['Rate',`£${form.rate}/hr`],['Pass rate',`${form.passRate}%`],['Experience',`${form.yrs} yrs`],['Availability',form.avail]].map(([l,v])=><div key={l}><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginBottom:2}}>{l}</div><strong>{v}</strong></div>)}
+              </div>
+              {form.types?.length>0&&<div style={{marginBottom:12}}><div style={{fontSize:'var(--txs)',fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:7}}>Lesson types</div><div style={{display:'flex',gap:5,flexWrap:'wrap'}}>{form.types.map(t=><span key={t} className="chip ch-blue">{t}</span>)}</div></div>}
+              {form.tx?.length>0&&<div style={{marginBottom:12}}><div style={{fontSize:'var(--txs)',fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:7}}>Transmission</div><div style={{display:'flex',gap:5}}>{form.tx.map(t=><span key={t} className="chip ch-gray">{t}</span>)}</div></div>}
+              {form.support?.length>0&&<div><div style={{fontSize:'var(--txs)',fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:7}}>Specialist support</div><div style={{display:'flex',gap:5,flexWrap:'wrap'}}>{form.support.map(s=><span key={s} className="chip ch-green">{s}</span>)}</div></div>}
+              {(!form.support||form.support.length===0)&&<p style={{fontSize:'var(--txs)',color:'var(--text4)',fontStyle:'italic'}}>No specialist support listed — edit to add.</p>}
+            </>
+            :<div style={{display:'flex',flexDirection:'column',gap:14}}>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
+                {[['Hourly rate (£)','rate'],['Pass rate (%)','passRate'],['Experience (years)','yrs']].map(([l,k])=><div key={k} className="field"><span className="label">{l}</span><input className="input" type="number" value={form[k]} onChange={e=>set(k,+e.target.value)}/></div>)}
+              </div>
+              <div className="field"><span className="label">Bio</span><textarea className="input" rows={3} value={form.bio} onChange={e=>set('bio',e.target.value)}/></div>
+              <div className="field"><span className="label">Availability</span><select className="select" value={form.avail} onChange={e=>set('avail',e.target.value)}>{['Available','Limited','Full'].map(a=><option key={a}>{a}</option>)}</select></div>
+              {[['Lesson types',['Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'],'types','ch-blue'],['Transmission',['Manual','Automatic'],'tx','ch-blue'],['Specialist support',['Anxious Drivers','ADHD Friendly','BSL / Deaf Support','Autism Friendly','Adapted Vehicle'],'support','ch-green']].map(([l,opts,k,cls])=><div key={k}><span className="label" style={{display:'block',marginBottom:8}}>{l}</span><div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{opts.map(o=>{const arr=Array.isArray(form[k])?form[k]:[];const on=arr.includes(o);return<button key={o} type="button" className={`chip ${on?cls:'ch-gray'}`} style={{cursor:'pointer',padding:'6px 12px',border:`1.5px solid ${on?'var(--borderh)':'transparent'}`,minHeight:36}} onClick={()=>tog(k,o)}>{o}</button>;})}</div></div>)}
+            </div>
+          }
+        </div>
+      </>}
+
+      {tab==='dvsa'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>DVSA Verification</h2>
+        <div className="callout cal-blue" style={{marginBottom:20}}>
+          <span style={{color:'var(--blue)',fontWeight:700}}>What is DVSA verification? </span>
+          We check your ADI licence number against the official DVSA register. Verified instructors get a badge on their profile, higher search placement, and learner trust signals.
+        </div>
+        <div className="card-s" style={{padding:'var(--sp6)',borderRadius:'var(--rxl)',marginBottom:16}}>
+          <div style={{marginBottom:16}}>
+            <div style={{fontSize:'var(--txs)',fontWeight:800,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:8}}>Current status</div>
+            <DvsaBadge status={form.dvsaStatus}/>
+            {form.dvsaLicence&&<div style={{marginTop:8,fontSize:'var(--tsm)',color:'var(--text2)'}}><div>Licence: <strong>{form.dvsaLicence}</strong></div><div>Expires: <strong>{form.dvsaExpiry}</strong></div></div>}
+          </div>
+          <div className="div" style={{marginBottom:16}}/>
+          <div style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:12}}>Check your ADI licence</div>
+          <div style={{display:'flex',gap:10,marginBottom:12}}>
+            <input className="input" value={dvsaInput} onChange={e=>setDvsaInput(e.target.value)} placeholder="Enter your ADI licence number" style={{flex:1}}/>
+            <button className="btn btn-p" onClick={runDvsaCheck} disabled={dvsaLoading||!dvsaInput.trim()}>{dvsaLoading?<span style={{animation:'spin 1s linear infinite',display:'inline-block',border:'2px solid #fff',borderTopColor:'transparent',borderRadius:'50%',width:16,height:16}}/>:'Verify'}</button>
+          </div>
+          {dvsaLoading&&<div style={{textAlign:'center',padding:20,color:'var(--text2)',fontSize:'var(--tsm)'}}>Checking DVSA register…</div>}
+          {dvsaResult&&(dvsaResult.success
+            ?<div className="callout cal-green"><div style={{fontWeight:700,color:'var(--green)',marginBottom:6}}>Verification successful</div><div style={{fontSize:'var(--txs)',display:'flex',flexDirection:'column',gap:3}}><span>Status: <strong>{dvsaResult.status}</strong></span><span>Grade: <strong>{dvsaResult.grade}</strong></span><span>Registered: <strong>{dvsaResult.registered}</strong></span><span>Expires: <strong>{dvsaResult.expiryDate}</strong></span></div></div>
+            :<div className="callout cal-red"><div style={{fontWeight:700,color:'var(--red)',marginBottom:4}}>Verification failed</div><span style={{fontSize:'var(--txs)'}}>{dvsaResult.error}</span></div>
+          )}
+        </div>
+      </>}
+
+      {tab==='pricing'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Pricing & PassScore</h2>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:14}}>
+          <div className="card-s mcard"><div className="mcard-s">Hourly rate</div><div className="mcard-n" style={{color:'var(--amber)'}}>£{form.rate}</div><Bench rate={form.rate} avg={ra}/><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:6}}>Area avg: £{ra}/hr</div></div>
+          <div className="card-s mcard"><div className="mcard-s">PassScore</div><div className="mcard-n" style={{color:ps>=85?'var(--green)':ps>=70?'var(--blue)':'var(--amber)'}}>{ps}<span style={{fontSize:14,color:'var(--text3)',fontWeight:400}}>/100</span></div><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:4}}>Price 40% · Rating 30% · Pass rate 30%</div></div>
+        </div>
+        <div className="card-s" style={{padding:'var(--sp6)',borderRadius:'var(--rxl)'}}>
+          <h3 style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:14}}>Score breakdown</h3>
+          {[{l:'Price competitiveness',v:Math.round(Math.max(0,Math.min(100,100-((form.rate-20)/50)*100)))},{l:`Rating (${form.rating}★)`,v:Math.round((form.rating/5)*100)},{l:`Pass rate (${form.passRate}%)`,v:form.passRate}].map(({l,v})=><div key={l} style={{marginBottom:12}}><div style={{display:'flex',justifyContent:'space-between',fontSize:'var(--tsm)',marginBottom:4}}><span style={{color:'var(--text2)'}}>{l}</span><strong>{v}/100</strong></div><div className="prog"><div className="prog-fill" style={{width:`${v}%`}}/></div></div>)}
+          <div className="callout cal-amber" style={{marginTop:14}}>Tip: Drop your rate by £2 to go below the regional average — could push your PassScore up by 8–12 points and move you into top 3.</div>
+        </div>
+      </>}
+
+      {tab==='inbox'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Inbox</h2>
+        <div className="card-s" style={{borderRadius:'var(--rxl)',overflow:'hidden'}}>
+          <div style={{padding:'12px 16px',borderBottom:'1px solid var(--border)',background:'var(--bg1)',fontSize:'var(--tsm)',fontWeight:700,color:'var(--text2)'}}>{msgs.length} messages</div>
+          {msgs.map(m=><div key={m.id} style={{padding:'14px 16px',borderBottom:'1px solid var(--border)',display:'flex',gap:12,alignItems:'flex-start'}}>
+            <div style={{width:36,height:36,borderRadius:'50%',background:m.fromLearner?'var(--bluegl)':'var(--greengl)',display:'flex',alignItems:'center',justifyContent:'center',color:m.fromLearner?'var(--blue)':'var(--green)',flexShrink:0,fontSize:14,fontWeight:800}}>{m.fromLearner?'L':'Y'}</div>
+            <div style={{flex:1}}><div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontSize:'var(--tsm)',fontWeight:700}}>{m.fromLearner?'Alex Doe':'You'}</span><span style={{fontSize:'var(--txs)',color:'var(--text3)'}}>{m.time}</span></div><p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.55}}>{m.text}</p></div>
+          </div>)}
+          <div style={{padding:'12px 16px',borderTop:'1px solid var(--border)',display:'flex',gap:8}}>
+            <input className="input" value={msgDraft} onChange={e=>setMsgDraft(e.target.value)} placeholder="Reply to learner…" style={{minHeight:40}} onKeyDown={e=>e.key==='Enter'&&sendReply()}/>
+            <button className="btn btn-p btn-sm" onClick={sendReply}>{I.send}</button>
+          </div>
+        </div>
+        <div className="callout cal-blue" style={{marginTop:14}}>In production, enquiries arrive by email relay. Replies go directly to the learner's inbox via PassPal's relay address.</div>
+      </>}
+
+      {tab==='reviews'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Reviews</h2>
+        <div style={{display:'flex',gap:20,marginBottom:20,flexWrap:'wrap'}}>
+          <div className="card-s mcard" style={{flex:1,minWidth:140}}><div className="mcard-s">Average rating</div><div className="mcard-n" style={{color:'var(--amber)'}}>{form.rating}★</div></div>
+          <div className="card-s mcard" style={{flex:1,minWidth:140}}><div className="mcard-s">Total reviews</div><div className="mcard-n">{form.reviews}</div></div>
+          <div className="card-s mcard" style={{flex:1,minWidth:140}}><div className="mcard-s">Pass rate</div><div className="mcard-n" style={{color:'var(--green)'}}>{form.passRate}%</div></div>
+        </div>
+        {instReviews.length>0
+          ?<div className="card-s" style={{borderRadius:'var(--rxl)',overflow:'hidden'}}>{instReviews.map(r=><div key={r.id} className="review-card"><div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}><div><strong style={{fontSize:'var(--tsm)'}}>{r.learnerName}</strong><div style={{marginTop:2}}><Stars r={r.rating}/></div></div><span style={{fontSize:'var(--txs)',color:'var(--text3)'}}>{r.date}</span></div><p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.65}}>{r.comment}</p></div>)}</div>
+          :<p style={{color:'var(--text2)'}}>No reviews yet. Complete your first lessons to start receiving reviews.</p>}
+      </>}
+
+      {tab==='subscription'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Subscription</h2>
+        <div className="callout cal-blue" style={{marginBottom:18}}>
+          <span style={{color:'var(--blue)',fontWeight:700}}>How top 3 placement works: </span>
+          Premium is limited to 3 slots per postcode area. When your area has capacity, Premium guarantees positions 1–3 in every comparison. When full, new applicants join a waitlist — this keeps the guarantee meaningful.
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:14}}>
+          {[{n:'Free',p:'£0/mo',b:['Listed in results','Standard placement','5 enquiries/month'],hi:false},{n:'Verified',p:'£4.99/mo',b:['Verified DVSA badge','Higher placement','Unlimited enquiries'],hi:false},{n:'Premium',p:'£12.99/mo',b:['Top 3 guaranteed (3 slots/area)','PassScore badge','Full analytics','Priority support'],hi:true}].map(({n,p,b,hi})=><div key={n} className={`card-s${hi?' plan-feat':''}`} style={{padding:'var(--sp6)',borderRadius:'var(--rxl)',border:'1px solid var(--border)'}}>
+            <div style={{fontWeight:800,fontSize:'var(--tmd)',marginBottom:4}}>{n}</div>
+            <div style={{fontSize:'var(--txl)',fontWeight:900,color:hi?'var(--blue)':'var(--text)',letterSpacing:'-.02em',marginBottom:14}}>{p}</div>
+            {b.map(x=><div key={x} style={{display:'flex',alignItems:'flex-start',gap:6,fontSize:'var(--tsm)',color:'var(--text2)',marginBottom:6}}><span style={{color:'var(--green)',flexShrink:0,marginTop:1}}>{I.check}</span>{x}</div>)}
+            <button className={`btn ${hi?'btn-p':'btn-ghost'} btn-full`} style={{marginTop:14}} onClick={()=>set('tier',n)}>{form.tier===n?'Current plan':`Switch to ${n}`}</button>
+          </div>)}
+        </div>
+      </>}
+
+      {tab==='stats'&&<>
+        <h2 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Performance</h2>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:12,marginBottom:16}}>
+          {[{l:'Profile views',v:'342',c:'var(--blue)',d:'+18% this month'},{l:'Quote requests',v:'28',c:'var(--green)',d:'+4 this week'},{l:'Bookings',v:'12',c:'var(--amber)',d:'This month'},{l:'Response time',v:'2.1h',c:'var(--text)',d:'Target <4h'}].map(({l,v,c,d})=><div key={l} className="card-s mcard"><div className="mcard-s">{l}</div><div className="mcard-n" style={{color:c}}>{v}</div><div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:3}}>{d}</div></div>)}
+        </div>
+        <div className="callout cal-blue">Upgrade to Premium for full analytics — rank position, click-through rates, and competitor benchmarking.</div>
+      </>}
+    </div>
+  </div>;
+};
+
+// ─── ADMIN ────────────────────────────────────────────────────────────────
+const AdminDash=({insts,learners,onApprove,onLogout})=>{
+  const [tab,setTab]=useState('overview');
+  return<div className="admin-wrap">
+    <div className="admin-nav">
+      <div className="admin-title">PassPal Admin</div>
+      {[{v:'overview',l:'Overview'},{v:'instructors',l:'Instructors'},{v:'learners',l:'Learners'},{v:'finance',l:'Finance'},{v:'messages',l:'Messages'}].map(({v,l})=><button key={v} className={`admin-ni${tab===v?' on':''}`} onClick={()=>setTab(v)}>{l}</button>)}
+      <div style={{flex:1}}/><button className="admin-ni" onClick={onLogout}>{I.logout} Sign out</button>
+    </div>
+    <div className="admin-content">
+      {tab==='overview'&&<>
+        <div className="admin-pt">Overview</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:12,marginBottom:20}}>
+          {[{t:'Learners',v:ADMIN.learners.toLocaleString(),c:'var(--blue)',d:'+5.4%'},{t:'Instructors',v:ADMIN.instructors,c:'var(--text)',d:'+2.1%'},{t:'Premium subs',v:ADMIN.premium,c:'var(--green)',d:'+12'},{t:'MRR',v:`£${ADMIN.mrr.toFixed(0)}`,c:'var(--amber)',d:'£1.2M ARR target'},{t:'Comparisons today',v:ADMIN.comparisons,c:'var(--text)'},{t:'Conversion',v:`${ADMIN.conversion}%`,c:'var(--green)'},{t:'Open tickets',v:ADMIN.tickets,c:'var(--red)'}].map(({t,v,c,d})=><div key={t} className="card-s mcard"><div className="mcard-s">{t}</div><div className="mcard-n" style={{color:c}}>{v}</div>{d&&<div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:3}}>{d}</div>}</div>)}
+        </div>
+        <div className="callout cal-green"><span style={{color:'var(--green)',fontWeight:700}}>ARR target: £500K → £1.2M. </span>At £12.99/mo Premium that requires ~{Math.ceil(500000/12/12.99)} active Premium instructors. Current: {ADMIN.premium}. Gap: {Math.ceil(500000/12/12.99)-ADMIN.premium} more to sign up.</div>
+      </>}
+      {tab==='instructors'&&<>
+        <div className="admin-pt">Instructors</div>
+        <div className="card-s" style={{overflow:'hidden',borderRadius:'var(--rxl)'}}>
+          <div style={{overflowX:'auto'}}>
+            <table className="dtable">
+              <thead><tr>{['Name','Area','Tier','Rate','Pass%','DVSA','Action'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+              <tbody>{insts.map(i=><tr key={i.id}>
+                <td style={{fontWeight:700}}>{i.name}</td>
+                <td style={{color:'var(--text2)'}}>{i.area}</td>
+                <td><span className={`chip ${i.tier==='Premium'?'ch-blue':i.tier==='Verified'?'ch-green':'ch-gray'}`}>{i.tier}</span></td>
+                <td style={{fontWeight:700,color:'var(--amber)'}}>£{i.rate}</td>
+                <td style={{fontWeight:700,color:i.passRate>=90?'var(--green)':'var(--text2)'}}>{i.passRate}%</td>
+                <td><span className={`chip ${i.dvsaStatus==='Verified'?'ch-green':i.dvsaStatus==='Pending'?'ch-amber':'ch-gray'}`}>{i.dvsaStatus}</span></td>
+                <td>{i.dvsaStatus==='Pending'&&<button className="btn btn-p btn-sm" onClick={()=>onApprove(i.id)}>Approve</button>}</td>
+              </tr>)}</tbody>
+            </table>
+          </div>
+        </div>
+      </>}
+      {tab==='learners'&&<>
+        <div className="admin-pt">Learners</div>
+        <div className="card-s" style={{overflow:'hidden',borderRadius:'var(--rxl)'}}><div style={{overflowX:'auto'}}><table className="dtable"><thead><tr>{['Name','Email','Verified'].map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{learners.map(l=><tr key={l.id}><td style={{fontWeight:700}}>{l.name}</td><td style={{color:'var(--text2)'}}>{l.email}</td><td><span className={`chip ${l.emailVerified?'ch-green':'ch-amber'}`}>{l.emailVerified?'Yes':'Pending'}</span></td></tr>)}</tbody></table></div></div>
+      </>}
+      {tab==='finance'&&<>
+        <div className="admin-pt">Finance</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:12,marginBottom:16}}>
+          {[{t:'MRR',v:`£${ADMIN.mrr.toFixed(2)}`},{t:'ARR projected',v:`£${(ADMIN.mrr*12).toFixed(0)}`},{t:'Rev / sub',v:`£${(ADMIN.mrr/ADMIN.premium).toFixed(2)}`},{t:'To £500K ARR',v:`+${Math.max(0,Math.ceil((500000-ADMIN.mrr*12)/12.99/12))} Premium subs`}].map(({t,v})=><div key={t} className="card-s mcard"><div className="mcard-s">{t}</div><div className="mcard-n" style={{color:'var(--green)'}}>{v}</div></div>)}
+        </div>
+        <div className="callout cal-blue">Full Stripe integration, churn cohorts, and LTV modelling available in production. Target: 3,206 Premium instructors = £500K ARR.</div>
+      </>}
+      {tab==='messages'&&<>
+        <div className="admin-pt">Message Log</div>
+        <div className="card-s" style={{borderRadius:'var(--rxl)',overflow:'hidden'}}>
+          {MOCK_MESSAGES.map(m=><div key={m.id} style={{padding:'12px 16px',borderBottom:'1px solid var(--border)',fontSize:'var(--tsm)'}}><div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}><span style={{fontWeight:700}}>{m.fromLearner?'Alex Doe → Sarah Mitchell':'Sarah Mitchell → Alex Doe'}</span><span style={{color:'var(--text3)'}}>{m.time}</span></div><p style={{color:'var(--text2)',lineHeight:1.5}}>{m.text}</p></div>)}
+        </div>
+      </>}
+    </div>
+  </div>;
+};
+
+// ─── INSTRUCTOR INFO ──────────────────────────────────────────────────────
+const InstInfoPage=({onNav})=><div className="wrap page" style={{paddingTop:48,paddingBottom:80,maxWidth:900,margin:'0 auto'}}>
+  <div style={{textAlign:'center',marginBottom:48}}>
+    <h1 style={{fontSize:'var(--t3xl)',fontWeight:900,letterSpacing:'-.03em',lineHeight:1.05,marginBottom:14}}>Fill your diary.<br/><span style={{color:'var(--green)'}}>Keep more of your earnings.</span></h1>
+    <p style={{fontSize:'var(--tmd)',color:'var(--text2)',maxWidth:500,margin:'0 auto 28px',lineHeight:1.7}}>Join 312 instructors matched with learners by value — not ad spend.</p>
+    <button className="btn btn-p btn-lg" onClick={()=>onNav('instructorLogin')}>Get started free {I.aR}</button>
+  </div>
+  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:16,marginBottom:40}}>
+    {[{ic:I.chart,c:'blue',t:'Listed in comparison results',d:'Your rate, pass rate, and PassScore shown to every learner in your area.'},{ic:I.award,c:'amber',t:'Ranked by value',d:'PassScore ranks you transparently — a strong pass rate can outrank a lower price.'},{ic:I.shield,c:'green',t:'Premium: top 3 guaranteed',d:'Limited to 3 Premium slots per postcode — so the guarantee actually means something.'}].map(({ic,c,t,d})=><div key={t} className="card-s card-h" style={{padding:'var(--sp6)'}}><div style={{color:`var(--${c})`,marginBottom:14,width:22,height:22}}>{ic}</div><h3 style={{fontSize:'var(--tmd)',fontWeight:800,marginBottom:8,letterSpacing:'-.01em'}}>{t}</h3><p style={{fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.7}}>{d}</p></div>)}
+  </div>
+  <div className="card-s" style={{padding:'var(--sp8)',borderRadius:'var(--r2xl)'}}>
+    <h2 style={{fontSize:'var(--txl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:20}}>Pricing</h2>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:14}}>
+      {[{n:'Free',p:'£0/mo',b:['Listed in comparison table','Standard placement','5 enquiries/month'],hi:false},{n:'Verified',p:'£4.99/mo',b:['DVSA badge','Higher placement','Unlimited enquiries'],hi:false},{n:'Premium',p:'£12.99/mo',b:['Top 3 guaranteed (3 slots/area)','PassScore badge','Full analytics'],hi:true}].map(({n,p,b,hi})=><div key={n} className={`card-s${hi?' plan-feat':''}`} style={{padding:'var(--sp6)',borderRadius:'var(--rxl)',border:'1px solid var(--border)'}}><div style={{fontWeight:800,fontSize:'var(--tmd)',marginBottom:4}}>{n}</div><div style={{fontSize:'var(--txl)',fontWeight:900,color:hi?'var(--blue)':'var(--text)',letterSpacing:'-.02em',marginBottom:14}}>{p}</div>{b.map(x=><div key={x} style={{display:'flex',gap:6,fontSize:'var(--tsm)',color:'var(--text2)',marginBottom:6,alignItems:'flex-start'}}><span style={{color:'var(--green)',flexShrink:0}}>{I.check}</span>{x}</div>)}<button className={`btn ${hi?'btn-p':'btn-ghost'} btn-full`} style={{marginTop:14}} onClick={()=>onNav('instructorLogin')}>Get started</button></div>)}
+    </div>
+  </div>
+</div>;
+
+// ─── RANKING METHOD PAGE ──────────────────────────────────────────────────
+const RankingMethodPage=({onBack})=><div className="wrap-sm page" style={{paddingTop:'var(--sp6)',paddingBottom:80}}>
+  <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:'var(--sp5)'}}>{I.aL} Back</button>
+  <div className="card-s" style={{padding:40,borderRadius:'var(--r2xl)'}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:6}}>How we rank instructors</h1>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:28,lineHeight:1.7}}>We want full transparency so you can make an informed choice.</p>
+    <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>PassScore</h2>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12,marginBottom:20}}>
+      {[{pct:'40%',l:'Price',d:'Rate vs regional average'},{pct:'30%',l:'Rating',d:'Verified learner reviews'},{pct:'30%',l:'Pass rate',d:'First-time pass percentage'}].map(({pct,l,d})=><div key={l} style={{padding:16,background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'var(--rlg)'}}><div className="rank-pct">{pct}</div><div style={{fontWeight:700,fontSize:'var(--tsm)',marginBottom:4}}>{l}</div><p style={{fontSize:'var(--txs)',color:'var(--text3)',lineHeight:1.6}}>{d}</p></div>)}
+    </div>
+    <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>Sponsored placements</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7,marginBottom:16}}>Premium instructors (£12.99/mo) get promoted into positions 1–3 when their PassScore is within 5 points of the next-ranked instructor. All sponsored results are labelled <span className="spons" style={{verticalAlign:'middle'}}>SPONSORED</span>.</p>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7,marginBottom:24}}>Premium placement is limited to 3 instructors per postcode. If PassScore is significantly lower than organic results, they will not be boosted.</p>
+    <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>Pass rates</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7,marginBottom:24}}>Self-reported by instructors. We are working towards DVSA data integration for independent verification.</p>
+    <h2 style={{fontSize:'var(--tlg)',fontWeight:800,marginBottom:12}}>Estimated total cost</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7,marginBottom:24}}>DVSA 2023 survey data: Beginner (47 hrs), A Few Hours (35 hrs), Some Experience (22 hrs), Returning Driver (12 hrs).</p>
+    <div style={{padding:'14px 18px',background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'var(--r)',fontSize:'var(--txs)',color:'var(--text3)',lineHeight:1.7}}>
+      PassPal AI is a comparison service. Complaints about ranking: ranking@passpal.ai
+    </div>
+  </div>
+</div>;
+
+// ─── PRIVACY PAGE ─────────────────────────────────────────────────────────
+const PrivacyPage=({onBack})=><div className="wrap-sm page" style={{paddingTop:'var(--sp6)',paddingBottom:80}}>
+  <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:'var(--sp5)'}}>{I.aL} Back</button>
+  <div className="card-s" style={{padding:40,borderRadius:'var(--r2xl)'}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,marginBottom:20,letterSpacing:'-.02em'}}>Privacy & Cookies</h1>
+    <div style={{lineHeight:1.8,color:'var(--text2)',fontSize:'var(--tsm)'}}>
+      {[{h:'Data we collect',t:'Name, email, postcode, driving preferences, and support needs. Support needs are special category data under UK GDPR Article 9, collected under explicit consent and used solely for instructor matching.'},
+        {h:'Your rights (UK GDPR)',t:'Access, correct, delete, port, and object to processing. Email privacy@passpal.ai.'},
+        {h:'Cookies',t:'Essential cookies only by default. Analytics only with explicit consent.'},
+        {h:'Email relay',t:'When you contact an instructor, messages are relayed via reply-{token}@mail.passpal.ai. Neither party\'s real email address is exposed.'},
+        {h:'Contact',t:'PassPal AI Ltd · privacy@passpal.ai · ICO registration pending.'},
+      ].map(({h,t})=><div key={h} style={{marginBottom:20}}><h2 style={{color:'var(--text)',fontSize:'var(--tmd)',fontWeight:700,marginBottom:6}}>{h}</h2><p>{t}</p></div>)}
+    </div>
+  </div>
+</div>;
+
+// ─── APP ──────────────────────────────────────────────────────────────────
+const App=()=>{
+  const [view,setView]=useState('home');
+  const [insts,setInsts]=useState(INSTS);
+  const [learners,setLearners]=useState(LEARNERS);
+  const [selId,setSelId]=useState(null);
+  const [sp,setSp]=useState(null);
+  const [lu,setLu]=useState(null);
+  const [iu,setIu]=useState(null);
+  const [admin,setAdmin]=useState(null);
+  const [bookInst,setBookInst]=useState(null);
+  const [bookPkg,setBookPkg]=useState(null);
+  const [waitInst,setWaitInst]=useState(null);
+  const [topics,setTopics]=useState(THEORY);
+  const [prog,setProg]=useState(PROG);
+  const [quiz,setQuiz]=useState(null);
+  const [cookie,setCookie]=useState(()=>localStorage.getItem('pp_c'));
+  const [lc,setLc]=useState(0);
+
+  const nav=useCallback(v=>{
+    window.scrollTo(0,0);
+    if(v==='dashboard'&&!lu){setView('learnerLogin');return;}
+    if(v==='messages'&&!lu){setView('learnerLogin');return;}
+    setView(v);
+  },[lu]);
+
+  // Body class management
+  useEffect(()=>{
+    const noBottomPad=['instructorPortal','adminDashboard','adminLogin'].includes(view)&&(iu||admin);
+    document.body.classList.toggle('no-bottom-pad',!!noBottomPad);
+  },[view,iu,admin]);
+
+  const render=()=>{
+    if(admin&&view==='adminDashboard')return<AdminDash insts={insts} learners={learners} onApprove={id=>setInsts(p=>p.map(i=>i.id===id?{...i,verified:true,dvsaStatus:'Verified'}:i))} onLogout={()=>{setAdmin(null);nav('home');}}/>;
+    if(view==='adminLogin')return<AdminLogin onLogin={()=>{setAdmin('SuperAdmin');setView('adminDashboard');}}/>;
+    switch(view){
+      case 'home':     return<Home onNav={nav} onSearch={p=>{setSp(p);setView('compare');}}/>;
+      case 'compare':  return<ComparePage insts={insts} sp={sp} isGuest={!lu} onNav={nav} onProfile={id=>{setSelId(id);setView('profile');}} onBook={i=>setBookInst(i)} onWaitlist={i=>setWaitInst(i)}/>;
+      case 'profile':  {const i=insts.find(x=>x.id===selId);return i?<InstProfile inst={i} exp={sp?.exp} postcode={sp?.postcode} onBack={()=>setView('compare')} onBook={(i,pkg)=>{setBookInst(i);setBookPkg(pkg||null);}} onMsg={i=>{if(!lu){nav('learnerLogin');return;}nav('messages');}} onWaitlist={i=>setWaitInst(i)} isGuest={!lu} onNav={nav}/>:<Home onNav={nav} onSearch={p=>{setSp(p);setView('compare');}}/>;  }
+      case 'messages': return lu?<MessagesPage learner={lu} insts={insts}/>:<LearnerLogin onLogin={u=>{setLu(u);nav('messages');}} onNav={nav}/>;
+      case 'theoryPractice':return<TheoryPage topics={topics} mockLeft={prog.mockLeft} isGuest={!lu} onNav={nav} onStart={t=>{setQuiz(t==='mock'?{topic:'mock',questions:MOCK_QS.slice(0,10)}:{topic:t,questions:t.questions});setView('quiz');}}/>;
+      case 'quiz':     return quiz?<QuizPage quiz={quiz} isGuest={!lu} onNav={nav} onFinish={(s,tot,t)=>{if(t!=='mock')setTopics(p=>p.map(x=>x.id===t.id?{...x,progress:Math.max(x.progress,Math.round(s/tot*100))}:x));setProg(p=>({...p,mockLeft:t==='mock'?p.mockLeft-1:p.mockLeft}));setQuiz(null);nav('theoryPractice');}}/>:<TheoryPage topics={topics} mockLeft={prog.mockLeft} isGuest={!lu} onNav={nav} onStart={()=>{}}/>;
+      case 'dashboard':return lu?<LearnerDash progress={prog} onNav={nav}/>:<LearnerLogin onLogin={u=>{setLu(u);nav('dashboard');}} onNav={nav}/>;
+      case 'learnerLogin':  return<LearnerLogin onLogin={u=>{setLu(u);nav('dashboard');}} onNav={nav}/>;
+      case 'learnerSignup': return<LearnerSignup onSignup={(name,email)=>{const u={...LEARNERS[0],id:99,name,email};setLearners(p=>[...p,u]);setLu(u);nav('compare');}} onNav={nav}/>;
+      case 'instructorInfo':return<InstInfoPage onNav={nav}/>;
+      case 'instructorLogin':return<InstLogin insts={insts} onLogin={i=>{setIu(i);nav('instructorPortal');}}/>;
+      case 'instructorPortal':return iu?<InstPortal inst={iu} onUpdate={u=>{setInsts(p=>p.map(i=>i.id===u.id?u:i));setIu(u);}} onLogout={()=>{setIu(null);nav('home');}} allInsts={insts}/>:<InstLogin insts={insts} onLogin={i=>{setIu(i);nav('instructorPortal');}}/>;
+      case 'rankingMethod': return<RankingMethodPage onBack={()=>setView('compare')}/>;
+      case 'privacyPolicy': return<PrivacyPage onBack={()=>nav('home')}/>;
+      default: return<Home onNav={nav} onSearch={p=>{setSp(p);setView('compare');}}/>;
+    }
+  };
+
+  const isPortal=['instructorPortal','adminDashboard','adminLogin'].includes(view)&&(iu||admin);
+
+  return<>
+    <Header view={view} onNav={nav} learner={lu} onLogout={()=>{setLu(null);nav('home');}} inst={iu} onInstOut={()=>{setIu(null);nav('home');}} logoClicks={lc} setLC={setLc}/>
+    <div className="page" key={view}>{render()}</div>
+    {!isPortal&&<footer style={{borderTop:'1px solid var(--border)',padding:'16px var(--sp6)',textAlign:'center',fontSize:'var(--txs)',color:'var(--text4)',marginTop:40,background:'var(--bg1)',paddingBottom:'calc(16px + env(safe-area-inset-bottom))'}}>
+      <div className="wrap" style={{display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10}}>
+        <span>© {new Date().getFullYear()} PassPal AI Ltd.</span>
+        <div style={{display:'flex',gap:16}}><button onClick={()=>nav('privacyPolicy')} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:'var(--txs)'}}>Privacy</button><button onClick={()=>nav('rankingMethod')} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:'var(--txs)'}}>How we rank</button></div>
+      </div>
+    </footer>}
+    {!isPortal&&<BottomNav view={view} onNav={nav} learner={lu} inst={iu}/>}
+    {bookInst&&<BookModal inst={bookInst} pkg={bookPkg} onClose={()=>{setBookInst(null);setBookPkg(null);}}/>}
+    {waitInst&&<WaitlistModal inst={waitInst} onClose={()=>setWaitInst(null)}/>}
+    {!cookie&&<div className="cookie"><p className="cookie-t">We use cookies to improve your experience. <button onClick={()=>nav('privacyPolicy')} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:'inherit',textDecoration:'underline'}}>Privacy policy</button></p><div style={{display:'flex',gap:8}}><button className="btn btn-ghost btn-sm" onClick={()=>{setCookie('d');localStorage.setItem('pp_c','d');}}>Decline</button><button className="btn btn-p btn-sm" onClick={()=>{setCookie('a');localStorage.setItem('pp_c','a');}}>Accept</button></div></div>}
+  </>;
+};
+
+/* ── SIMULATED SERVICES ───────────────────────────────────────────── */
+const simulateDVSA=async ref=>{
+  await new Promise(r=>setTimeout(r,1400));
+  if(!ref||ref.length<8)return{ok:false,msg:'ADI reference not found in DVSA register.'};
+  const found=INSTRUCTORS.find(i=>i.dvsaRef===ref);
+  if(found)return{ok:true,name:found.name,grade:'A',renewed:'January 2027',badge:ref};
+  return{ok:false,msg:'Reference not found. Please check your ADI certificate number.'};
+};
+const simulateEmail=async(to,subject,body)=>{
+  await new Promise(r=>setTimeout(r,800));
+  return{ok:true,id:`msg_${Date.now()}`,to,subject,preview:body.slice(0,120)};
+};
+
+/* ── BOTTOM SHEET ────────────────────────────────────────────────── */
+const BottomSheet=({open,onClose,title,children})=>{
+  if(!open)return null;
+  return<>
+    <div className="sheet-overlay" onClick={onClose}/>
+    <div className="sheet">
+      <div className="sheet-handle"/>
+      <div className="sheet-hd">
+        <span style={{fontWeight:800,fontSize:'var(--txl)'}}>{title}</span>
+        <button className="close-btn" onClick={onClose}>{Ic.x}</button>
+      </div>
+      <div className="sheet-bd">{children}</div>
+    </div>
+  </>;
+};
+
+/* ── LEARNER DASHBOARD ────────────────────────────────────────────── */
+const Dashboard=({progress:p,onNav})=>{
+  const r=52,circ=2*Math.PI*r,dash=circ*(p.theoryProgress/100);
+  return<div className="wrap page" style={{paddingTop:24,paddingBottom:80}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:4}}>Your progress</h1>
+    <p style={{color:'var(--text2)',marginBottom:22,fontSize:'var(--tsm)'}}>Keep going — you're on track.</p>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:14,marginBottom:20}}>
+      {[{l:'Lessons completed',v:p.lessonsCompleted,c:'var(--blue)'},{l:'Average saving',v:`£${p.avgSaving}/hr`,c:'var(--green)'},{l:'Pass readiness',v:`${p.passLikelihood}%`,c:'var(--amber)'}].map(({l,v,c})=>(
+        <div key={l} className="mcard card-solid" style={{borderRadius:'var(--rlg)'}}>
+          <div className="mcard-sub">{l}</div>
+          <div className="mcard-n" style={{color:c}}>{v}</div>
+        </div>
+      ))}
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+      <div className="card-solid" style={{padding:22,borderRadius:'var(--rxl)',display:'flex',flexDirection:'column',alignItems:'center'}}>
+        <h3 style={{fontWeight:800,marginBottom:16,alignSelf:'flex-start'}}>Theory progress</h3>
+        <div style={{position:'relative',display:'inline-flex',alignItems:'center',justifyContent:'center',width:130,height:130}}>
+          <svg width="130" height="130" viewBox="0 0 130 130" style={{transform:'rotate(-90deg)'}}>
+            <circle cx="65" cy="65" r={r} fill="none" stroke="var(--bg3)" strokeWidth="9"/>
+            <circle cx="65" cy="65" r={r} fill="none" stroke="var(--blue)" strokeWidth="9" strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" style={{transition:'stroke-dasharray .5s ease'}}/>
+          </svg>
+          <span style={{position:'absolute',fontSize:26,fontWeight:900,letterSpacing:'-.03em'}}>{p.theoryProgress}%</span>
+        </div>
+        <p style={{color:'var(--green)',fontWeight:700,marginTop:10,fontSize:'var(--tsm)'}}>Up {p.scoreTrend}% this week</p>
+        <button className="btn btn-p btn-full" style={{marginTop:14}} onClick={()=>onNav('theoryPractice')}>Continue studying</button>
+      </div>
+      <div className="card-solid" style={{padding:22,borderRadius:'var(--rxl)'}}>
+        <h3 style={{fontWeight:800,marginBottom:12}}>Recommended topics</h3>
+        {p.recommended.map(t=><div key={t} style={{padding:'9px 12px',background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:'var(--r)',fontSize:'var(--tsm)',marginBottom:8,color:'var(--text2)'}}>{t}</div>)}
+        <h3 style={{fontWeight:800,margin:'16px 0 12px'}}>Badges</h3>
+        <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+          {p.badges.map(b=><div key={b.name} style={{textAlign:'center',width:52}}>
+            <div style={{width:44,height:44,background:'var(--ambergl)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--amber)',margin:'0 auto'}}>{Ic.award}</div>
+            <div style={{fontSize:9,color:'var(--text3)',marginTop:4,lineHeight:1.3}}>{b.name}</div>
+          </div>)}
+        </div>
+      </div>
+    </div>
+  </div>;
+};
+
+/* ── CONTACT FORM ────────────────────────────────────────────────── */
+const ContactForm=({instructor,isGuest,onNav})=>{
+  const [name,setName]=useState('');
+  const [email,setEmail]=useState('');
+  const [msg,setMsg]=useState('');
+  const [sending,setSending]=useState(false);
+  const [sent,setSent]=useState(null);
+  const [err,setErr]=useState('');
+  const send=async e=>{
+    e.preventDefault();
+    if(isGuest){onNav('learnerSignup');return;}
+    setSending(true);setErr('');
+    const result=await simulateEmail(instructor.email,`Lesson enquiry via PassPal — ${name}`,`From: ${name} (${email})\n\n${msg}`);
+    setSending(false);
+    if(result.ok)setSent(result);else setErr('Failed to send. Please try again.');
+  };
+  if(sent)return<div style={{textAlign:'center',padding:'16px 0'}}>
+    <div style={{color:'var(--green)',marginBottom:12,display:'flex',justifyContent:'center'}}>{Ic.check}</div>
+    <h3 style={{fontWeight:900,marginBottom:8,fontSize:'var(--txl)'}}>Message sent</h3>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.6,marginBottom:16}}>Your enquiry has been delivered to <strong>{instructor.name}</strong>. They'll reply directly to your email.</p>
+    <div style={{background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:'var(--r)',padding:16,fontSize:'var(--tsm)',color:'var(--text2)',lineHeight:1.7,textAlign:'left'}}>
+      <div style={{fontSize:'var(--txs)',fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:3}}>Subject</div>
+      <div style={{color:'var(--text)',marginBottom:10}}>Lesson enquiry via PassPal — {name}</div>
+      <div style={{fontSize:'var(--txs)',fontWeight:700,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:3}}>Preview</div>
+      <div>{msg.slice(0,100)}{msg.length>100?'…':''}</div>
+    </div>
+  </div>;
+  if(isGuest)return<div style={{textAlign:'center',padding:'16px 0'}}>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:16}}>Sign up free to send enquiries directly to instructors.</p>
+    <button className="btn btn-p btn-full btn-lg" onClick={()=>onNav('learnerSignup')}>Sign up to send enquiry</button>
+  </div>;
+  return<form onSubmit={send} style={{display:'flex',flexDirection:'column',gap:14}}>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+      <div className="field"><span className="lbl">Your name</span><input className="inp" value={name} onChange={e=>setName(e.target.value)} required/></div>
+      <div className="field"><span className="lbl">Your email</span><input className="inp" type="email" value={email} onChange={e=>setEmail(e.target.value)} required/></div>
+    </div>
+    <div className="field"><span className="lbl">Message</span><textarea className="inp" rows={4} value={msg} onChange={e=>setMsg(e.target.value)} placeholder={`Hi ${instructor.name.split(' ')[0]}, I'm interested in booking lessons...`} required/></div>
+    {err&&<p style={{color:'var(--red)',fontSize:'var(--tsm)'}}>{err}</p>}
+    <button type="submit" className="btn btn-p btn-full btn-lg" disabled={sending}>
+      {sending?'Sending…':<>{Ic.mail} Send enquiry</>}
+    </button>
+    <p style={{fontSize:'var(--txs)',color:'var(--text3)',textAlign:'center'}}>Delivered directly to the instructor. PassPal does not read your messages.</p>
+  </form>;
+};
+
+/* ── QUOTE REQUEST MODAL ──────────────────────────────────────────── */
+const QuoteRequestModal=({instructor,onClose,isGuest,onNav})=>{
+  const [notes,setNotes]=useState('');
+  const [sent,setSent]=useState(false);
+  const send=async e=>{
+    e.preventDefault();
+    if(isGuest){onNav('learnerSignup');onClose();return;}
+    await simulateEmail(instructor.email,'Quote request via PassPal',`Learner quote request.\nNotes: ${notes}`);
+    setSent(true);
+  };
+  return<Modal open={true} onClose={onClose} title="Request a quote"
+    footer={!sent&&<><button className="btn btn-ghost btn-full" onClick={onClose}>Cancel</button><button className="btn btn-p btn-full btn-lg" onClick={send}>Send request</button></>}>
+    {sent
+      ?<div style={{textAlign:'center',padding:'16px 0'}}>
+          <div style={{color:'var(--green)',marginBottom:12,display:'flex',justifyContent:'center'}}>{Ic.check}</div>
+          <h3 style={{fontWeight:900,marginBottom:6}}>Quote requested</h3>
+          <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.6}}><strong>{instructor.name}</strong> will send you a personalised quote by email within 24 hours.</p>
+          <button className="btn btn-p" style={{marginTop:16}} onClick={onClose}>Done</button>
+        </div>
+      :<div style={{display:'flex',flexDirection:'column',gap:14}}>
+          <div style={{display:'flex',gap:12,alignItems:'center',padding:14,background:'var(--bg1)',borderRadius:'var(--r)'}}>
+            <img src={instructor.avatar} style={{width:44,height:44,borderRadius:'50%',objectFit:'cover'}} alt="" loading="lazy"/>
+            <div>
+              <div style={{fontWeight:800}}>{instructor.name}</div>
+              <div style={{fontSize:'var(--txs)',color:'var(--text3)'}}>£{instructor.rate}/hr · {instructor.passRate}% pass rate</div>
+            </div>
+          </div>
+          <div className="field"><span className="lbl">Special requirements?</span>
+            <textarea className="inp" rows={3} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="e.g. block booking discount, specific times, accessibility needs…"/>
+          </div>
+          <div className="cl-info callout">
+            <strong style={{color:'var(--blue)'}}>How it works: </strong>The instructor will email you a quote within 24 hours. No obligation to book.
+          </div>
+        </div>
+    }
+  </Modal>;
+};
+
+/* ── REVIEW MODAL ────────────────────────────────────────────────── */
+const ReviewModal=({instructor,onClose,onSubmit})=>{
+  const [rating,setRating]=useState(0);
+  const [text,setText]=useState('');
+  const [hover,setHover]=useState(0);
+  const submit=e=>{e.preventDefault();if(!rating)return;onSubmit(instructor.id,rating,text);onClose();};
+  return<Modal open={true} onClose={onClose} title={`Review ${instructor.name.split(' ')[0]}`}
+    footer={<><button className="btn btn-ghost btn-full" onClick={onClose}>Cancel</button><button className="btn btn-p btn-full btn-lg" disabled={!rating} onClick={submit}>Submit review</button></>}>
+    <div style={{display:'flex',flexDirection:'column',gap:16}}>
+      <div>
+        <div className="lbl" style={{marginBottom:10}}>Your rating</div>
+        <div style={{display:'flex',gap:6}}>
+          {[1,2,3,4,5].map(n=><button key={n} type="button"
+            style={{background:'none',border:'none',cursor:'pointer',color:n<=(hover||rating)?'var(--amber)':'var(--text3)',fontSize:32,lineHeight:1,padding:4,minWidth:44,minHeight:44,display:'flex',alignItems:'center',justifyContent:'center',transition:'color .15s'}}
+            onMouseEnter={()=>setHover(n)} onMouseLeave={()=>setHover(0)} onClick={()=>setRating(n)}>★</button>)}
+        </div>
+        {rating>0&&<div style={{fontSize:'var(--txs)',color:'var(--text3)',marginTop:4}}>{['','Poor','Okay','Good','Great','Excellent!'][rating]}</div>}
+      </div>
+      <div className="field"><span className="lbl">Your review</span>
+        <textarea className="inp" rows={4} value={text} onChange={e=>setText(e.target.value)} placeholder="Tell other learners about your experience…" required/>
+      </div>
+    </div>
+  </Modal>;
+};
+
+/* ── RANKING METHOD PAGE ──────────────────────────────────────────── */
+const RankingPage=({onBack})=><div className="wrap page" style={{paddingTop:24,paddingBottom:48,maxWidth:680,margin:'0 auto'}}>
+  <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:20}}>{Ic.arrowL} Back</button>
+  <div className="card-solid" style={{padding:32,borderRadius:'var(--r2xl)'}}>
+    <h1 style={{fontSize:'var(--t2xl)',fontWeight:900,letterSpacing:'-.02em',marginBottom:6}}>How we rank instructors</h1>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:24,lineHeight:1.7}}>Full transparency on how results are ordered.</p>
+    <h2 style={{fontWeight:800,marginBottom:8}}>PassScore™</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:12,lineHeight:1.7}}>Every instructor gets a PassScore out of 100: <strong style={{color:'var(--text)'}}>40% price competitiveness</strong> (vs regional average), <strong style={{color:'var(--text)'}}>30% star rating</strong>, <strong style={{color:'var(--text)'}}>30% pass rate</strong>.</p>
+    <h2 style={{fontWeight:800,marginBottom:8,marginTop:20}}>Sponsored placements</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:12,lineHeight:1.7}}>Premium subscribers (£12.99/mo) are promoted to positions 1–3 when their PassScore is within 5 points of organic results. All sponsored results are labelled <span className="chip chip-blue" style={{fontSize:9,padding:'2px 7px',verticalAlign:'middle'}}>SPONSORED</span>. Limited to 3 slots per postcode area.</p>
+    <h2 style={{fontWeight:800,marginBottom:8,marginTop:20}}>Pass rates</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',marginBottom:12,lineHeight:1.7}}>Self-reported unless marked DVSA-verified. We are working towards automated DVSA data integration.</p>
+    <h2 style={{fontWeight:800,marginBottom:8,marginTop:20}}>Estimated total cost</h2>
+    <p style={{color:'var(--text2)',fontSize:'var(--tsm)',lineHeight:1.7}}>Uses DVSA 2023 survey averages: Complete Beginner (47 hrs), A Few Hours (35 hrs), Some Experience (22 hrs), Returning Driver (12 hrs).</p>
+    <div style={{marginTop:20,padding:'12px 14px',background:'var(--bg2)',border:'1px solid var(--bdr)',borderRadius:'var(--r)',fontSize:'var(--txs)',color:'var(--text3)',lineHeight:1.7}}>
+      Complaints: ranking@passpal.ai · PassPal AI is a comparison service and does not endorse individual instructors.
+    </div>
+  </div>
+</div>;
+
+
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+</body>
+</html>
