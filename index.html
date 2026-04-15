@@ -90,7 +90,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .page{padding-bottom:calc(var(--tab-h) + var(--safe-b) + 16px)}
 /* SHEET */
 .sh-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;animation:fi .2s ease}
-.sh{position:fixed;bottom:0;left:0;right:0;z-index:101;background:var(--surface);border-radius:20px 20px 0 0;padding-bottom:calc(16px + var(--safe-b));max-height:92svh;overflow-y:auto;animation:su .3s cubic-bezier(.22,.68,0,1.1)}
+.sh{position:fixed;bottom:0;left:0;right:0;z-index:101;background:var(--surface);border-radius:20px 20px 0 0;max-height:92svh;display:flex;flex-direction:column;animation:su .3s cubic-bezier(.22,.68,0,1.1)}
+.sh-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sh-foot{padding:14px 20px calc(14px + var(--safe-b));border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
 .sh-hd{display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid var(--border)}
 .sh-bd{padding:20px}
 .sh-bar{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0}
@@ -285,7 +287,7 @@ const simDVSA=async ref=>{await new Promise(r=>setTimeout(r,1400));const f=INSTS
 const simEmail=async(to,sub,body)=>{await new Promise(r=>setTimeout(r,700));return{ok:true,id:`msg_${Date.now()}`,to,preview:body.slice(0,100)};};
 
 /* ── SHEET ── */
-const Sheet=({open,onClose,title,children})=>{
+const Sheet=({open,onClose,title,children,footer})=>{
   if(!open)return null;
   return<>
     <div className="sh-ov" onClick={onClose}/>
@@ -295,7 +297,10 @@ const Sheet=({open,onClose,title,children})=>{
         <span style={{fontSize:18,fontWeight:700}}>{title}</span>
         <button className="xbtn" onClick={onClose}>{Ic.x}</button>
       </div>
-      <div className="sh-bd">{children}</div>
+      <div className="sh-scroll">
+        <div className="sh-bd">{children}</div>
+      </div>
+      {footer&&<div className="sh-foot">{footer}</div>}
     </div>
   </>;
 };
@@ -581,9 +586,9 @@ const Compare=({insts,sp,isGuest,onNav,onProfile,onBook})=>{
     </div>
 
     {/* Filter Sheet */}
-    <Sheet open={filterOpen} onClose={()=>setFO(false)} title="">
+    <Sheet open={filterOpen} onClose={()=>setFO(false)} title="Filters"
+      footer={<button className="btn btn-p btn-full btn-lg" onClick={()=>setFO(false)}>Show {results.length} results</button>}>
       <FilterContent maxRate={maxRate} setMR={setMR} tx={tx} setTx={setTx} gender={gender} setG={setG} ltype={ltype} setLt={setLt} verOnly={verOnly} setVO={setVO} specs={specs} toggleSpec={togSpec} onReset={reset}/>
-      <button className="btn btn-p btn-full btn-lg" style={{marginTop:20}} onClick={()=>setFO(false)}>Show {results.length} results</button>
     </Sheet>
   </div>;
 };
