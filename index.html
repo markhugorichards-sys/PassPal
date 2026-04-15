@@ -422,13 +422,13 @@ textarea.input { resize: vertical; min-height: 90px; }
 .expand-panel {
   border-top: 1px solid var(--border-l);
   background: var(--off);
-  padding: 22px 24px;
+  padding: 16px;
   display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
   animation: fadeIn .2s ease both;
 }
-@media(max-width:700px){ .expand-panel { grid-template-columns: 1fr 1fr; } }
+@media(min-width:769px){ .expand-panel { grid-template-columns: repeat(4,1fr); padding: 22px 24px; gap: 20px; } }
 .expand-section-title { font-size: var(--t-xs); font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
 
 /* Mini price chart */
@@ -661,8 +661,7 @@ input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; }
   .inst-row:hover { transform: none !important; box-shadow: none !important; border-color: var(--border) !important; }
   .btn:active { transform: scale(.97) !important; }
 }
-.mob-metrics-wrap { display: none; }
-@media(max-width:768px) { .mob-metrics-wrap { display: block; } }
+
 
 /* ─── MOBILE CARD vs DESKTOP ROW ───────────────────────────────── */
 .mob-card  { display: none; }
@@ -680,6 +679,49 @@ input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; }
   .mob-mn.warn   { color: var(--amber); }
   .mob-mn.bad    { color: var(--red); }
 }
+
+.results-layout { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+@media(min-width:900px){ .results-layout { grid-template-columns: 230px 1fr; } }
+
+.theory-layout { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+@media(min-width:769px){ .theory-layout { grid-template-columns: 1fr 260px; } }
+
+.profile-body { padding: 20px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media(min-width:769px){ .profile-body { padding: 32px 36px; grid-template-columns: 1fr 280px; gap: 32px; } }
+
+.home-acc-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; }
+@media(min-width:769px){ .home-acc-grid { grid-template-columns: 1fr 1fr; gap: 40px; } }
+
+/* Filter mob button */
+.filter-mob-btn {
+  display: none;
+  align-items: center; gap: 6px; padding: 8px 14px;
+  border: 1.5px solid var(--border); border-radius: 99px;
+  background: var(--surface); color: var(--text-2);
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; position: relative; min-height: 36px;
+  font-family: inherit;
+}
+@media(max-width: 900px) { .filter-mob-btn { display: inline-flex; } }
+.filter-dot-badge {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--blue);
+  position: absolute; top: -2px; right: -2px;
+}
+/* Bottom sheet */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; animation: fadeIn .2s ease; }
+.sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 201;
+  background: var(--surface); border-radius: 20px 20px 0 0;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -8px 40px rgba(0,0,0,.12);
+  animation: slideUp .28s cubic-bezier(.22,.68,0,1.1) both;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+.sheet-handle { width: 36px; height: 4px; background: var(--border); border-radius: 99px; margin: 12px auto 16px; }
+@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+.close-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: var(--off); color: var(--text-2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+@media(max-width:900px){aside{display:none}}
 </style>
 </head>
 <body>
@@ -864,7 +906,7 @@ const Header = ({ view, onNav, learner, onLogout, instructor, onInstLogout, logo
 
 // ─── HOME ─────────────────────────────────────────────────────────────────
 const Home = ({ onNav, onSearch }) => {
-  const [form, setForm] = useState({ postcode:'Manchester', experience:'Complete Beginner', transmission:'Any', lessonType:'Standard' });
+  const [form, setForm] = useState({ postcode:'', experience:'Complete Beginner', transmission:'Any', lessonType:'Standard' });
   const set = (k, v) => setForm(p => ({...p, [k]:v}));
 
   return (
@@ -933,39 +975,45 @@ const Home = ({ onNav, onSearch }) => {
           ))}
         </div>
 
-        <div className="card" style={{padding:'36px 40px',background:'var(--navy)',border:'none',marginBottom:56,borderRadius:'var(--r-xl)'}}>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40,alignItems:'center'}}>
+        <div className="card" style={{padding:'28px 20px',background:'var(--navy)',border:'none',marginBottom:32,borderRadius:'var(--r-xl)'}}>
+          <div className='home-acc-grid'>
             <div>
               <div style={{fontSize:'var(--t-xs)',fontWeight:600,color:'rgba(255,255,255,.4)',letterSpacing:'.06em',textTransform:'uppercase',marginBottom:10}}>Built for every learner</div>
               <h2 className="serif" style={{fontSize:'var(--t-2xl)',color:'#fff',marginBottom:14,fontWeight:400}}>Accessibility filters<br/>no other platform has.</h2>
               <p style={{fontSize:'var(--t-sm)',color:'rgba(255,255,255,.5)',lineHeight:1.7,marginBottom:24}}>The only UK comparison site with dedicated filters for ADHD-friendly, BSL and Deaf support, autism-friendly, and adapted vehicle instructors.</p>
               <button className="btn btn-primary" onClick={()=>onNav('compare')}>Find a specialist instructor</button>
             </div>
-            <div style={{display:'flex',flexWrap:'wrap',gap:10,alignContent:'center'}}>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:4}}>
               {['ADHD Friendly','BSL / Deaf Support','Adapted Vehicle','Autism Friendly','Anxious Drivers'].map(s => (
-                <span key={s} className="chip chip-navy" style={{padding:'8px 16px',fontSize:'var(--t-sm)'}}>{s}</span>
+                <span key={s} style={{display:'inline-block',padding:'7px 14px',
+                  borderRadius:99,fontSize:13,fontWeight:600,
+                  background:'rgba(255,255,255,.1)',
+                  border:'1px solid rgba(255,255,255,.2)',
+                  color:'#fff'}}>{s}</span>
               ))}
             </div>
           </div>
         </div>
 
-        <div style={{textAlign:'center',marginBottom:36}}>
-          <h2 className="serif" style={{fontSize:'var(--t-2xl)',fontWeight:400,marginBottom:10}}>How the comparison works</h2>
-          <p style={{fontSize:'var(--t-sm)',color:'var(--text-2)'}}>Transparent methodology. No hidden promotions.</p>
-        </div>
-        <div className="grid-4">
-          {[
-            {n:'1',t:'Enter your postcode and experience level',d:'30 seconds. No account needed.'},
-            {n:'2',t:'See all local instructors ranked',d:'Cheapest first, or by value score — your choice.'},
-            {n:'3',t:'Compare price, total cost, and pass rate',d:'All the data side by side on a single screen.'},
-            {n:'4',t:'Book directly with your chosen instructor',d:'No middleman fees. No commissions.'},
-          ].map(({n,t,d},i) => (
-            <div key={n} className={`fade-up delay-${i+1}`} style={{textAlign:'center',padding:'8px 16px'}}>
-              <div style={{width:40,height:40,borderRadius:'50%',background:'var(--blue)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'Instrument Serif, serif',fontSize:20,margin:'0 auto 14px'}}>{n}</div>
-              <h4 style={{fontSize:'var(--t-sm)',fontWeight:600,marginBottom:6,lineHeight:1.4}}>{t}</h4>
-              <p style={{fontSize:'var(--t-xs)',color:'var(--text-3)',lineHeight:1.6}}>{d}</p>
-            </div>
-          ))}
+        <div style={{background:'var(--surface)',borderRadius:'var(--r-lg)',padding:'28px 20px',marginTop:8}}>
+          <div style={{textAlign:'center',marginBottom:28}}>
+            <h2 className="serif" style={{fontSize:'var(--t-2xl)',fontWeight:400,marginBottom:8,color:'var(--text)'}}>How it works</h2>
+            <p style={{fontSize:'var(--t-sm)',color:'var(--text-2)'}}>30 seconds. No account. No commitment.</p>
+          </div>
+          <div className="grid-4">
+            {[
+              {n:'1',t:'Enter your postcode',d:'30 seconds. No account needed.'},
+              {n:'2',t:'See instructors ranked',d:'Cheapest first, or by PassScore.'},
+              {n:'3',t:'Compare price and pass rate',d:'All data side by side.'},
+              {n:'4',t:'Book directly',d:'No middleman fees. No commissions.'},
+            ].map(({n,t,d},i) => (
+              <div key={n} style={{textAlign:'center',padding:'8px 12px'}}>
+                <div style={{width:40,height:40,borderRadius:'50%',background:'var(--blue)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Instrument Serif',serif",fontSize:20,margin:'0 auto 12px'}}>{n}</div>
+                <h4 style={{fontSize:'var(--t-sm)',fontWeight:600,marginBottom:5,lineHeight:1.4,color:'var(--text)'}}>{t}</h4>
+                <p style={{fontSize:'var(--t-xs)',color:'var(--text-3)',lineHeight:1.6}}>{d}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
@@ -982,9 +1030,10 @@ const ComparisonPage = ({ instructors, searchParams, isGuest, onNav, onViewProfi
   const [lessonType, setLessonType] = useState(searchParams?.lessonType || 'Any');
   const [specialties, setSpecialties] = useState([]);
   const [expanded, setExpanded] = useState(null);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const experience = searchParams?.experience || 'Complete Beginner';
-  const postcode = searchParams?.postcode || 'Manchester';
+  const postcode = searchParams?.postcode || '';
   const hours = HOURS[experience] || 47;
   const regionAvg = REGION_AVG(postcode);
 
@@ -1027,16 +1076,23 @@ const ComparisonPage = ({ instructors, searchParams, isGuest, onNav, onViewProfi
             <span>in {postcode}</span>
             {maxSaving > 0 && <span className="savings-pill">{I.pound} Save up to £{Math.round(maxSaving)}</span>}
           </div>
-          <div className="sort-group">
-            {[{v:'value',l:'Best Value'},{v:'price',l:'Cheapest / hr'},{v:'total',l:'Lowest Total'},{v:'pass',l:'Pass Rate'},{v:'rating',l:'Top Rated'}].map(({v,l}) => (
-              <button key={v} className={`sort-btn${sortBy===v?' on':''}`} onClick={()=>setSortBy(v)}>{l}</button>
-            ))}
+          <div style={{display:'flex',alignItems:'center',gap:8,flex:1,justifyContent:'flex-end'}}>
+            <div className="sort-group">
+              {[{v:'value',l:'Best Value'},{v:'price',l:'Cheapest / hr'},{v:'total',l:'Lowest Total'},{v:'pass',l:'Pass Rate'},{v:'rating',l:'Top Rated'}].map(({v,l}) => (
+                <button key={v} className={`sort-btn${sortBy===v?' on':''}`} onClick={()=>setSortBy(v)}>{l}</button>
+              ))}
+            </div>
+            <button className="filter-mob-btn" onClick={()=>setFilterOpen(true)}>
+              {I.arrowR} Filters
+              {(transmission!=='Any'||gender!=='Any'||lessonType!=='Any'||verifiedOnly||specialties.length>0)
+                && <span className="filter-dot-badge"/>}
+            </button>
           </div>
         </div>
       </div>
 
       <div className="wrap" style={{paddingTop:24,paddingBottom:48}}>
-        <div style={{display:'grid',gridTemplateColumns:'230px 1fr',gap:20,alignItems:'start'}}>
+        <div className='results-layout'>
 
           {/* Sidebar */}
           <aside className="sidebar" style={{fontSize:'var(--t-sm)'}}>
@@ -1143,7 +1199,7 @@ const ComparisonPage = ({ instructors, searchParams, isGuest, onNav, onViewProfi
                         </div>
                       </div>
                     </div>
-                    <span className="mob-metrics-wrap"><MobMetrics inst={inst} hours={hours} regionAvg={regionAvg}/></span>
+                    
 
                     <div className={`metric-cell ${priceCls}`}>
                       <div className="metric-n">£{inst.hourlyRate}</div>
@@ -1253,134 +1309,267 @@ const ComparisonPage = ({ instructors, searchParams, isGuest, onNav, onViewProfi
         </div>
       </div>
 
-      <style>{`@media(max-width:900px){aside{display:none}}`}</style>
+
+      {/* Mobile filter sheet */}
+      {filterOpen && <>
+        <div className="sheet-overlay" onClick={()=>setFilterOpen(false)}/>
+        <div className="sheet">
+          <div className="sheet-handle"/>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0 20px 14px',borderBottom:'1px solid var(--border)'}}>
+            <span style={{fontWeight:700,fontSize:18}}>Filters</span>
+            <button className="close-btn" onClick={()=>setFilterOpen(false)}>{I.x}</button>
+          </div>
+          <div style={{padding:'20px',overflowY:'auto',maxHeight:'70vh'}}>
+            <div style={{marginBottom:20}}>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:10}}>Max hourly rate</div>
+              <input type="range" min={20} max={80} value={maxPrice} onChange={e=>setMaxPrice(+e.target.value)}/>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--text-3)',marginTop:6}}>
+                <span>£20</span><strong style={{color:'var(--blue)'}}>£{maxPrice}/hr</strong>
+              </div>
+            </div>
+            {[
+              {label:'Transmission', opts:['Any','Manual','Automatic','EV'], val:transmission, set:setTransmission},
+              {label:'Lesson type', opts:['Any','Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'], val:lessonType, set:setLessonType},
+              {label:'Gender preference', opts:['Any','Male','Female'], val:gender, set:setGender},
+            ].map(({label,opts,val,set})=>(
+              <div key={label} style={{marginBottom:18}}>
+                <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:8}}>{label}</div>
+                <select className="select" value={val} onChange={e=>set(e.target.value)} style={{width:'100%'}}>
+                  {opts.map(o=><option key={o}>{o}</option>)}
+                </select>
+              </div>
+            ))}
+            <div style={{marginBottom:18}}>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:10}}>Specialist support</div>
+              {['Anxious Drivers','ADHD Friendly','BSL / Deaf Support','Autism Friendly','Adapted Vehicle'].map(s=>(
+                <label key={s} style={{display:'flex',alignItems:'center',gap:10,marginBottom:12,cursor:'pointer',minHeight:44}}>
+                  <input type="checkbox" style={{width:18,height:18,accentColor:'var(--blue)',flexShrink:0}}
+                    checked={specialties.includes(s)} onChange={()=>setSpecialties(p=>p.includes(s)?p.filter(x=>x!==s):[...p,s])}/>
+                  <span style={{fontSize:14,color:'var(--text-2)'}}>{s}</span>
+                </label>
+              ))}
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',minHeight:48,marginBottom:20}}>
+              <span style={{fontWeight:600,fontSize:14}}>Verified only</span>
+              <label className="toggle">
+                <input type="checkbox" checked={verifiedOnly} onChange={e=>setVerifiedOnly(e.target.checked)}/>
+                <span className="toggle-track"/>
+              </label>
+            </div>
+            <button className="btn btn-primary btn-full btn-lg" onClick={()=>setFilterOpen(false)}>
+              Show {results.length} results
+            </button>
+            <button className="btn btn-ghost btn-full" style={{marginTop:10}}
+              onClick={()=>{setTransmission('Any');setGender('Any');setLessonType('Any');setVerifiedOnly(false);setMaxPrice(60);setSpecialties([]);}}>
+              Reset all filters
+            </button>
+          </div>
+        </div>
+      </>}
     </>
   );
 };
 
 // ─── INSTRUCTOR PROFILE ───────────────────────────────────────────────────
 const InstructorProfile = ({ instructor: i, experience, postcode, onBack, onBook }) => {
-  const hours = HOURS[experience || 'Complete Beginner'] || 47;
-  const totalCost = i.hourlyRate * hours;
-  const regionAvg = REGION_AVG(postcode || '');
-  const priceScore = Math.round(Math.max(0, Math.min(100, 100 - ((i.hourlyRate-20)/50)*100)));
-  const vScore = Math.round(priceScore*.4 + (i.rating/5)*100*.3 + i.passRate*.3);
-  const vColor = vScore>=85?'var(--green)':vScore>=70?'var(--blue)':vScore>=55?'var(--amber)':'var(--red)';
+  const hours    = HOURS[experience || 'Complete Beginner'] || 47;
+  const total    = i.hourlyRate * hours;
+  const ravg     = REGION_AVG(postcode || '');
+  const pScore   = Math.round(Math.max(0, Math.min(100, 100-((i.hourlyRate-20)/50)*100)));
+  const vScore   = Math.round(pScore*.4 + (i.rating/5)*100*.3 + i.passRate*.3);
+  const vColor   = vScore>=85?'var(--green)':vScore>=70?'var(--blue)':vScore>=55?'var(--amber)':'var(--red)';
+  const saving   = Math.round(ravg*hours - total);
 
   return (
-    <div className="wrap" style={{paddingTop:24,paddingBottom:56,pageBreakInside:'avoid'}}>
-      <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:20}}>{I.arrowL} Back to comparison</button>
+    <div style={{paddingBottom:56}}>
+      <div className="wrap" style={{paddingTop:20,paddingBottom:0}}>
+        <button className="btn btn-ghost btn-sm" onClick={onBack} style={{marginBottom:16}}>{I.arrowL} Back</button>
+      </div>
 
-      <div className="card" style={{overflow:'hidden',borderRadius:'var(--r-xl)'}}>
-        {/* Profile header */}
-        <div style={{background:'var(--navy)',padding:'32px 36px'}}>
-          <div style={{display:'flex',gap:24,alignItems:'flex-start',flexWrap:'wrap'}}>
-            <img src={i.avatar} alt={i.name} style={{width:88,height:88,borderRadius:'50%',objectFit:'cover',border:'3px solid rgba(255,255,255,.15)',flexShrink:0}}/>
-            <div style={{flex:1}}>
-              <div style={{display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:12,alignItems:'flex-start'}}>
-                <div>
-                  <h1 className="serif" style={{color:'#fff',fontSize:'var(--t-2xl)',fontWeight:400,marginBottom:6}}>{i.name}</h1>
-                  {i.verified && <span style={{color:'#93b4f0',fontSize:'var(--t-xs)',fontWeight:600,display:'flex',alignItems:'center',gap:5}}>{I.shield} DVSA Verified</span>}
-                </div>
-                <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
-                  {[
-                    {l:'Per hour', v:`£${i.hourlyRate}`},
-                    {l:'Pass rate', v:`${i.passRate}%`},
-                    {l:'Value score', v:vScore, c:vColor},
-                  ].map(({l,v,c}) => (
-                    <div key={l} style={{textAlign:'center',background:'rgba(255,255,255,.07)',borderRadius:12,padding:'12px 18px',minWidth:80}}>
-                      <div className="serif" style={{fontSize:24,color:c||'#fff',lineHeight:1}}>{v}</div>
-                      <div style={{fontSize:'var(--t-xs)',color:'rgba(255,255,255,.4)',marginTop:4,textTransform:'uppercase',letterSpacing:'.05em'}}>{l}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{display:'flex',gap:16,marginTop:12,flexWrap:'wrap'}}>
-                {[i.locationName, `${i.experienceYears} years experience`, i.vehicle].map(x=>(
-                  <span key={x} style={{color:'rgba(255,255,255,.4)',fontSize:'var(--t-xs)',display:'flex',alignItems:'center',gap:4}}>{x}</span>
-                ))}
+      {/* ── HERO CARD ─────────────────────────────────────── */}
+      <div style={{background:'var(--navy)',padding:'28px 0 0'}}>
+        <div className="wrap">
+          {/* Avatar + Name row */}
+          <div style={{display:'flex',gap:18,alignItems:'center',marginBottom:20}}>
+            <img src={i.avatar} alt={i.name}
+              style={{width:80,height:80,borderRadius:'50%',objectFit:'cover',
+                      border:'3px solid rgba(255,255,255,.2)',flexShrink:0}}/>
+            <div>
+              <h1 style={{color:'#fff',fontSize:'clamp(22px,5vw,30px)',fontWeight:700,
+                          letterSpacing:'-.02em',lineHeight:1.1,marginBottom:6,
+                          fontFamily:"'Instrument Serif',serif"}}>{i.name}</h1>
+              <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+                {i.verified
+                  ? <span style={{display:'inline-flex',alignItems:'center',gap:5,
+                                  background:'rgba(0,200,100,.15)',border:'1px solid rgba(0,200,100,.3)',
+                                  borderRadius:99,padding:'3px 10px',fontSize:12,fontWeight:600,color:'#4fffb0'}}>
+                      {I.shield} DVSA Verified
+                    </span>
+                  : <span style={{display:'inline-flex',alignItems:'center',gap:5,
+                                  background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.15)',
+                                  borderRadius:99,padding:'3px 10px',fontSize:12,fontWeight:600,color:'rgba(255,255,255,.5)'}}>
+                      Unverified
+                    </span>
+                }
+                <span style={{color:'rgba(255,255,255,.45)',fontSize:12}}>{i.locationName} · {i.experienceYears} yrs</span>
               </div>
             </div>
+          </div>
+
+          {/* Stars */}
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:20}}>
+            <Stars r={i.rating}/>
+            <span style={{color:'#fff',fontWeight:700,fontSize:15}}>{i.rating}</span>
+            <span style={{color:'rgba(255,255,255,.4)',fontSize:13}}>({i.ratingCount} reviews)</span>
+            <Avail status={i.availability}/>
+          </div>
+
+          {/* 3 stat boxes — always horizontal grid */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:10,marginBottom:0}}>
+            {[
+              {label:'Per hour',    value:`£${i.hourlyRate}`,  color:'#fff'},
+              {label:'Pass rate',   value:`${i.passRate}%`,    color:i.passRate>=90?'#4fffb0':'#fff'},
+              {label:'PassScore',   value:vScore,              color:vColor},
+            ].map(({label,value,color})=>(
+              <div key={label} style={{background:'rgba(255,255,255,.08)',borderRadius:12,
+                                       padding:'14px 8px',textAlign:'center',
+                                       border:'1px solid rgba(255,255,255,.1)'}}>
+                <div style={{fontSize:'clamp(20px,5vw,28px)',fontWeight:900,color,
+                             letterSpacing:'-.02em',lineHeight:1,
+                             fontFamily:"'Instrument Serif',serif"}}>{value}</div>
+                <div style={{fontSize:10,color:'rgba(255,255,255,.45)',marginTop:5,
+                            textTransform:'uppercase',letterSpacing:'.07em',fontWeight:600}}>{label}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Total cost bar */}
-        <div style={{background:'var(--blue-ll)',borderBottom:'1px solid var(--blue-l)',padding:'18px 36px'}}>
-          <div style={{display:'flex',gap:32,alignItems:'center',flexWrap:'wrap'}}>
-            <div>
-              <div style={{fontSize:'var(--t-xs)',fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:5}}>Estimated total cost to pass</div>
-              <div style={{display:'flex',alignItems:'baseline',gap:10}}>
-                <span className="serif" style={{fontSize:'var(--t-3xl)',color:'var(--blue)',lineHeight:1}}>£{totalCost.toLocaleString()}</span>
-                <span style={{fontSize:'var(--t-sm)',color:'var(--text-2)'}}>({hours} hrs × £{i.hourlyRate}/hr)</span>
-              </div>
-              <div style={{fontSize:'var(--t-xs)',color:'var(--text-3)',marginTop:4}}>Based on <em>{experience}</em> experience level · DVSA 2023 data</div>
-            </div>
-            <div style={{width:1,height:48,background:'var(--blue-l)'}}/>
-            <div>
-              <div style={{fontSize:'var(--t-xs)',fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:5}}>Regional average ({postcode})</div>
-              <span className="serif" style={{fontSize:24,color:'var(--text-2)'}}>£{(regionAvg * hours).toLocaleString()}</span>
-              {totalCost < regionAvg * hours && (
-                <div style={{fontSize:'var(--t-xs)',color:'var(--green)',fontWeight:600,marginTop:3}}>
-                  £{Math.round(regionAvg*hours - totalCost)} cheaper than the local average
+        {/* Total cost strip */}
+        <div style={{marginTop:20,background:'rgba(29,111,243,.18)',
+                     borderTop:'1px solid rgba(29,111,243,.3)',padding:'16px 0'}}>
+          <div className="wrap">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+              <div>
+                <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.45)',
+                            textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>Est. total to pass</div>
+                <div style={{display:'flex',alignItems:'baseline',gap:8}}>
+                  <span style={{fontFamily:"'Instrument Serif',serif",fontSize:'clamp(26px,6vw,36px)',
+                               color:'#93b4f0',lineHeight:1,fontWeight:400}}>£{total.toLocaleString()}</span>
+                  <span style={{fontSize:12,color:'rgba(255,255,255,.35)'}}>{hours} hrs × £{i.hourlyRate}</span>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Body */}
-        <div style={{padding:'32px 36px',display:'grid',gridTemplateColumns:'1fr 280px',gap:32}}>
-          <div>
-            <h2 className="serif" style={{fontSize:'var(--t-xl)',fontWeight:400,marginBottom:14}}>About {i.name.split(' ')[0]}</h2>
-            <p style={{color:'var(--text-2)',lineHeight:1.75,marginBottom:28,fontSize:'var(--t-sm)'}}>{i.bio}</p>
-
-            <h2 className="serif" style={{fontSize:'var(--t-lg)',fontWeight:400,marginBottom:12}}>Qualifications</h2>
-            <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:24}}>
-              {i.qualifications.map(q => <span key={q} className="chip chip-blue" style={{padding:'5px 12px'}}>{i.verified && <span style={{marginRight:3}}>{I.check}</span>}{q}</span>)}
-            </div>
-
-            {i.specialties.length > 0 && <>
-              <h2 className="serif" style={{fontSize:'var(--t-lg)',fontWeight:400,marginBottom:12}}>Specialist support</h2>
-              <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:24}}>
-                {i.specialties.map(s => <span key={s} className="chip chip-green" style={{padding:'5px 12px'}}>{s}</span>)}
+                <div style={{fontSize:11,color:'rgba(255,255,255,.35)',marginTop:3}}>
+                  Based on <em>{experience}</em> · DVSA 2023
+                </div>
               </div>
-            </>}
-
-            <h2 className="serif" style={{fontSize:'var(--t-lg)',fontWeight:400,marginBottom:12}}>Price history — last 4 weeks</h2>
-            <div className="price-bars" style={{height:52,marginBottom:8}}>
-              {i.priceHistory.map((p,idx) => (
-                <div key={idx} className={`price-bar${idx===i.priceHistory.length-1?' latest':''}`} style={{height:`${((p-20)/50)*100}%`,minHeight:6}}/>
-              ))}
-            </div>
-            <Trend history={i.priceHistory}/>
-          </div>
-
-          <div>
-            <div className="card" style={{padding:24,position:'sticky',top:84,borderColor:'var(--blue)'}}>
-              <div className="serif" style={{fontSize:32,marginBottom:4}}>£{i.hourlyRate}<span style={{fontSize:14,color:'var(--text-3)',fontFamily:'DM Sans, sans-serif',fontWeight:400}}>/hr</span></div>
-              <Bench rate={i.hourlyRate} avg={regionAvg}/>
-              <div style={{display:'flex',alignItems:'center',gap:6,marginTop:10,marginBottom:16}}>
-                <Stars r={i.rating}/><span style={{fontSize:'var(--t-xs)',color:'var(--text-2)'}}>{i.rating} ({i.ratingCount} reviews)</span>
-              </div>
-              <button className="btn btn-primary btn-full btn-lg" onClick={()=>onBook(i)} style={{marginBottom:10}}>Book a lesson</button>
-              <div style={{display:'flex',alignItems:'center',gap:6,justifyContent:'center',fontSize:'var(--t-xs)',color:i.availability==='Available'?'var(--green)':'var(--amber)'}}>
-                <AvailDot status={i.availability}/>{i.availability}
-              </div>
-              {i.tier === 'Premium' && (
-                <div style={{marginTop:14,padding:'10px 14px',background:'var(--off)',borderRadius:'var(--r)',fontSize:'var(--t-xs)',color:'var(--text-2)',textAlign:'center',lineHeight:1.5}}>
-                  Premium instructor — top 3 placement guaranteed in your area.
+              {saving > 0 && (
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.45)',
+                              textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>vs local avg</div>
+                  <div style={{fontFamily:"'Instrument Serif',serif",fontSize:22,
+                               color:'rgba(255,255,255,.5)',lineHeight:1}}>£{(ravg*hours).toLocaleString()}</div>
+                  <div style={{fontSize:12,color:'#4fffb0',fontWeight:600,marginTop:2}}>
+                    £{saving} cheaper
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-      <style>{`@media(max-width:768px){.card div[style*="grid-template-columns"]{grid-template-columns:1fr!important}}`}</style>
+
+      {/* ── BOOK CTA ──────────────────────────────────────── */}
+      <div className="wrap" style={{padding:'16px 16px 0'}}>
+        <button className="btn btn-primary btn-full btn-lg"
+                style={{marginBottom:8,minHeight:52,fontSize:16,fontWeight:700}}
+                onClick={()=>onBook(i)}>
+          Book a lesson with {i.name.split(' ')[0]}
+        </button>
+        <div style={{textAlign:'center',fontSize:12,color:'var(--text-3)',paddingBottom:4}}>
+          <AvailDot status={i.availability}/> {i.availability} · No booking fee
+        </div>
+      </div>
+
+      {/* ── ABOUT ─────────────────────────────────────────── */}
+      <div className="wrap" style={{paddingTop:24,paddingBottom:8}}>
+        <div className="card" style={{padding:'22px 20px',marginBottom:14}}>
+          <h2 style={{fontSize:18,fontWeight:700,marginBottom:10,letterSpacing:'-.01em'}}>
+            About {i.name.split(' ')[0]}
+          </h2>
+          <p style={{color:'var(--text-2)',lineHeight:1.75,fontSize:14,marginBottom:16}}>{i.bio}</p>
+
+          {/* Qualifications */}
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',
+                        letterSpacing:'.07em',marginBottom:8}}>Qualifications</div>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+              {i.qualifications.map(q=>(
+                <span key={q} className="chip chip-blue" style={{padding:'5px 12px'}}>
+                  {i.verified && <span style={{marginRight:3}}>{I.check}</span>}{q}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Lesson types */}
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',
+                        letterSpacing:'.07em',marginBottom:8}}>Lesson types</div>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+              {i.lessonTypes.map(l=>(
+                <span key={l} className="chip chip-gray">{l}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Specialist support */}
+          {i.specialties.length > 0 && (
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',
+                          letterSpacing:'.07em',marginBottom:8}}>Specialist support</div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                {i.specialties.map(s=>(
+                  <span key={s} className="chip chip-green" style={{padding:'5px 12px'}}>{s}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Transmissions */}
+          <div>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',
+                        letterSpacing:'.07em',marginBottom:8}}>Transmission</div>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+              {i.transmissions.map(t=>(
+                <span key={t} className="chip chip-gray">{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── PRICE HISTORY ─────────────────────────────── */}
+        <div className="card" style={{padding:'20px',marginBottom:14}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',
+                      letterSpacing:'.07em',marginBottom:12}}>Price history — 4 weeks</div>
+          <div className="price-bars" style={{height:44,marginBottom:8}}>
+            {i.priceHistory.map((p,idx)=>(
+              <div key={idx} className={`price-bar${idx===i.priceHistory.length-1?' latest':''}`}
+                   style={{height:`${((p-20)/50)*100}%`,minHeight:6}}/>
+            ))}
+          </div>
+          <Trend history={i.priceHistory}/>
+        </div>
+
+        {/* ── BOOK AGAIN ────────────────────────────────── */}
+        <button className="btn btn-primary btn-full btn-lg"
+                style={{minHeight:52,fontSize:16,fontWeight:700,marginBottom:40}}
+                onClick={()=>onBook(i)}>
+          Book a lesson · £{i.hourlyRate}/hr
+        </button>
+      </div>
     </div>
   );
 };
 
-// ─── BOOKING MODAL ─────────────────────────────────────────────────────────
 const BookingModal = ({ instructor, onClose }) => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -1572,7 +1761,7 @@ const InstructorPortal = ({ instructor: init, onUpdate, onLogout }) => {
                     <div>
                       <h3 style={{fontSize:'var(--t-lg)',fontWeight:600,marginBottom:3}}>{form.name}</h3>
                       {form.verified && <span className="verified-mark">{I.shield} DVSA Verified</span>}
-                      <div style={{fontSize:'var(--t-xs)',color:'var(--text-3)',marginTop:3}}>{form.locationName} · {form.vehicle}</div>
+                      <div style={{fontSize:'var(--t-xs)',color:'var(--text-3)',marginTop:3}}>{form.locationName}</div>
                     </div>
                   </div>
                   <p style={{color:'var(--text-2)',fontSize:'var(--t-sm)',lineHeight:1.7,marginBottom:18}}>{form.bio}</p>
@@ -1808,7 +1997,7 @@ const TheoryPractice = ({ topics, mockLeft, onStartQuiz }) => (
     <h1 className="serif" style={{fontSize:'var(--t-2xl)',fontWeight:400,marginBottom:6,display:'flex',alignItems:'center',gap:12}}>{I.book} Theory Practice</h1>
     <p style={{color:'var(--text-2)',marginBottom:20,fontSize:'var(--t-sm)'}}>Official DVSA-licensed questions. Practice unlimited, for free.</p>
     <div className="callout callout-success" style={{marginBottom:24}}>All questions are sourced from official DVSA material. Practice with confidence.</div>
-    <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:20,alignItems:'start'}}>
+    <div className='theory-layout'>
       <div className="card card-p">
         <h2 style={{fontSize:'var(--t-md)',fontWeight:600,marginBottom:18}}>Study topics</h2>
         <div className="grid-2">
@@ -2096,21 +2285,71 @@ const App = () => {
 
 // ─── MOBILE TAB BAR ────────────────────────────────────────────────
 const MobTabBar = ({ view, onNav, learnerUser, instUser }) => {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   const tabs = [
-    {v:'home',l:'Home',icon:<Svg size={20}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></Svg>},
-    {v:'compare',l:'Compare',icon:<Svg size={20}><path d="M18 20V10M12 20V4M6 20v-6"/></Svg>},
-    {v:'theoryPractice',l:'Theory',icon:<Svg size={20}><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></Svg>},
+    {v:'home',         l:'Home',    icon:<Svg size={20}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></Svg>},
+    {v:'compare',      l:'Compare', icon:<Svg size={20}><path d="M18 20V10M12 20V4M6 20v-6"/></Svg>},
+    {v:'theoryPractice',l:'Theory', icon:<Svg size={20}><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></Svg>},
     {v:learnerUser?'dashboard':instUser?'instructorPortal':'learnerLogin',
      l:learnerUser||instUser?'Account':'Sign in',
      icon:<Svg size={20}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></Svg>},
+    {v:'__more__', l:'More', icon:<Svg size={20}><path d="M3 12h18M3 6h18M3 18h18"/></Svg>},
   ];
-  return <div className="mob-tab-bar">
-    {tabs.map(({v,l,icon}) => (
-      <button key={v} className={`mob-tab-item${view===v?' on':''}`} onClick={()=>onNav(v)}>
-        {icon}<span>{l}</span>
-      </button>
-    ))}
-  </div>;
+
+  const go = v => { setMenuOpen(false); onNav(v); };
+
+  return <>
+    <div className="mob-tab-bar">
+      {tabs.map(({v,l,icon}) => (
+        <button key={v}
+          className={`mob-tab-item${view===v||v==='__more__'&&menuOpen?' on':''}`}
+          onClick={v==='__more__'?()=>setMenuOpen(m=>!m):()=>go(v)}>
+          {icon}<span>{l}</span>
+        </button>
+      ))}
+    </div>
+
+    {menuOpen && <>
+      <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.4)',zIndex:198}}
+           onClick={()=>setMenuOpen(false)}/>
+      <div style={{position:'fixed',bottom:'calc(60px + env(safe-area-inset-bottom,0px))',
+                   left:0,right:0,zIndex:199,background:'var(--surface)',
+                   borderTop:'1px solid var(--border)',borderRadius:'16px 16px 0 0',
+                   boxShadow:'0 -4px 24px rgba(0,0,0,.1)',padding:'8px 0 4px'}}>
+        <div style={{width:36,height:4,background:'var(--border)',borderRadius:99,margin:'8px auto 16px'}}/>
+        {[
+          {v:'instructorInfo', l:'For Instructors', sub:'List your profile, manage bookings',
+           icon:<Svg size={20}><path d="M20 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6m3-3h-6"/></Svg>},
+          {v:'theoryPractice', l:'Theory Practice', sub:'DVSA questions, mock tests',
+           icon:<Svg size={20}><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></Svg>},
+          {v:'compare', l:'Compare Instructors', sub:'Find the best value near you',
+           icon:<Svg size={20}><path d="M18 20V10M12 20V4M6 20v-6"/></Svg>},
+          ...(learnerUser||instUser ? [
+            {v:learnerUser?'dashboard':'instructorPortal', l:'My Account', sub:learnerUser?'Progress & bookings':'Portal & subscription',
+             icon:<Svg size={20}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></Svg>},
+          ] : [
+            {v:'learnerLogin', l:'Sign in', sub:'Access your PassPal account',
+             icon:<Svg size={20}><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><path d="M10 17l5-5-5-5M15 12H3"/></Svg>},
+          ]),
+        ].map(({v,l,sub,icon})=>(
+          <button key={v} onClick={()=>go(v)}
+            style={{display:'flex',alignItems:'center',gap:14,width:'100%',padding:'13px 20px',
+                    background:'none',border:'none',cursor:'pointer',textAlign:'left',
+                    borderBottom:'1px solid var(--border-l)',minHeight:60}}>
+            <span style={{color:'var(--blue)',flexShrink:0}}>{icon}</span>
+            <span>
+              <span style={{display:'block',fontWeight:600,fontSize:15,color:'var(--text)',lineHeight:1.3}}>{l}</span>
+              <span style={{display:'block',fontSize:12,color:'var(--text-3)',marginTop:2}}>{sub}</span>
+            </span>
+            <span style={{marginLeft:'auto',color:'var(--text-4)'}}>
+              <Svg size={16}><path d="M9 18l6-6-6-6"/></Svg>
+            </span>
+          </button>
+        ))}
+      </div>
+    </>}
+  </>;
 };
 
 // ─── MOBILE METRIC STRIP (injected inside inst-row on mobile) ──────
