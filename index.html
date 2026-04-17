@@ -89,16 +89,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 /* PAGE BODY */
 .page{padding-bottom:calc(var(--tab-h) + var(--safe-b) + 16px)}
 /* SHEET */
-.sh-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;animation:fi .2s ease}
-.sh{position:fixed;bottom:0;left:0;right:0;z-index:101;background:var(--surface);border-radius:20px 20px 0 0;max-height:92svh;display:flex;flex-direction:column;animation:su .3s cubic-bezier(.22,.68,0,1.1)}
+.sh-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;animation:fi .2s ease}
+.sh{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--surface);border-radius:20px 20px 0 0;max-height:85svh;display:flex;flex-direction:column;animation:su .3s cubic-bezier(.22,.68,0,1.1)}
 .sh-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.sh-foot{padding:14px 20px calc(14px + var(--safe-b));border-top:1px solid var(--border);background:var(--surface);flex-shrink:0}
+.sh-foot{padding:12px 20px calc(12px + var(--tab-h) + var(--safe-b));border-top:1px solid var(--border);background:var(--surface);flex-shrink:0;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
 .sh-hd{display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid var(--border)}
 .sh-bd{padding:20px}
 .sh-bar{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0}
 /* MODAL */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;animation:fi .2s ease}
-.modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:92svh;overflow-y:auto;padding-bottom:calc(16px + var(--safe-b));animation:su .3s cubic-bezier(.22,.68,0,1.1)}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:flex-end;animation:fi .2s ease}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-height:85svh;overflow-y:auto;padding-bottom:calc(16px + var(--tab-h) + var(--safe-b));z-index:301;position:relative;animation:su .3s cubic-bezier(.22,.68,0,1.1)}
 .modal-hd{display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid var(--border)}
 .modal-bd{padding:20px}
 .xbtn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
@@ -116,7 +116,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .cl-g{background:var(--greenl);border-color:var(--green);color:#15803d}
 .cl-a{background:var(--amberl);border-color:var(--amber);color:var(--amber)}
 /* SECTION LABEL */
-.slbl{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.slbl{font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
 /* DIVIDER */
 .dvdr{height:1px;background:var(--border);margin:16px 0}
 /* BENCH BADGE */
@@ -138,7 +138,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .frow{padding:14px 0;border-bottom:1px solid var(--borderl);display:flex;flex-direction:column;gap:8px}
 .frow:last-child{border-bottom:none}
 /* NAV MENU */
-.nmenu{position:fixed;bottom:calc(var(--tab-h) + var(--safe-b));left:0;right:0;z-index:99;background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,.15);animation:su .25s cubic-bezier(.22,.68,0,1.1)}
+.nmenu{position:fixed;bottom:calc(var(--tab-h) + var(--safe-b));left:0;right:0;z-index:150;background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,.15);animation:su .25s cubic-bezier(.22,.68,0,1.1)}
 .nmenu-item{display:flex;align-items:center;gap:14px;width:100%;padding:16px 20px;background:none;border:none;cursor:pointer;border-bottom:1px solid var(--borderl);text-align:left}
 .nmenu-item:last-child{border-bottom:none}
 /* INST CARD */
@@ -323,36 +323,51 @@ const Modal=({open,onClose,title,children,footer})=>{
 /* ── FILTER CONTENT ── */
 const FilterContent=({maxRate,setMR,tx,setTx,gender,setG,ltype,setLt,verOnly,setVO,specs,toggleSpec,onReset})=>{
   const specOpts=['Anxious Drivers','ADHD Friendly','BSL / Deaf Support','Autism Friendly','Adapted Vehicle'];
-  return<>
-    <div className="row" style={{marginBottom:20}}>
-      <span style={{fontWeight:700,fontSize:16}}>Filters</span>
-      <button className="btn btn-gh btn-sm" onClick={onReset}>Reset all</button>
-    </div>
-    <div className="frow">
-      <div className="slbl">Max hourly rate — <strong style={{color:'var(--blue)'}}>£{maxRate}/hr</strong></div>
-      <input type="range" min={20} max={80} value={maxRate} onChange={e=>setMR(+e.target.value)}/>
-      <div className="row" style={{fontSize:12,color:'var(--tx3)'}}><span>£20</span><span>£80</span></div>
-    </div>
-    {[['Transmission',['Any','Manual','Automatic'],tx,setTx],['Lesson type',['Any','Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'],ltype,setLt],['Gender preference',['Any','Male','Female'],gender,setG]].map(([t,opts,v,set])=>(
-      <div key={t} className="frow">
-        <div className="slbl">{t}</div>
-        <select className="sel" value={v} onChange={e=>set(e.target.value)}>{opts.map(o=><option key={o}>{o}</option>)}</select>
+  const Row=({label,children})=><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,padding:'12px 0',borderBottom:'1px solid var(--borderl)'}}><span style={{fontSize:15,fontWeight:600,color:'var(--tx)',flexShrink:0}}>{label}</span>{children}</div>;
+  return<div style={{display:'flex',flexDirection:'column'}}>
+    {/* Rate slider */}
+    <div style={{padding:'12px 0 16px',borderBottom:'1px solid var(--borderl)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+        <span style={{fontSize:15,fontWeight:600}}>Max rate</span>
+        <span style={{fontSize:17,fontWeight:800,color:'var(--blue)'}}>£{maxRate}<span style={{fontSize:13,fontWeight:600,color:'var(--tx3)'}}>/hr</span></span>
       </div>
-    ))}
-    <div className="frow">
-      <div className="slbl">Specialist support</div>
-      {specOpts.map(s=>(
-        <label key={s} style={{display:'flex',alignItems:'center',gap:12,minHeight:44,cursor:'pointer'}}>
-          <input type="checkbox" style={{width:20,height:20,accentColor:'var(--blue)',flexShrink:0}} checked={specs.includes(s)} onChange={()=>toggleSpec(s)}/>
-          <span style={{fontSize:15,color:'var(--tx)'}}>{s}</span>
-        </label>
-      ))}
+      <input type="range" min={20} max={80} value={maxRate} onChange={e=>setMR(+e.target.value)}/>
+      <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--tx3)',marginTop:4}}><span>£20</span><span>£80</span></div>
     </div>
-    <div className="row frow">
-      <span style={{fontSize:15,fontWeight:600}}>Verified only</span>
+    {/* Selects — compact inline layout */}
+    <Row label="Transmission">
+      <select className="sel" value={tx} onChange={e=>setTx(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+        {['Any','Manual','Automatic'].map(o=><option key={o}>{o}</option>)}
+      </select>
+    </Row>
+    <Row label="Lesson type">
+      <select className="sel" value={ltype} onChange={e=>setLt(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+        {['Any','Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'].map(o=><option key={o}>{o}</option>)}
+      </select>
+    </Row>
+    <Row label="Gender">
+      <select className="sel" value={gender} onChange={e=>setG(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+        {['Any','Male','Female'].map(o=><option key={o}>{o}</option>)}
+      </select>
+    </Row>
+    {/* Verified only — inline row */}
+    <Row label="Verified only">
       <label className="tog"><input type="checkbox" checked={verOnly} onChange={e=>setVO(e.target.checked)}/><span className="tog-t"/></label>
+    </Row>
+    {/* Specialist support — compact chips */}
+    <div style={{padding:'12px 0'}}>
+      <div style={{fontSize:12,fontWeight:700,color:'var(--tx3)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:10}}>Specialist support</div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+        {specOpts.map(s=>{const on=specs.includes(s);return<button key={s} type="button"
+          onClick={()=>toggleSpec(s)}
+          style={{padding:'8px 14px',borderRadius:99,fontSize:13,fontWeight:600,cursor:'pointer',border:`1.5px solid ${on?'var(--blue)':'var(--border)'}`,background:on?'var(--bluel)':'var(--surface)',color:on?'var(--blue)':'var(--tx2)',transition:'all .15s'}}>
+          {on&&'✓ '}{s}
+        </button>;})}
+      </div>
     </div>
-  </>;
+    {/* Reset */}
+    <button className="btn btn-gh btn-full" style={{marginTop:4,height:40,fontSize:14}} onClick={onReset}>Reset all filters</button>
+  </div>;
 };
 
 /* ── SKELETON ── */
@@ -469,6 +484,18 @@ const Home=({onNav,onSearch})=>{
             </div>
           </div>
         ))}
+      </div>
+    </div>
+    {/* Footer */}
+    <div style={{padding:'24px 16px',borderTop:'1px solid var(--border)',marginTop:8,textAlign:'center'}}>
+      <div style={{fontSize:12,color:'var(--tx3)',marginBottom:10}}>PassPal AI Ltd · passpal.co.uk</div>
+      <div style={{display:'flex',justifyContent:'center',gap:20,flexWrap:'wrap'}}>
+        {[['Privacy Policy','legal_privacy'],['Terms of Service','legal_terms'],['Cookie Policy','legal_cookies'],['For Instructors','instructors']].map(([l,v])=>(
+          <button key={v} onClick={()=>onNav(v)} style={{background:'none',border:'none',color:'var(--blue)',cursor:'pointer',fontSize:13,fontWeight:600,fontFamily:'inherit'}}>{l}</button>
+        ))}
+      </div>
+      <div style={{fontSize:11,color:'var(--tx4)',marginTop:12,lineHeight:1.6}}>
+        PassPal is a comparison service. We do not endorse individual instructors. Pass rates are self-reported unless marked DVSA-verified. Always verify your instructor's ADI status at gov.uk.
       </div>
     </div>
   </div>;
@@ -707,31 +734,86 @@ const Profile=({inst:i,exp,pc,onBack,onBook,isGuest,onNav})=>{
 };
 
 /* ── BOOK MODAL ── */
-const BookModal=({inst,onClose})=>{
-  const [date,setDate]=useState('');const [time,setTime]=useState('');const [msg,setMsg]=useState('');const [sent,setSent]=useState(false);const [busy,setBusy]=useState(false);
-  const send=async()=>{setBusy(true);await simEmail(inst.email,'Booking request',`Date:${date} Time:${time}\n${msg}`);setBusy(false);setSent(true);};
+const BookModal=({inst,onClose,learner,onNav})=>{
+  const [date,setDate]=useState('');
+  const [time,setTime]=useState('');
+  const [msg,setMsg]=useState('');
+  const [name,setName]=useState(learner?.name||'');
+  const [email,setEmail]=useState(learner?.email||'');
+  const [phone,setPhone]=useState('');
+  const [sent,setSent]=useState(false);
+  const [busy,setBusy]=useState(false);
+
+  const send=async()=>{
+    setBusy(true);
+    const body=`Booking request from ${name}\nEmail: ${email}\nPhone: ${phone}\nDate: ${date} at ${time}\n\n${msg}`;
+    await simEmail(inst.email,`Lesson request from ${name}`,body);
+    setBusy(false);setSent(true);
+  };
+
   return<Modal open={true} onClose={onClose} title={`Book with ${inst.name.split(' ')[0]}`}>
-    {sent?<div style={{textAlign:'center',padding:'16px 0'}}>
-      <div style={{color:'var(--green)',display:'flex',justifyContent:'center',marginBottom:12}}>{Ic.check}</div>
-      <h3 style={{fontWeight:800,marginBottom:6}}>Request sent!</h3>
-      <p style={{fontSize:14,color:'var(--tx2)',lineHeight:1.6}}><strong>{inst.name}</strong> will confirm within 24 hours.</p>
-      <button className="btn btn-p btn-full" style={{marginTop:20}} onClick={onClose}>Done</button>
-    </div>:<div style={{display:'flex',flexDirection:'column',gap:14}}>
-      <div style={{display:'flex',gap:12,alignItems:'center',padding:14,background:'var(--bg)',borderRadius:12}}>
-        <img src={inst.avatar} style={{width:44,height:44,borderRadius:'50%',objectFit:'cover'}} alt="" loading="lazy"/>
-        <div><div style={{fontWeight:700}}>{inst.name}</div><div style={{fontSize:12,color:'var(--tx2)'}}>£{inst.rate}/hr · {inst.passRate}% pass rate</div></div>
-      </div>
-      <div className="field"><span className="lbl">Preferred date</span><input className="inp" type="date" value={date} onChange={e=>setDate(e.target.value)} min={new Date().toISOString().split('T')[0]}/></div>
-      <div className="field"><span className="lbl">Preferred time</span>
-        <select className="sel" value={time} onChange={e=>setTime(e.target.value)}>
-          <option value="">Select time…</option>
-          {['8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM'].map(t=><option key={t}>{t}</option>)}
-        </select>
-      </div>
-      <div className="field"><span className="lbl">Message (optional)</span><textarea className="inp" value={msg} onChange={e=>setMsg(e.target.value)} placeholder="Accessibility needs, focus areas…" style={{height:'auto',padding:14}} rows={3}/></div>
-      <button className="btn btn-p btn-full btn-lg" disabled={!date||!time||busy} onClick={send}>{busy?'Sending…':'Send request'}</button>
-      <button className="btn btn-gh btn-full" onClick={onClose}>Cancel</button>
-    </div>}
+    {sent
+      ?<div style={{textAlign:'center',padding:'16px 0'}}>
+          <div style={{color:'var(--green)',display:'flex',justifyContent:'center',marginBottom:12}}>{Ic.check}</div>
+          <h3 style={{fontWeight:800,marginBottom:8,fontSize:20}}>Request sent!</h3>
+          <p style={{fontSize:14,color:'var(--tx2)',lineHeight:1.65,marginBottom:6}}><strong>{inst.name}</strong> will reply directly to:</p>
+          <div style={{background:'var(--bg)',borderRadius:10,padding:'10px 14px',fontSize:14,fontWeight:600,marginBottom:16}}>{email}</div>
+          <p style={{fontSize:13,color:'var(--tx3)',lineHeight:1.6}}>Check your inbox — including spam — within 24 hours. PassPal does not read your messages.</p>
+          <button className="btn btn-p btn-full" style={{marginTop:20}} onClick={onClose}>Done</button>
+        </div>
+      :<div style={{display:'flex',flexDirection:'column',gap:14}}>
+          {/* Instructor summary */}
+          <div style={{display:'flex',gap:12,alignItems:'center',padding:14,background:'var(--bg)',borderRadius:12}}>
+            <img src={inst.avatar} style={{width:44,height:44,borderRadius:'50%',objectFit:'cover',flexShrink:0}} alt="" loading="lazy"/>
+            <div>
+              <div style={{fontWeight:700,fontSize:15}}>{inst.name}</div>
+              <div style={{fontSize:12,color:'var(--tx2)',marginTop:2}}>£{inst.rate}/hr · {inst.passRate}% pass rate · {inst.area}</div>
+            </div>
+          </div>
+
+          {/* Contact details — always required so instructor can reply */}
+          <div style={{background:'var(--bluell)',border:'1px solid var(--bluel)',borderRadius:10,padding:'10px 14px'}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--bluek)',marginBottom:2}}>📬 How will the instructor reply to you?</div>
+            <div style={{fontSize:13,color:'var(--tx2)'}}>Your contact details go directly to {inst.name.split(' ')[0]}. PassPal never reads your messages.</div>
+          </div>
+
+          <div className="field"><span className="lbl">Your name</span>
+            <input className="inp" value={name} onChange={e=>setName(e.target.value)} placeholder="Your full name" required/>
+          </div>
+          <div className="field"><span className="lbl">Your email</span>
+            <input className="inp" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="so the instructor can reply" required/>
+          </div>
+          <div className="field"><span className="lbl">Your mobile number</span>
+            <input className="inp" type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="optional — for quicker response"/>
+          </div>
+
+          <div style={{height:1,background:'var(--border)'}}/>
+
+          <div className="field"><span className="lbl">Preferred date</span>
+            <input className="inp" type="date" value={date} onChange={e=>setDate(e.target.value)} min={new Date().toISOString().split('T')[0]}/>
+          </div>
+          <div className="field"><span className="lbl">Preferred time</span>
+            <select className="sel" value={time} onChange={e=>setTime(e.target.value)}>
+              <option value="">Select time…</option>
+              {['8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM'].map(t=><option key={t}>{t}</option>)}
+            </select>
+          </div>
+          <div className="field"><span className="lbl">Message (optional)</span>
+            <textarea className="inp" value={msg} onChange={e=>setMsg(e.target.value)}
+              placeholder={`Hi ${inst.name.split(' ')[0]}, I'm interested in booking lessons. I'm a complete beginner…`}
+              style={{height:'auto',padding:14}} rows={3}/>
+          </div>
+
+          <button className="btn btn-p btn-full btn-lg"
+            disabled={!name||!email||!date||!time||busy}
+            onClick={send}>
+            {busy?'Sending…':`Send request to ${inst.name.split(' ')[0]}`}
+          </button>
+          <p style={{fontSize:12,color:'var(--tx3)',textAlign:'center',lineHeight:1.5}}>
+            {inst.name.split(' ')[0]} replies directly to your email. No account needed.
+          </p>
+          <button className="btn btn-gh btn-full" onClick={onClose}>Cancel</button>
+        </div>}
   </Modal>;
 };
 
@@ -877,7 +959,21 @@ const Dashboard=({learner,onNav})=>{
         <button className="btn btn-p btn-sm" onClick={()=>onNav('theory')}>Continue studying</button>
       </div>
     </div>
-    <button className="btn btn-p btn-full btn-lg" onClick={()=>onNav('compare')}>Compare instructors {Ic.arR}</button>
+    <button className="btn btn-p btn-full btn-lg" style={{marginBottom:10}} onClick={()=>onNav('compare')}>Compare instructors {Ic.arR}</button>
+    <div className="card" style={{padding:'16px',background:'var(--navy)'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:12}}>
+        <div>
+          <div style={{fontSize:14,fontWeight:700,color:'#fff',marginBottom:4}}>Unlock verified data</div>
+          <div style={{fontSize:13,color:'rgba(255,255,255,.5)',lineHeight:1.5,marginBottom:10}}>DVSA-verified pass rates, full review history, guaranteed 24hr instructor response.</div>
+          <div style={{fontSize:12,color:'#4fffb0',fontWeight:600}}>Spend £4.99. Save up to £400 on lessons.</div>
+        </div>
+        <div style={{textAlign:'right',flexShrink:0}}>
+          <div style={{fontSize:20,fontWeight:900,color:'#4fffb0'}}>£4.99</div>
+          <div style={{fontSize:11,color:'rgba(255,255,255,.4)'}}>one-time</div>
+        </div>
+      </div>
+      <button className="btn btn-full" style={{background:'#4fffb0',color:'var(--navy)',fontWeight:800,marginTop:12,height:44}} onClick={()=>window.open('https://buy.stripe.com/LEARNER_UNLOCK','_blank')}>Unlock now</button>
+    </div>
   </div>;
 };
 
@@ -978,17 +1074,37 @@ const Portal=({inst:init,onUpdate,onLogout})=>{
       </>}
 
       {tab==='subs'&&<>
-        <h2 style={{fontSize:18,fontWeight:700,marginBottom:8}}>Subscription</h2>
-        <div className="cl cl-b" style={{marginBottom:16,fontSize:13}}>Premium is capped at 3 slots per postcode — guaranteeing positions 1–3 in every comparison in your area.</div>
-        {[{n:'Free',p:'£0/mo',b:['Listed in results','Standard placement','5 enquiries/month'],hi:false},{n:'Verified',p:'£4.99/mo',b:['DVSA badge','Higher placement','Unlimited enquiries'],hi:false},{n:'Premium',p:'£12.99/mo',b:['Top 3 guaranteed (3 slots/area)','PassScore badge','Full analytics','Priority support'],hi:true}].map(({n,p,b,hi})=>(
+        <h2 style={{fontSize:18,fontWeight:700,marginBottom:4}}>Subscription</h2>
+        <p style={{fontSize:13,color:'var(--tx2)',marginBottom:12,lineHeight:1.6}}>Premium is hard-capped at 3 slots per postcode. When your area has capacity, you appear in positions 1–3 on every search — guaranteed.</p>
+        <div style={{background:'var(--amberl)',border:'1px solid rgba(217,119,6,.25)',borderRadius:10,padding:'10px 14px',marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+          <span style={{fontSize:16}}>⏳</span>
+          <span style={{fontSize:13,fontWeight:600,color:'var(--amber)'}}>Founder pricing active — first 30 sign-ups only. Verified rises to £14.99, Premium to £34.99 after.</span>
+        </div>
+        {[
+          {n:'Free',p:'£0/mo',ann:null,b:['Listed in comparison results','3 enquiries per month','Standard placement'],hi:false},
+          {n:'Verified',p:'£9.99/mo',ann:'£99/yr',b:['DVSA-verified badge','Unlimited enquiries','Higher placement','24hr response badge','Email alerts'],hi:false},
+          {n:'Premium',p:'£19.99/mo',ann:'£199/yr',b:['Top 3 guaranteed — 3 slots/postcode','PassScore badge','Full analytics','Featured in learner emails','Priority support'],hi:true},
+        ].map(({n,p,ann,b,hi})=>(
           <div key={n} className={`plan${hi?' feat':''}`}>
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
-              <div><div style={{fontWeight:700,fontSize:16}}>{n}</div><div style={{fontSize:13,color:hi?'var(--blue)':'var(--tx2)',fontWeight:600}}>{p}</div></div>
-              {form.tier===n?<span className="chip chip-g">Current</span>:<button className="btn btn-sm btn-p" onClick={()=>set('tier',n)}>Switch</button>}
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
+              <div>
+                <div style={{fontWeight:800,fontSize:16}}>{n}</div>
+                <div style={{display:'flex',alignItems:'baseline',gap:6,marginTop:2}}>
+                  <span style={{fontSize:18,fontWeight:800,color:hi?'var(--blue)':'var(--tx)'}}>{p}</span>
+                  {ann&&<span style={{fontSize:11,color:'var(--green)',fontWeight:600}}>{ann} ✓</span>}
+                </div>
+              </div>
+              {form.tier===n
+                ?<span className="chip chip-g">Current plan</span>
+                :<button className="btn btn-sm btn-p" onClick={()=>window.open(hi?'https://buy.stripe.com/PREMIUM_LINK':'https://buy.stripe.com/VERIFIED_LINK','_blank')}>
+                  {hi?'Claim slot':'Upgrade'}
+                </button>}
             </div>
-            {b.map(x=><div key={x} style={{display:'flex',gap:8,fontSize:13,color:'var(--tx2)',marginBottom:6}}><span style={{color:'var(--green)',flexShrink:0}}>{Ic.check}</span>{x}</div>)}
+            {b.map(x=><div key={x} style={{display:'flex',gap:8,fontSize:13,color:'var(--tx2)',marginBottom:5,alignItems:'flex-start'}}><span style={{color:'var(--green)',flexShrink:0,marginTop:1}}>{Ic.check}</span>{x}</div>)}
+            {hi&&form.tier!=='Premium'&&<div style={{marginTop:10,padding:'8px 12px',background:'rgba(29,111,243,.08)',borderRadius:8,fontSize:12,color:'var(--blue)',fontWeight:600}}>⚡ Limited availability in your area — 3 slots per postcode</div>}
           </div>
         ))}
+        <div className="cl cl-b" style={{marginTop:12,fontSize:12}}>Annual plans save up to £41. To switch to annual billing email hello@passpal.co.uk</div>
       </>}
 
       {tab==='enquiries'&&<>
@@ -1025,9 +1141,14 @@ const Portal=({inst:init,onUpdate,onLogout})=>{
 /* ── FOR INSTRUCTORS PAGE ── */
 const ForInstructors=({onNav})=><div className="page" style={{padding:'0 16px'}}>
   <div style={{background:'var(--navy)',margin:'0 -16px',padding:'32px 16px 28px'}}>
+    <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,179,0,.2)',border:'1px solid rgba(255,179,0,.4)',borderRadius:99,padding:'4px 12px',marginBottom:14}}>
+      <span style={{width:6,height:6,borderRadius:'50%',background:'var(--amber)',flexShrink:0}}/>
+      <span style={{fontSize:12,color:'var(--amber)',fontWeight:700}}>Founder pricing — first 30 instructors only</span>
+    </div>
     <h1 style={{fontSize:30,fontWeight:900,color:'#fff',letterSpacing:'-.03em',lineHeight:1.1,marginBottom:12}}>Fill your diary.<br/><span style={{color:'#4fffb0'}}>Keep your earnings.</span></h1>
-    <p style={{fontSize:15,color:'rgba(255,255,255,.55)',lineHeight:1.65,marginBottom:24}}>Join 312 instructors matched with learners by value — not ad spend.</p>
-    <button className="btn btn-full btn-lg" style={{background:'#4fffb0',color:'var(--navy)',fontWeight:800}} onClick={()=>onNav('login')}>Get started free {Ic.arR}</button>
+    <p style={{fontSize:15,color:'rgba(255,255,255,.55)',lineHeight:1.65,marginBottom:8}}>Join instructors matched with learners by value — not ad spend.</p>
+    <p style={{fontSize:13,color:'rgba(255,179,0,.8)',fontWeight:600,marginBottom:20}}>🔒 Premium: 3 slots per postcode. Once they're gone, they're gone.</p>
+    <button className="btn btn-full btn-lg" style={{background:'#4fffb0',color:'var(--navy)',fontWeight:800}} onClick={()=>window.open('https://tally.so/r/YOURFORMID','_blank')}>Claim your free profile {Ic.arR}</button>
   </div>
   <div style={{paddingTop:16}}>
     {[{icon:Ic.compare,t:'Listed in every comparison',d:'Your rate, pass rate, and PassScore shown to every learner searching your postcode area.'},
@@ -1042,13 +1163,26 @@ const ForInstructors=({onNav})=><div className="page" style={{padding:'0 16px'}}
     ))}
     <div className="card" style={{padding:'20px',marginBottom:12}}>
       <h2 style={{fontSize:18,fontWeight:700,marginBottom:14}}>Pricing</h2>
-      {[{n:'Free',p:'£0/mo',b:['Listed in results','5 enquiries/month'],hi:false},{n:'Verified',p:'£4.99/mo',b:['DVSA badge','Unlimited enquiries'],hi:false},{n:'Premium',p:'£12.99/mo',b:['Top 3 guaranteed','Full analytics'],hi:true}].map(({n,p,b,hi})=>(
+      {[
+        {n:'Free',p:'£0/mo',ann:null,b:['Listed in comparison results','3 enquiries per month','Standard placement'],hi:false,sub:null},
+        {n:'Verified',p:'£9.99/mo',ann:'£99/yr — save £21',b:['DVSA-verified badge','Unlimited enquiries','Higher placement','24hr response badge'],hi:false,sub:'Founder price — rises to £14.99 after 30 sign-ups'},
+        {n:'Premium',p:'£19.99/mo',ann:'£199/yr — save £41',b:['Top 3 guaranteed','Hard cap: 3 slots per postcode','PassScore badge','Full analytics','Featured in learner emails'],hi:true,sub:'Founder price — rises to £34.99 after 30 sign-ups'},
+      ].map(({n,p,ann,b,hi,sub})=>(
         <div key={n} className={`plan${hi?' feat':''}`}>
-          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
-            <div style={{fontWeight:700}}>{n}</div><div style={{fontWeight:700,color:hi?'var(--blue)':'var(--tx2)'}}>{p}</div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:4}}>
+            <div style={{fontWeight:800,fontSize:16}}>{n}</div>
+            <div style={{textAlign:'right'}}>
+              <div style={{fontWeight:800,fontSize:18,color:hi?'var(--blue)':'var(--tx)'}}>{p}</div>
+              {ann&&<div style={{fontSize:11,color:'var(--green)',fontWeight:600}}>{ann}</div>}
+            </div>
           </div>
-          {b.map(x=><div key={x} style={{display:'flex',gap:8,fontSize:13,color:'var(--tx2)',marginBottom:4}}><span style={{color:'var(--green)'}}>{Ic.check}</span>{x}</div>)}
-          <button className={`btn btn-sm btn-full ${hi?'btn-p':'btn-gh'}`} style={{marginTop:12}} onClick={()=>onNav('login')}>Get started</button>
+          {sub&&<div style={{fontSize:11,color:'var(--amber)',fontWeight:600,marginBottom:10,background:'var(--amberl)',padding:'3px 8px',borderRadius:6,display:'inline-block'}}>{sub}</div>}
+          <div style={{marginBottom:12,marginTop:sub?4:8}}>
+            {b.map(x=><div key={x} style={{display:'flex',gap:8,fontSize:13,color:'var(--tx2)',marginBottom:5,alignItems:'flex-start'}}><span style={{color:'var(--green)',flexShrink:0,marginTop:1}}>{Ic.check}</span>{x}</div>)}
+          </div>
+          <button className={`btn btn-sm btn-full ${hi?'btn-p':'btn-gh'}`} onClick={()=>window.open('https://tally.so/r/YOURFORMID','_blank')}>
+            {hi?'Claim your slot':'Get started'} {hi?Ic.arR:''}
+          </button>
         </div>
       ))}
     </div>
@@ -1160,6 +1294,11 @@ const App=()=>{
       case 'signup':    return<Signup onSignup={(name,email)=>{const u={...LEARNERS[0],id:99,name,email};setLearners(p=>[...p,u]);setLu(u);nav('compare');}} onNav={nav}/>;
       case 'portal':    return iu?<Portal inst={iu} onUpdate={u=>{setInsts(p=>p.map(i=>i.id===u.id?u:i));setIu(u);}} onLogout={()=>{setIu(null);nav('home');}}/>:<Login onLogin={handleLogin} onNav={nav} insts={insts}/>;
       case 'instructors':return<ForInstructors onNav={nav}/>;
+      case 'legal':     return<LegalHub onNav={nav}/>;
+      case 'legal_privacy':            return<Legal page="privacy" onBack={()=>nav('legal')}/>;
+      case 'legal_terms':              return<Legal page="terms" onBack={()=>nav('legal')}/>;
+      case 'legal_cookies':            return<Legal page="cookies" onBack={()=>nav('legal')}/>;
+      case 'legal_instructor_agreement':return<Legal page="instructor_agreement" onBack={()=>nav('legal')}/>;
       default:          return<Home onNav={nav} onSearch={p=>{setSp(p);nav('compare');}}/>;
     }
   };
@@ -1212,6 +1351,7 @@ const App=()=>{
           {v:'theory',l:'Theory Practice',sub:'DVSA questions, mock tests',icon:Ic.theory},
           {v:'compare',l:'Compare Instructors',sub:'Find the best value near you',icon:Ic.compare},
           {v:lu?'dashboard':iu?'portal':'login',l:lu||iu?'My Account':'Sign in / Sign up',sub:lu?'Progress & bookings':iu?'Portal & subscription':'Free account',icon:Ic.user},
+          {v:'legal',l:'Legal & Privacy',sub:'Terms, privacy policy, cookies',icon:Ic.lock},
         ].map(({v,l,sub,icon})=>(
           <button key={v} className="nmenu-item" onClick={()=>nav(v)}>
             <span style={{color:'var(--blue)',flexShrink:0}}>{icon}</span>
@@ -1226,11 +1366,11 @@ const App=()=>{
     </>}
 
     {/* Book modal */}
-    {bookI&&<BookModal inst={bookI} onClose={()=>setBookI(null)}/>}
+    {bookI&&<BookModal inst={bookI} onClose={()=>setBookI(null)} learner={lu} onNav={nav}/>}
 
     {/* Cookie */}
     {!cookie&&<div className="cookie">
-      <span style={{flex:1,lineHeight:1.5}}>We use cookies to improve your experience.</span>
+      <span style={{flex:1,lineHeight:1.5}}>We use cookies. <button onClick={()=>nav('legal_cookies')} style={{background:'none',border:'none',color:'rgba(255,255,255,.7)',cursor:'pointer',textDecoration:'underline',fontSize:'inherit',fontFamily:'inherit'}}>Learn more</button></span>
       <div style={{display:'flex',gap:8,flexShrink:0}}>
         <button className="btn btn-sm" style={{background:'rgba(255,255,255,.15)',color:'#fff',height:36}} onClick={()=>{setCookie('d');try{localStorage.setItem('pp_c','d');}catch(e){}}}>No</button>
         <button className="btn btn-p btn-sm" onClick={()=>{setCookie('a');try{localStorage.setItem('pp_c','a');}catch(e){}}}>Accept</button>
@@ -1238,6 +1378,244 @@ const App=()=>{
     </div>}
   </>;
 };
+
+
+/* ── LEGAL PAGES ── */
+const Legal=({page,onBack})=>{
+  const pages={
+    privacy:{
+      title:'Privacy Policy',
+      updated:'January 2025',
+      company:'PassPal AI Ltd',
+      sections:[
+        {h:'1. Who we are',t:`PassPal AI Ltd ("PassPal", "we", "us") operates passpal.co.uk, a driving instructor comparison platform. We are the data controller for personal data collected through this service.
+
+Contact: hello@passpal.co.uk
+Address: [Your registered address]
+ICO Registration: [Pending / your ICO number once registered]`},
+        {h:'2. What data we collect',t:`Learner visitors:
+• Postcode (to show local results)
+• Email address (if you sign up or subscribe to alerts)
+• Usage data (pages visited, search terms) via anonymous analytics
+
+Instructor accounts:
+• Full name, email address, phone number
+• Business postcode and area
+• ADI badge number
+• Hourly rate, pass rate, qualifications
+• Profile photo (if provided)
+• Payment information (processed by Stripe — we never see your card details)
+• Communication history
+
+Special category data: If you provide or search for specialist support needs (ADHD, BSL, autism, anxiety, adapted vehicle), this is processed under Article 9(2)(a) UK GDPR — explicit consent — solely for matching purposes.`},
+        {h:'3. How we use your data',t:`We use your data to:
+• Display your instructor profile to learner visitors
+• Process subscription payments via Stripe
+• Send transactional emails (booking enquiries, account notices)
+• Send marketing emails (only with your explicit consent, unsubscribe anytime)
+• Verify ADI credentials against the public DVSA register
+• Improve the platform through anonymised analytics
+
+We do not sell your data to third parties. We do not read messages sent between learners and instructors.`},
+        {h:'4. Legal basis for processing',t:`• Contract performance: processing your account and subscription
+• Legitimate interests: fraud prevention, platform security, anonymised analytics
+• Legal obligation: compliance with tax and financial regulations
+• Consent: marketing emails, special category data (support needs)`},
+        {h:'5. Data sharing',t:`We share data only with:
+• Stripe (payment processing) — Stripe Privacy Policy: stripe.com/privacy
+• Resend (transactional email delivery) — resend.com/legal/privacy-policy
+• Airtable (internal CRM) — airtable.com/privacy
+• DVSA public register (for ADI verification — we query, we don't share)
+
+All processors are contractually bound to process data only on our instructions.`},
+        {h:'6. Data retention',t:`• Active accounts: retained while your account is live
+• Instructor profiles: deleted within 30 days of account closure on request
+• Payment records: retained for 7 years (legal requirement)
+• Marketing consent records: retained for duration of consent + 3 years
+• Learner email addresses: retained until unsubscribe or deletion request`},
+        {h:'7. Your rights',t:`Under UK GDPR you have the right to:
+• Access your personal data (Subject Access Request)
+• Correct inaccurate data
+• Delete your data ("right to be forgotten")
+• Restrict or object to processing
+• Data portability
+• Withdraw consent at any time
+
+To exercise any right: hello@passpal.co.uk. We will respond within 30 days. You also have the right to complain to the ICO: ico.org.uk`},
+        {h:'8. Cookies',t:`Essential cookies (always active):
+• Session management — keeps you logged in
+• Security tokens — protects against CSRF attacks
+
+Analytics cookies (consent required):
+• Anonymous usage analytics to improve the platform
+• No third-party advertising cookies
+
+You can manage cookie preferences at any time via the banner at the bottom of the screen.`},
+        {h:'9. Security',t:`We use HTTPS encryption for all data transmission. Passwords are hashed using bcrypt. Payment data is handled entirely by Stripe and never touches our servers. We conduct regular security reviews.`},
+        {h:'10. Changes',t:`We will notify registered users by email of any material changes to this policy at least 14 days before they take effect.`},
+      ]
+    },
+    terms:{
+      title:'Terms of Service',
+      updated:'January 2025',
+      sections:[
+        {h:'1. About PassPal',t:`PassPal AI Ltd ("PassPal") operates a driving instructor comparison platform at passpal.co.uk. By using our service you agree to these terms.
+
+These terms govern both learner visitors and instructor account holders. Additional terms apply to paid subscriptions (Section 8).`},
+        {h:'2. Eligibility',t:`You must be 16 or older to use PassPal. Instructor accounts require a valid ADI or PDI licence issued by the DVSA. By registering as an instructor you confirm you hold a valid licence and have permission to offer driving instruction in the UK.`},
+        {h:'3. Instructor accounts — your obligations',t:`You agree to:
+• Provide accurate information including your ADI number, hourly rate and pass rate
+• Keep your profile up to date — rates and availability must reflect your current offering
+• Respond to learner enquiries within 24 hours (Premium accounts) or 48 hours (Verified/Free)
+• Not use automated tools to manipulate your PassScore or placement
+• Not create multiple accounts for the same instructor
+• Comply with DVSA regulations and UK driving instruction law at all times
+
+Pass rates: You may display your self-reported pass rate. PassPal verifies pass rates for Verified and Premium accounts against the DVSA register where possible. Knowingly misrepresenting your pass rate is grounds for immediate account termination.`},
+        {h:'4. Learner use',t:`PassPal is a comparison and discovery tool only. We do not guarantee the quality, safety or suitability of any instructor listed. The contract for driving lessons is between you and the instructor directly. PassPal is not party to any lesson booking.
+
+Verify your instructor's ADI status independently at gov.uk/check-driving-instructor if you have any concerns.`},
+        {h:'5. PassScore and rankings',t:`PassScore is a proprietary algorithm combining price competitiveness (40%), star rating (30%) and pass rate (30%). Premium subscribers receive boosted placement within the top 3 positions where their PassScore is within 5 points of organic results. All paid placements are labelled "Sponsored." The methodology is disclosed at passpal.co.uk.`},
+        {h:'6. Content and conduct',t:`You must not:
+• Post false reviews or ratings
+• Use the platform to harass, defame or threaten any person
+• Scrape, copy or redistribute our comparison data
+• Attempt to reverse-engineer our algorithm or systems
+• Use PassPal to market competing comparison services
+
+PassPal reserves the right to remove any content or suspend any account that violates these terms without notice.`},
+        {h:'7. Intellectual property',t:`PassPal, PassScore, and associated branding are trademarks of PassPal AI Ltd. You may not use our branding without written permission. Instructor profile content remains owned by the instructor; by listing on PassPal you grant us a licence to display it on the platform.`},
+        {h:'8. Subscriptions and payments',t:`Subscriptions are billed monthly or annually via Stripe. All prices shown are inclusive of VAT where applicable.
+
+Cancellation: Cancel anytime from your portal. Your access continues until the end of the billing period. No refunds for partial periods.
+
+Free trial / founder pricing: Where founder pricing is offered, the rate will be honoured for the duration of your active subscription. If you cancel and resubscribe, current pricing applies.
+
+Premium slot guarantee: The top 3 guarantee is per-postcode and requires a minimum of 1 active learner search per month in your area. PassPal reserves the right to adjust postcode boundaries. If your postcode area has no learner searches in a given month, a pro-rata credit will be applied.`},
+        {h:'9. Limitation of liability',t:`PassPal provides a comparison and discovery service only. We are not liable for:
+• The conduct of any instructor or learner
+• The outcome of any driving lesson or test
+• Loss of business resulting from ranking position changes
+• Technical downtime (we target 99.5% uptime but do not guarantee it)
+
+Our total liability to you in any 12-month period shall not exceed the total subscription fees paid by you in that period.`},
+        {h:'10. Governing law',t:`These terms are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales.`},
+        {h:'11. Contact',t:`PassPal AI Ltd
+hello@passpal.co.uk
+passpal.co.uk`},
+      ]
+    },
+    cookies:{
+      title:'Cookie Policy',
+      updated:'January 2025',
+      sections:[
+        {h:'What are cookies',t:`Cookies are small text files stored on your device when you visit a website. They help websites remember your preferences and improve your experience.`},
+        {h:'Cookies we use',t:`Essential cookies (always active — no consent required):
+
+• pp_session — keeps you logged in during your visit. Expires: end of session.
+• pp_csrf — security token to prevent cross-site request forgery. Expires: end of session.
+• pp_c — records your cookie consent choice. Expires: 1 year.
+
+Analytics cookies (consent required):
+
+• We use anonymous analytics to understand how learners and instructors use the platform. No personally identifiable data is collected. No data is shared with advertising networks.
+
+We do not use:
+• Advertising cookies
+• Social media tracking cookies
+• Any third-party marketing cookies`},
+        {h:'Managing cookies',t:`You can withdraw consent at any time by clearing your browser cookies and revisiting the site. Most browsers also allow you to block cookies entirely — see your browser's help documentation.
+
+Blocking essential cookies will prevent you from staying logged in to your account.`},
+        {h:'Contact',t:`Questions about our cookie use: hello@passpal.co.uk`},
+      ]
+    },
+    instructor_agreement:{
+      title:'Instructor Listing Agreement',
+      updated:'January 2025',
+      sections:[
+        {h:'Overview',t:`This agreement governs the listing of driving instructor profiles on PassPal. By creating a profile you agree to these terms in addition to our general Terms of Service.`},
+        {h:'Profile accuracy',t:`You are responsible for the accuracy of your profile at all times including:
+• Your hourly rate (must reflect your actual rate charged to new learners)
+• Your pass rate (must be your genuine overall pass rate — inflated figures are grounds for removal)
+• Your qualifications and certifications
+• Your availability status
+• Your specialist support capabilities
+
+PassPal reserves the right to verify any profile information against public records including the DVSA ADI register.`},
+        {h:'Enquiry handling',t:`Free accounts: respond to enquiries within 48 hours or your response rate score will be affected.
+Verified accounts: respond within 24 hours.
+Premium accounts: 24-hour response is a condition of maintaining your guaranteed top 3 placement.
+
+Failure to respond to 3 or more consecutive enquiries may result in your placement being reduced or your account being suspended.`},
+        {h:'Premium placement guarantee',t:`Premium placement guarantees that your profile appears in positions 1–3 in search results for your registered postcode area, subject to:
+• A minimum of 1 learner search per month in your postcode
+• Your profile remaining complete and up to date
+• Your account remaining in good standing
+• The cap of 3 Premium instructors per postcode
+
+PassPal will not be liable if placement is temporarily affected by technical issues, though we will apply credits where downtime exceeds 24 hours.`},
+        {h:'Termination',t:`You may close your account at any time. PassPal may terminate your listing without notice for:
+• Providing false information
+• Holding an invalid or lapsed ADI/PDI licence
+• Receiving verified complaints of misconduct
+• Attempting to manipulate the comparison algorithm
+
+On termination, your profile will be removed within 24 hours.`},
+        {h:'Disputes',t:`Any disputes regarding your listing should be directed to hello@passpal.co.uk. We aim to respond within 3 working days.`},
+      ]
+    },
+  };
+
+  const p = pages[page];
+  if(!p) return null;
+
+  return<div className="page" style={{padding:'0 16px'}}>
+    <div style={{padding:'16px 0 12px'}}>
+      <button onClick={onBack} style={{background:'none',border:'none',cursor:'pointer',display:'flex',alignItems:'center',gap:6,fontSize:14,fontWeight:600,color:'var(--tx2)',padding:'0 0 8px'}}>
+        {Ic.arL} Back
+      </button>
+      <h1 style={{fontSize:22,fontWeight:800,letterSpacing:'-.02em',marginBottom:4}}>{p.title}</h1>
+      <p style={{fontSize:13,color:'var(--tx3)'}}>PassPal AI Ltd · Last updated {p.updated}</p>
+    </div>
+    {p.sections.map((s,i)=>(
+      <div key={i} className="card" style={{padding:'16px',marginBottom:10}}>
+        <h2 style={{fontSize:15,fontWeight:700,marginBottom:8,color:'var(--tx)'}}>{s.h}</h2>
+        <div style={{fontSize:14,color:'var(--tx2)',lineHeight:1.75,whiteSpace:'pre-line'}}>{s.t}</div>
+      </div>
+    ))}
+    <div style={{padding:'16px 0 8px',textAlign:'center',fontSize:12,color:'var(--tx3)'}}>
+      Questions? Email hello@passpal.co.uk
+    </div>
+  </div>;
+};
+
+/* ── LEGAL HUB ── */
+const LegalHub=({onNav})=><div className="page" style={{padding:'0 16px'}}>
+  <div style={{padding:'20px 0 14px'}}>
+    <h1 style={{fontSize:22,fontWeight:800,letterSpacing:'-.02em',marginBottom:4}}>Legal</h1>
+    <p style={{fontSize:14,color:'var(--tx2)'}}>PassPal AI Ltd · passpal.co.uk</p>
+  </div>
+  {[
+    {v:'privacy',l:'Privacy Policy',sub:'How we collect, use and protect your data',icon:Ic.shield},
+    {v:'terms',l:'Terms of Service',sub:'Rules governing use of PassPal',icon:Ic.dvsa},
+    {v:'cookies',l:'Cookie Policy',sub:'What cookies we use and why',icon:Ic.lock},
+    {v:'instructor_agreement',l:'Instructor Listing Agreement',sub:'Additional terms for instructor accounts',icon:Ic.instruc},
+  ].map(({v,l,sub,icon})=>(
+    <button key={v} onClick={()=>onNav('legal_'+v)}
+      style={{display:'flex',alignItems:'center',gap:14,width:'100%',padding:'16px',background:'var(--surface)',border:'none',cursor:'pointer',textAlign:'left',borderRadius:14,marginBottom:10}}>
+      <span style={{color:'var(--blue)',flexShrink:0}}>{icon}</span>
+      <span style={{flex:1}}>
+        <span style={{display:'block',fontWeight:700,fontSize:15,color:'var(--tx)'}}>{l}</span>
+        <span style={{display:'block',fontSize:13,color:'var(--tx3)',marginTop:2}}>{sub}</span>
+      </span>
+      <span style={{color:'var(--tx4)',flexShrink:0}}><Sv d="M9 18l6-6-6-6" s={16}/></span>
+    </button>
+  ))}
+  <div className="cl cl-b" style={{fontSize:13,marginTop:4}}>
+    PassPal AI Ltd · Registered in England and Wales · hello@passpal.co.uk
+  </div>
+</div>;
 
 ReactDOM.render(<App/>,document.getElementById('root'));
 </script>
