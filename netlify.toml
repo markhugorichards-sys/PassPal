@@ -1,0 +1,75 @@
+# ── Build ────────────────────────────────────────────────────
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# ── SPA: all routes -> index.html ───────────────────────────
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# ── HTTPS + canonical domain redirects ──────────────────────
+[[redirects]]
+  from  = "http://passd-ai.co.uk/*"
+  to    = "https://passd-ai.co.uk/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from  = "https://www.passd-ai.co.uk/*"
+  to    = "https://passd-ai.co.uk/:splat"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from  = "http://www.passd-ai.co.uk/*"
+  to    = "https://passd-ai.co.uk/:splat"
+  status = 301
+  force  = true
+
+# ── Security + performance headers ──────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options           = "SAMEORIGIN"
+    X-Content-Type-Options    = "nosniff"
+    X-XSS-Protection          = "1; mode=block"
+    Referrer-Policy           = "strict-origin-when-cross-origin"
+    Permissions-Policy        = "camera=(), microphone=(), geolocation=(), payment=(self)"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+# HTML: never cache
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Hashed JS/CSS assets: cache 1 year immutably
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Fonts
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control               = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+
+# Manifest / robots / sitemap
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
