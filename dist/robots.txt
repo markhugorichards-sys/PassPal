@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /.netlify/
+
+Sitemap: https://passd-ai.co.uk/sitemap.xml
