@@ -1,7 +1,11 @@
 # ── Build ────────────────────────────────────────────────────
 [build]
-  command = "npm run build"
+  command = "npm install --legacy-peer-deps && npm run build"
   publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 # ── SPA: all routes -> index.html ───────────────────────────
 [[redirects]]
@@ -39,26 +43,22 @@
     Permissions-Policy        = "camera=(), microphone=(), geolocation=(), payment=(self)"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
 
-# HTML: never cache
 [[headers]]
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Hashed JS/CSS assets: cache 1 year immutably
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Fonts
 [[headers]]
   for = "/*.woff2"
   [headers.values]
     Cache-Control               = "public, max-age=31536000, immutable"
     Access-Control-Allow-Origin = "*"
 
-# Manifest / robots / sitemap
 [[headers]]
   for = "/site.webmanifest"
   [headers.values]
