@@ -258,7 +258,7 @@ const Portal=({inst:init,onUpdate,onLogout,reviews,onFlag})=>{
             {[['Hourly rate (£)','rate'],['Pass rate (%)','passRate'],['Experience (yrs)','yrs']].map(([l,k])=>(
               <div key={k} className="field">
                 <span className="lbl">{l}</span>
-                <input className="inp" type="number" value={form[k]} onChange={e=>set(k,+e.target.value)}
+                <input className="inp" type="number" value={form[k]} onChange={e=>set(k,+e.target.value)} aria-label={k}
                   style={{background:'#ffffff',color:'#0f1724'}}/>
               </div>
             ))}
@@ -319,7 +319,7 @@ const Portal=({inst:init,onUpdate,onLogout,reviews,onFlag})=>{
               <strong>Not verified.</strong> Your profile shows a warning to learners. Add your ADI badge number to fix this.
             </div>
             <div style={{display:'flex',gap:10,marginBottom:12}}>
-              <input className="inp" value={dref} onChange={e=>setDref(e.target.value)}
+              <input className="inp" value={dref} onChange={e=>setDref(e.target.value)} aria-label="DVSA reference number"
                 placeholder="e.g. ADI-2847361"
                 style={{flex:1,background:'#ffffff',color:'#0f1724'}}/>
               <button className="btn btn-p" style={{flexShrink:0}} disabled={dvsa.status==='loading'||!dref} onClick={verifyDVSA}>

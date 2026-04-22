@@ -49,7 +49,7 @@ export const Sheet=({open,onClose,title,children,footer})=>{
       <div className="sh-bar"/>
       <div className="sh-hd">
         <span style={{fontSize:18,fontWeight:700}}>{title}</span>
-        <button className="xbtn" onClick={onClose}>{Ic.x}</button>
+        <button className="xbtn" onClick={onClose} aria-label="Close">{Ic.x}</button>
       </div>
       <div className="sh-scroll"><div className="sh-bd">{children}</div></div>
       {footer&&<div className="sh-foot">{footer}</div>}
@@ -63,7 +63,7 @@ export const Modal=({open,onClose,title,children,footer})=>{
     <div className="modal">
       <div className="modal-hd">
         <span style={{fontSize:18,fontWeight:700}}>{title}</span>
-        <button className="xbtn" onClick={onClose}>{Ic.x}</button>
+        <button className="xbtn" onClick={onClose} aria-label="Close">{Ic.x}</button>
       </div>
       <div className="modal-bd">{children}</div>
       {footer&&<div className="sh-foot">{footer}</div>}

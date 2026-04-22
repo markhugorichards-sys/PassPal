@@ -102,7 +102,7 @@ const Sheet=({open,onClose,title,children,footer})=>{
       <div className="sh-bar"/>
       <div className="sh-hd">
         <span style={{fontSize:18,fontWeight:700}}>{title}</span>
-        <button className="xbtn" onClick={onClose}>{Ic.x}</button>
+        <button className="xbtn" onClick={onClose} aria-label="Close">{Ic.x}</button>
       </div>
       <div className="sh-scroll">
         <div className="sh-bd">{children}</div>
@@ -119,7 +119,7 @@ const Modal=({open,onClose,title,children,footer})=>{
     <div className="modal">
       <div className="modal-hd">
         <span style={{fontSize:18,fontWeight:700}}>{title}</span>
-        <button className="xbtn" onClick={onClose}>{Ic.x}</button>
+        <button className="xbtn" onClick={onClose} aria-label="Close">{Ic.x}</button>
       </div>
       <div className="modal-bd">{children}</div>
       {footer&&<div style={{padding:'0 20px 8px',display:'flex',gap:10}}>{footer}</div>}
@@ -138,28 +138,28 @@ const FilterContent=({maxRate,setMR,tx,setTx,gender,setG,ltype,setLt,verOnly,set
         <span style={{fontSize:15,fontWeight:600}}>Max rate</span>
         <span style={{fontSize:17,fontWeight:800,color:'#1d6ff3'}}>£{maxRate}<span style={{fontSize:13,fontWeight:600,color:'#64748b'}}>/hr</span></span>
       </div>
-      <input type="range" min={20} max={80} value={maxRate} onChange={e=>setMR(+e.target.value)}/>
+      <input type="range" min={20} max={80} value={maxRate} onChange={e=>setMR(+e.target.value)} aria-label="Maximum hourly rate" />
       <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'#64748b',marginTop:4}}><span>£20</span><span>£80</span></div>
     </div>
     {/* Selects — compact inline layout */}
     <Row label="Transmission">
-      <select className="sel" value={tx} onChange={e=>setTx(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+      <select className="sel" value={tx} onChange={e=>setTx(e.target.value)} aria-label="Transmission type" style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
         {['Any','Manual','Automatic'].map(o=><option key={o}>{o}</option>)}
       </select>
     </Row>
     <Row label="Lesson type">
-      <select className="sel" value={ltype} onChange={e=>setLt(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+      <select className="sel" value={ltype} onChange={e=>setLt(e.target.value)} aria-label="Lesson type" style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
         {['Any','Beginner','Standard','Intensive','Pass Plus','Refresher','Motorbike'].map(o=><option key={o}>{o}</option>)}
       </select>
     </Row>
     <Row label="Gender">
-      <select className="sel" value={gender} onChange={e=>setG(e.target.value)} style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
+      <select className="sel" value={gender} onChange={e=>setG(e.target.value)} aria-label="Instructor gender preference" style={{width:'auto',height:38,fontSize:14,padding:'0 10px',borderRadius:10,maxWidth:160}}>
         {['Any','Male','Female'].map(o=><option key={o}>{o}</option>)}
       </select>
     </Row>
     {/* Verified only — inline row */}
     <Row label="Verified only">
-      <label className="tog"><input type="checkbox" checked={verOnly} onChange={e=>setVO(e.target.checked)}/><span className="tog-t"/></label>
+      <label className="tog"><input type="checkbox" checked={verOnly} onChange={e=>setVO(e.target.checked)} aria-label="Show verified instructors only"/><span className="tog-t"/></label>
     </Row>
     {/* Specialist support — compact chips */}
     <div style={{padding:'12px 0'}}>
@@ -298,7 +298,7 @@ const Home=({onNav,onSearch,autoScroll,onScrolled})=>{
             </button>
           </div>
           {locErr&&<div style={{fontSize:12,color:'#fca5a5',marginBottom:8,lineHeight:1.4}}>{locErr}</div>}
-          <input className="inp" value={pc} onChange={e=>setPc(e.target.value)}
+          <input className="inp" value={pc} onChange={e=>setPc(e.target.value)} aria-label="Enter your postcode"
             placeholder="e.g. M1 1AA · SW1A 2AA · B1 1BB"
             style={{fontSize:17,height:50,borderRadius:12,border:'1.5px solid rgba(255,255,255,.2)',
                     background:'rgba(255,255,255,.1)',color:'#fff',letterSpacing:'.02em'}}
@@ -311,14 +311,14 @@ const Home=({onNav,onSearch,autoScroll,onScrolled})=>{
           {adv&&<div style={{display:'flex',flexDirection:'column',gap:10,marginTop:12}}>
             <div>
               <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.4)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>Experience level</div>
-              <select className="sel" value={exp} onChange={e=>setExp(e.target.value)}
+              <select className="sel" value={exp} onChange={e=>setExp(e.target.value)} aria-label="Experience level"
                 style={{background:'rgba(255,255,255,.1)',color:'#fff',border:'1.5px solid rgba(255,255,255,.2)',borderRadius:12,height:46}}>
                 {Object.keys(HRS).map(x=><option key={x} style={{background:'#0a1628'}}>{x}</option>)}
               </select>
             </div>
             <div>
               <div style={{fontSize:11,fontWeight:700,color:'rgba(255,255,255,.4)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>Transmission</div>
-              <select className="sel" value={tx} onChange={e=>setTx(e.target.value)}
+              <select className="sel" value={tx} onChange={e=>setTx(e.target.value)} aria-label="Transmission type"
                 style={{background:'rgba(255,255,255,.1)',color:'#fff',border:'1.5px solid rgba(255,255,255,.2)',borderRadius:12,height:46}}>
                 {['Any','Manual','Automatic'].map(x=><option key={x} style={{background:'#0a1628'}}>{x}</option>)}
               </select>
