@@ -74,4 +74,4 @@ const AdminLogin=({onLogin})=>{
 
 /* ── APP ── */
 
-export default Admin_final;
+export default Admin;

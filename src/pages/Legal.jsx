@@ -239,4 +239,4 @@ const LegalHub=({onNav})=><div className="page" style={{padding:'0 16px'}}>
 
 
 
-export default Legal_final;
+export default Legal;

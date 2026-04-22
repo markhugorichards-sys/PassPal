@@ -193,4 +193,4 @@ const BookModal=({inst,onClose,learner,onNav,onSent})=>{
 
 /* ── AUTH ── */
 
-export default Profile_final;
+export default Profile;

@@ -19,4 +19,4 @@ const Signup=({onSignup,onNav})=>{
 
 /* ── THEORY ── */
 
-export default Signup_final;
+export default Signup;

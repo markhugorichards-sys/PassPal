@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import { Ic, Sv, Stars, AvDot, Bench, Sheet, Modal, calcPS, scCol, simDVSA, simEmail } from './shared.jsx';
 
+const LEARNERS=[{id:1,name:"Alex Doe",email:"alex@passd-ai.co.uk",emailVerified:true,postcode:"M1 1AA"}];
 const Login=({onLogin,onNav,insts})=>{
   const [isInst,setIsInst]=useState(false);
   const [e,setE]=useState(isInst?'instructor@passd-ai.co.uk':'alex@passd-ai.co.uk');
@@ -29,4 +30,4 @@ const Login=({onLogin,onNav,insts})=>{
 };
 
 
-export default Login_final;
+export default Login;

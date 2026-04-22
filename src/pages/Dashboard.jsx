@@ -121,4 +121,4 @@ const Dashboard=({learner,onNav,enquiries})=>{
 
 /* ── INSTRUCTOR PORTAL ── */
 
-export default Dashboard_final;
+export default Dashboard;

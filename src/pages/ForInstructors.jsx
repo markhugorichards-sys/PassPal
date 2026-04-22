@@ -53,4 +53,4 @@ const ForInstructors=({onNav})=><div className="page" style={{padding:'0 16px'}}
 
 /* ── ADMIN ── */
 
-export default ForInstructors_final;
+export default ForInstructors;

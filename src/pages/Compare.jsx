@@ -295,4 +295,4 @@ const ReviewsTab=({i,reviews,onReview,isGuest,onNav})=>{
 };
 
 
-export default Compare_final;
+export default Compare;

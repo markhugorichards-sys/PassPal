@@ -385,4 +385,4 @@ const Portal=({inst:init,onUpdate,onLogout,reviews,onFlag})=>{
 
 
 
-export default Portal_final;
+export default Portal;

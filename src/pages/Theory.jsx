@@ -70,4 +70,4 @@ const Theory=({topics,setTopics,mockLeft,setMockLeft,isGuest,onNav})=>{
 
 /* ── DASHBOARD ── */
 
-export default Theory_final;
+export default Theory;
