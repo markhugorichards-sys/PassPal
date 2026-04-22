@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://passd-ai.co.uk/</loc>
-    <lastmod>2025-04-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://passd-ai.co.uk/</loc><lastmod>2025-04-22</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/southampton/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/portsmouth/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/winchester/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/basingstoke/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/eastleigh/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/fareham/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/aldershot/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/farnborough/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/fleet/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/camberley/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/woking/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://passd-ai.co.uk/driving-lessons/frimley/</loc><lastmod>2025-04-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
