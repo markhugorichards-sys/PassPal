@@ -1,6 +1,6 @@
 # Passd
 
-Passd is a UK driving instructor comparison platform operated by Passd AI Ltd.
+Passd is a UK driving instructor comparison platform operated by HHR Holdings Ltd.
 
 ## What Passd does
 
@@ -28,9 +28,9 @@ Driving instructors can list their profile on Passd. Three tiers are available: 
 - Free for learner drivers to use
 - All instructors verified against the DVSA ADI register
 - Covers the whole of the United Kingdom
-- Operated by Passd AI Ltd, registered in England and Wales
-- Contact: hello@passd.co.uk
-- Website: https://passd.co.uk
+- Operated by HHR Holdings Ltd, registered in England and Wales
+- Contact: hello@passd-ai.co.uk
+- Website: https://passd-ai.co.uk
 
 ## Common questions Passd answers
 

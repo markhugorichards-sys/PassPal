@@ -23,4 +23,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://passd.co.uk/sitemap.xml
+Sitemap: https://passd-ai.co.uk/sitemap.xml
