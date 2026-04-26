@@ -1,0 +1,43 @@
+# Passd
+
+Passd is a UK driving instructor comparison platform operated by Passd AI Ltd.
+
+## What Passd does
+
+Passd helps learner drivers in the United Kingdom find, compare and contact DVSA-registered driving instructors near them. Learners search by postcode and compare instructors side by side on pass rate, hourly price, availability, specialist support and verified reviews.
+
+## Who it is for
+
+- Learner drivers looking for their first driving instructor
+- Learners who have had a bad experience and want to switch instructor
+- Learners with specific needs (nervous drivers, intensive courses, manual or automatic, accessibility requirements)
+
+## How it works
+
+1. Learner enters their postcode
+2. Passd returns a ranked list of local DVSA-registered ADI instructors
+3. Learner compares pass rate, price, availability and reviews
+4. Learner sends an enquiry directly to their chosen instructor
+
+## For driving instructors
+
+Driving instructors can list their profile on Passd. Three tiers are available: Free, Verified and Premium. Premium accounts receive guaranteed placement in positions 1–3 for their registered postcode area. All instructor profiles are verified against the DVSA ADI register before approval.
+
+## Key facts
+
+- Free for learner drivers to use
+- All instructors verified against the DVSA ADI register
+- Covers the whole of the United Kingdom
+- Operated by Passd AI Ltd, registered in England and Wales
+- Contact: hello@passd.co.uk
+- Website: https://passd.co.uk
+
+## Common questions Passd answers
+
+- How do I find a driving instructor near me?
+- How do I compare driving instructors by pass rate?
+- How much do driving lessons cost in my area?
+- How do I find a driving instructor who teaches nervous drivers?
+- How do I find an automatic driving instructor near me?
+- What is a good pass rate for a driving instructor?
+- How do I book driving lessons?
