@@ -784,7 +784,6 @@ document.getElementById('mainForm').addEventListener('submit', async function(e)
     }
   };
 
-  const service = document.getElementById('serviceType').value || 'standard';
   const owners = parseInt(document.getElementById('ownerCount').value) || 1;
   const email = document.getElementById('email').value;
   const count = owners > 3 ? 3 : owners;
@@ -795,7 +794,6 @@ document.getElementById('mainForm').addEventListener('submit', async function(e)
     const url = link + '?prefilled_email=' + encodeURIComponent(email);
     setTimeout(() => { window.location.href = url; }, 800);
   } else {
-    // Fast Track not yet live — show modal and notify by email
     setTimeout(()=>{
       btn.disabled = false;
       btn.innerHTML = 'Get Your Certificate <span class="pay-sub">Secure payment via Stripe</span>';
